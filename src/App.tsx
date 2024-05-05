@@ -1,7 +1,7 @@
 import "./App.css";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, Session } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 
 const supabase = createClient(
@@ -10,7 +10,7 @@ const supabase = createClient(
 );
 
 export default function App(): JSX.Element {
-  const [session, setSession] = useState(null);
+  const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
