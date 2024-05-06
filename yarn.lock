@@ -824,6 +824,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/query-core@npm:5.34.2":
+  version: 5.34.2
+  resolution: "@tanstack/query-core@npm:5.34.2"
+  checksum: 10c0/4f275bca4c5212f44cd6fc9eabd59386167da9f5f1e9c9f2fa60038f2ce979bbb4a46f5cb10e69fe5347cffd9650eccf76a9fd4649f57fa21174034263d1b77a
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query@npm:^5.34.2":
+  version: 5.34.2
+  resolution: "@tanstack/react-query@npm:5.34.2"
+  dependencies:
+    "@tanstack/query-core": "npm:5.34.2"
+  peerDependencies:
+    react: ^18.0.0
+  checksum: 10c0/c1944a7cdd28b6ca96f3a8af9a7fb37e4d6e3699903023491bd07a94a4655a6113243bce314153573444a9972792a536c0787c2eba0129d4e60ac2a9171b8c23
+  languageName: node
+  linkType: hard
+
 "@types/babel__core@npm:^7.20.5":
   version: 7.20.5
   resolution: "@types/babel__core@npm:7.20.5"
@@ -2618,6 +2636,7 @@ __metadata:
     "@supabase/auth-ui-react": "npm:^0.4.7"
     "@supabase/auth-ui-shared": "npm:^0.1.8"
     "@supabase/supabase-js": "npm:^2.43.1"
+    "@tanstack/react-query": "npm:^5.34.2"
     "@types/react": "npm:^18.2.66"
     "@types/react-dom": "npm:^18.2.22"
     "@typescript-eslint/eslint-plugin": "npm:^7.2.0"

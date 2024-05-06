@@ -1,25 +1,25 @@
 import "./App.css";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
-import { createClient, Session } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
-
-const supabase = createClient(
-  "https://ykwhwaydruzwdnoaaswt.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlrd2h3YXlkcnV6d2Rub2Fhc3d0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTQ5MTU0MjUsImV4cCI6MjAzMDQ5MTQyNX0.syZdVHFCQJwCRc6dHql7RMxVZS3Pj9RPlNXW_TcJKzk",
-);
+import { Session } from "@supabase/supabase-js";
+import React, { useEffect, useState } from "react";
+import Create from "./Create.tsx";
+import List from "./List.tsx";
+import { getSupabaseClient } from "./supabaseClient.ts";
 
 export default function App(): JSX.Element {
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
+    getSupabaseClient()
+      .auth.getSession()
+      .then(({ data: { session } }) => {
+        setSession(session);
+      });
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = getSupabaseClient().auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
 
@@ -29,12 +29,17 @@ export default function App(): JSX.Element {
   if (!session) {
     return (
       <Auth
-        supabaseClient={supabase}
+        supabaseClient={getSupabaseClient()}
         appearance={{ theme: ThemeSupa }}
         providers={["google"]}
       />
     );
   } else {
-    return <div>Logged in!</div>;
+    return (
+      <div>
+        <Create />
+        <List />
+      </div>
+    );
   }
 }
