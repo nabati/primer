@@ -1,10 +1,7 @@
-import { supabase } from "@supabase/auth-ui-shared";
 import React, { useCallback } from "react";
 import { getSupabaseClient } from "./supabaseClient.ts";
 
-type CreateProps = {};
-
-const Create: React.FC<CreateProps> = () => {
+const Create: React.FC = () => {
   const handleClick = useCallback(async () => {
     const content = window.prompt("Enter card content");
 
