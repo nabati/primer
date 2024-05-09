@@ -37,9 +37,9 @@ export default function App(): JSX.Element {
   } else {
     return (
       <div>
+        <Stack />
         <List />
         {/*<Create />*/}
-        <Stack />
       </div>
     );
   }

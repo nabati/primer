@@ -62,6 +62,8 @@ const Stack: React.FC = () => {
 const Container = styled.div`
   display: flex;
   position: relative;
+  clear: both;
+  height: 300px;
 `;
 
 const Card = styled.div`
@@ -77,6 +79,8 @@ const Card = styled.div`
   position: absolute;
   cursor: pointer;
   user-select: none;
+  clear: both;
+  font-family: Roboto, sans-serif;
 `;
 
 export default Stack;
