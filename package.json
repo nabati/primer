@@ -13,7 +13,7 @@
     "@fontsource/roboto": "^5.0.13",
     "@mui/icons-material": "^5.15.17",
     "@mui/material": "^5.15.17",
-    "@mui/styled-engine-sc": "6.0.0-alpha.18",
+    "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest",
     "@react-spring/web": "9.5.5",
     "@supabase/auth-ui-react": "^0.4.7",
     "@supabase/auth-ui-shared": "^0.1.8",
@@ -44,5 +44,8 @@
   "engines": {
     "yarn": "4.2.1"
   },
-  "packageManager": "yarn@4.2.1"
+  "packageManager": "yarn@4.2.1",
+  "resolutions": {
+    "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
+  }
 }

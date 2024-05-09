@@ -9,7 +9,7 @@ const Stack: React.FC = () => {
     queryKey: ["cards"],
     queryFn: async (): Promise<Card[]> => {
       const { data: cards } = await getSupabaseClient()
-        .from("cards")
+        .from("prompts")
         .select("*");
 
       if (cards === null) {

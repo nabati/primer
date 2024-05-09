@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import Create from "./Create.tsx";
 import Stack from "./Stack.tsx";
 import { getSupabaseClient } from "./supabaseClient.ts";
+import List from "./Prompts/List.tsx";
 
 export default function App(): JSX.Element {
   const [session, setSession] = useState<Session | null>(null);
@@ -37,8 +38,9 @@ export default function App(): JSX.Element {
   } else {
     return (
       <div>
-        <Create />
-        <Stack />
+        <List />
+        {/*<Create />*/}
+        {/*<Stack />*/}
       </div>
     );
   }

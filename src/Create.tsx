@@ -15,7 +15,7 @@ const Create: React.FC = () => {
     }
 
     await getSupabaseClient()
-      .from("cards")
+      .from("prompts")
       .insert({ content, user_id: user.id });
   }, []);
 
