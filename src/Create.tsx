@@ -1,11 +1,16 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { getSupabaseClient } from "./supabaseClient.ts";
 import { useQueryClient } from "@tanstack/react-query";
 
 const Create: React.FC = () => {
   const queryClient = useQueryClient();
-  const handleClick = useCallback(async () => {
+
+  const handleCreate = useCallback(async () => {
     const content = window.prompt("Enter card content");
+
+    if (content === null || content.trim() === "") {
+      return;
+    }
 
     const {
       data: { user },
@@ -22,9 +27,24 @@ const Create: React.FC = () => {
 
     // Invalidate react-query cache
     queryClient.invalidateQueries({ queryKey: ["cards"] });
+  }, [queryClient]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.metaKey && event.shiftKey && event.key === "i") {
+        event.stopPropagation();
+        event.preventDefault();
+        handleCreate();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
-  return <button onClick={handleClick}>Create card</button>;
+  return <button onClick={handleCreate}>Create card</button>;
 };
 
 export default Create;
