@@ -2,7 +2,7 @@ import "./App.css";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { Session } from "@supabase/supabase-js";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Stack from "./Stack.tsx";
 import { getSupabaseClient } from "./supabaseClient.ts";
 import List from "./Prompts/List.tsx";
