@@ -8,6 +8,8 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useQuery } from "@tanstack/react-query";
 import { getSupabaseClient } from "../supabaseClient.ts";
+import ListRow from "./ListRow.tsx";
+import Create from "../Create.tsx";
 
 type ListProps = {};
 
@@ -34,13 +36,19 @@ const List: React.FC<ListProps> = ({ ...props }) => {
         <TableHead>
           <TableRow>
             <TableCell>Content</TableCell>
+            <TableCell>
+              <Create />
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {prompts?.map((prompt) => (
-            <TableRow key={prompt.id}>
-              <TableCell>{prompt.content}</TableCell>
-            </TableRow>
+            <ListRow
+              key={prompt.id}
+              id={prompt.id}
+              content={prompt.content}
+              lastReviewed={prompt.lastReviewed}
+            />
           ))}
         </TableBody>
       </Table>

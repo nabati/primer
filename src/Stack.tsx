@@ -3,14 +3,18 @@ import React from "react";
 import styled from "styled-components";
 import { getSupabaseClient } from "./supabaseClient.ts";
 import TinderCard from "react-tinder-card";
+import { Prompt } from "./types.ts";
+
+type SwipeDirection = "right" | "left" | "up" | "down";
 
 const Stack: React.FC = () => {
-  const { data: cards } = useQuery({
+  const { data: prompts } = useQuery({
     queryKey: ["cards"],
     queryFn: async (): Promise<Card[]> => {
       const { data: cards } = await getSupabaseClient()
         .from("prompts")
-        .select("*");
+        .select("*")
+        .order("last_reviewed", { ascending: true });
 
       if (cards === null) {
         return [];
@@ -21,24 +25,34 @@ const Stack: React.FC = () => {
     initialData: [],
   });
 
-  const onSwipe = (direction: unknown) => {
-    console.log("You swiped: " + direction);
-  };
+  const onSwipePrompt = async (prompt: Prompt, direction: SwipeDirection) => {
+    if (direction === "left") {
+      // Return
+      return;
+    }
 
-  const onCardLeftScreen = (myIdentifier: unknown) => {
-    console.log(myIdentifier + " left the screen");
+    if (direction === "right") {
+      // Archive
+      await getSupabaseClient()
+        .from("prompts")
+        .update({ last_reviewed: new Date(), reviews: prompt.reviews + 1 })
+        .eq("id", prompt.id);
+    }
+
+    // Whenever a card has been swiped right
   };
 
   return (
     <Container>
-      {cards?.map((card) => (
+      {prompts?.map((prompt) => (
         <TinderCard
-          key={card.id}
-          onSwipe={onSwipe}
-          onCardLeftScreen={() => onCardLeftScreen("fooBar")}
-          preventSwipe={["right", "left"]}
+          key={prompt.id}
+          onSwipe={(direction: SwipeDirection) =>
+            onSwipePrompt(prompt, direction)
+          }
+          preventSwipe={["up", "down"]}
         >
-          <Card>{card.content}</Card>
+          <Card>{prompt.content}</Card>
         </TinderCard>
       ))}
     </Container>
@@ -61,6 +75,8 @@ const Card = styled.div`
   border: 1px solid gray;
   border-radius: 8px;
   position: absolute;
+  cursor: pointer;
+  user-select: none;
 `;
 
 export default Stack;

@@ -3,7 +3,6 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { Session } from "@supabase/supabase-js";
 import React, { useEffect, useState } from "react";
-import Create from "./Create.tsx";
 import Stack from "./Stack.tsx";
 import { getSupabaseClient } from "./supabaseClient.ts";
 import List from "./Prompts/List.tsx";
@@ -40,7 +39,7 @@ export default function App(): JSX.Element {
       <div>
         <List />
         {/*<Create />*/}
-        {/*<Stack />*/}
+        <Stack />
       </div>
     );
   }
