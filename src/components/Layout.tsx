@@ -108,7 +108,7 @@ export default function Layout() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Persistent drawer
+            Primer
           </Typography>
         </Toolbar>
       </AppBar>
@@ -137,7 +137,7 @@ export default function Layout() {
         <Divider />
         <List>
           {links.map(({ text, icon, to }) => (
-            <NavigationItem text={text} icon={icon} to={to} />
+            <NavigationItem key={text} text={text} icon={icon} to={to} />
           ))}
         </List>
       </Drawer>
