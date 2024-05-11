@@ -3,8 +3,8 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { Session } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
-import { getSupabaseClient } from "./supabaseClient.ts";
-
+import { getSupabaseClient } from "../supabaseClient.ts";
+import Layout from "./Layout.tsx";
 export default function App(): JSX.Element {
   const [session, setSession] = useState<Session | null>(null);
 
@@ -32,7 +32,7 @@ export default function App(): JSX.Element {
         providers={["google"]}
       />
     );
-  } else {
-    return <div>{/*<Create />*/}</div>;
   }
+
+  return <Layout />;
 }
