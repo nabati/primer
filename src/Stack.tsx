@@ -64,6 +64,7 @@ const Container = styled.div`
   position: relative;
   clear: both;
   height: 300px;
+  margin: 48px;
 `;
 
 const Card = styled.div`
@@ -76,8 +77,10 @@ const Card = styled.div`
   color: black;
   border: 1px solid gray;
   border-radius: 8px;
+  padding: 24px;
   position: absolute;
   cursor: pointer;
+  text-align: center;
   user-select: none;
   clear: both;
   font-family: Roboto, sans-serif;
