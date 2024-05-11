@@ -1,11 +1,12 @@
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
+import { EditorRefPlugin } from "@lexical/react/LexicalEditorRefPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
-import { EditorState } from "lexical";
+import { EditorState, LexicalEditor } from "lexical";
 import {
   $convertToMarkdownString,
   $convertFromMarkdownString,
@@ -29,9 +30,14 @@ type EditorProps = {
    * @param text
    */
   onChange?: (text: string) => void;
+  editorRef: React.RefObject<LexicalEditor>;
 };
 
-const Editor: React.FC<EditorProps> = ({ initialValue = "", onChange }) => {
+const Editor: React.FC<EditorProps> = ({
+  initialValue = "",
+  onChange,
+  editorRef,
+}) => {
   const initialConfig = {
     namespace: "Editor",
     theme,
@@ -44,7 +50,6 @@ const Editor: React.FC<EditorProps> = ({ initialValue = "", onChange }) => {
       editorState.read(() => {
         // Read the contents of the EditorState here.
         const markdownString = $convertToMarkdownString(TRANSFORMERS);
-        console.debug("Editor content: ", markdownString);
         onChange?.(markdownString);
       });
     },
@@ -56,7 +61,12 @@ const Editor: React.FC<EditorProps> = ({ initialValue = "", onChange }) => {
       <RichTextPlugin
         contentEditable={
           <ContentEditable
-            style={{ width: '50em', height: "100%", border: "2px solid green", padding: '16px' }}
+            style={{
+              width: "50em",
+              height: "100%",
+              border: "2px solid green",
+              padding: "16px",
+            }}
           />
         }
         placeholder={<div></div>}
@@ -65,6 +75,7 @@ const Editor: React.FC<EditorProps> = ({ initialValue = "", onChange }) => {
       <OnChangePlugin onChange={handleChange} />
       <HistoryPlugin />
       <AutoFocusPlugin />
+      <EditorRefPlugin editorRef={editorRef} />
     </LexicalComposer>
   );
 };

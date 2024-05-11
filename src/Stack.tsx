@@ -7,7 +7,11 @@ import { Prompt } from "./types.ts";
 
 type SwipeDirection = "right" | "left" | "up" | "down";
 
-const Stack: React.FC = () => {
+type StackProps = {
+  onSwipeRight?: (prompt: string) => void;
+};
+
+const Stack: React.FC<StackProps> = ({ onSwipeRight }) => {
   const { data: prompts } = useQuery({
     queryKey: ["cards"],
     queryFn: async (): Promise<Card[]> => {
@@ -37,6 +41,7 @@ const Stack: React.FC = () => {
         .from("prompts")
         .update({ last_reviewed: new Date(), reviews: prompt.reviews + 1 })
         .eq("id", prompt.id);
+      onSwipeRight?.(prompt.content);
     }
 
     // Whenever a card has been swiped right
