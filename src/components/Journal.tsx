@@ -109,7 +109,6 @@ const Journal: React.FC<JournalProps> = () => {
   const handleChange = useCallback(
     (content: string) => {
       editorContent.current = content;
-      console.log(`@@onChange content:'${content}'`);
       throttledSave();
     },
     [throttledSave],
@@ -149,7 +148,7 @@ const Journal: React.FC<JournalProps> = () => {
         $createLineBreakNode(),
         $createTextNode(prompt).setFormat("bold"),
         $createLineBreakNode(),
-        $createListNode("bullet").append($createListItemNode())
+        $createListNode("bullet").append($createListItemNode()),
       ]);
     });
   };
