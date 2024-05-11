@@ -56,7 +56,7 @@ const Editor: React.FC<EditorProps> = ({ initialValue = "", onChange }) => {
       <RichTextPlugin
         contentEditable={
           <ContentEditable
-            style={{ width: 600, height: 600, border: "2px solid green" }}
+            style={{ width: '50em', height: "100%", border: "2px solid green", padding: '16px' }}
           />
         }
         placeholder={<div></div>}

@@ -2,6 +2,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useQuery } from "@tanstack/react-query";
 import { endOfDay, startOfDay } from "date-fns";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import styled from "styled-components";
 import { getSupabaseClient } from "../supabaseClient.ts";
 import { useUser } from "./AuthContext.tsx";
 import Editor from "./Editor";
@@ -99,13 +100,20 @@ const Journal: React.FC<JournalProps> = () => {
   }
 
   return (
-    <div>
+    <Container>
       <Editor
         onChange={handleChange}
         initialValue={initialJournalEntry?.content}
       />
-    </div>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 128px);
+`;
 
 export default Journal;
