@@ -1,11 +1,32 @@
-import "./App.css";
+// React AuthContext
+
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { Session } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
-import { getSupabaseClient } from "./supabaseClient.ts";
+import React, { createContext, useState, useEffect } from "react";
+import { getSupabaseClient } from "../supabaseClient.ts";
 
-export default function App(): JSX.Element {
+type User = {
+  id: string;
+};
+
+type AuthContextType = {
+  user: User;
+};
+
+const AuthContext = createContext<AuthContextType | null>(null);
+
+export const useUser = (): User => {
+  const context = React.useContext(AuthContext);
+  if (context === null) {
+    throw new Error("useUser must be used within an AuthProvider");
+  }
+  return context.user;
+};
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
@@ -32,7 +53,11 @@ export default function App(): JSX.Element {
         providers={["google"]}
       />
     );
-  } else {
-    return <div>{/*<Create />*/}</div>;
   }
-}
+
+  return (
+    <AuthContext.Provider value={{ user: session.user }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};

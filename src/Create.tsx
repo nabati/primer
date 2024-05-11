@@ -1,23 +1,16 @@
 import React, { useCallback, useEffect } from "react";
+import { useUser } from "./components/AuthContext.tsx";
 import { getSupabaseClient } from "./supabaseClient.ts";
 import { useQueryClient } from "@tanstack/react-query";
 
 const Create: React.FC = () => {
   const queryClient = useQueryClient();
+  const user = useUser();
 
   const handleCreate = useCallback(async () => {
     const content = window.prompt("Enter card content");
 
     if (content === null || content.trim() === "") {
-      return;
-    }
-
-    const {
-      data: { user },
-    } = await getSupabaseClient().auth.getUser();
-
-    if (user === null) {
-      console.warn("User is not logged in");
       return;
     }
 

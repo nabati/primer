@@ -3,11 +3,14 @@ import { useQuery } from "@tanstack/react-query";
 import { endOfDay, startOfDay } from "date-fns";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { getSupabaseClient } from "../supabaseClient.ts";
+import { useUser } from "./AuthContext.tsx";
 import Editor from "./Editor";
 import throttle from "lodash/throttle";
 import { v4 as uuidv4 } from "uuid";
 
-type JournalProps = {};
+type JournalProps = {
+  //
+};
 
 type JournalEntry = {
   id: string;
@@ -17,6 +20,7 @@ type JournalEntry = {
 const Journal: React.FC<JournalProps> = () => {
   const editorContent = useRef<string>("");
   const lastSavedEditorContent = useRef<string>("");
+  const user = useUser();
 
   // Get today's journal entry, if it exists.
   const { data: initialJournalEntry, isFetching } = useQuery({
@@ -49,22 +53,13 @@ const Journal: React.FC<JournalProps> = () => {
   }, [initialJournalEntry]);
 
   const save = useCallback(async () => {
-    const {
-      data: { user },
-    } = await getSupabaseClient().auth.getUser();
-
-    if (user === null) {
-      console.warn("User is not logged in");
-      return;
-    }
-
     await getSupabaseClient().from("journals").upsert({
       id: entryUuid,
       content: editorContent.current,
       user_id: user.id,
     });
     lastSavedEditorContent.current = editorContent.current;
-  }, [entryUuid]);
+  }, [entryUuid, user]);
 
   const throttledSave = useMemo(
     () =>
