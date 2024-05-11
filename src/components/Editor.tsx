@@ -13,6 +13,13 @@ import {
   TRANSFORMERS,
 } from "@lexical/markdown";
 import { useCallback } from "react";
+import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
+import { HorizontalRuleNode } from "@lexical/react/LexicalHorizontalRuleNode";
+
+import { CodeNode } from "@lexical/code";
+import { LinkNode } from "@lexical/link";
+import { ListNode, ListItemNode } from "@lexical/list";
+import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 
 const theme = {};
 
@@ -43,6 +50,15 @@ const Editor: React.FC<EditorProps> = ({
     theme,
     onError,
     editorState: () => $convertFromMarkdownString(initialValue, TRANSFORMERS),
+    nodes: [
+      HorizontalRuleNode,
+      CodeNode,
+      LinkNode,
+      ListNode,
+      ListItemNode,
+      HeadingNode,
+      QuoteNode,
+    ],
   };
 
   const handleChange = useCallback(
@@ -72,6 +88,7 @@ const Editor: React.FC<EditorProps> = ({
         placeholder={<div></div>}
         ErrorBoundary={LexicalErrorBoundary}
       />
+      <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
       <OnChangePlugin onChange={handleChange} />
       <HistoryPlugin />
       <AutoFocusPlugin />

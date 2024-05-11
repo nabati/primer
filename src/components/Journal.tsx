@@ -18,7 +18,7 @@ import { useUser } from "./AuthContext.tsx";
 import Editor from "./Editor";
 import throttle from "lodash/throttle";
 import { v4 as uuidv4 } from "uuid";
-import { $convertFromMarkdownString, TRANSFORMERS } from "@lexical/markdown";
+import { $createListNode, $createListItemNode } from "@lexical/list";
 
 type JournalProps = {
   //
@@ -75,8 +75,6 @@ const Journal: React.FC<JournalProps> = () => {
     },
     initialData: null,
   });
-
-  console.log("@@ini", initialJournalEntry);
 
   useEffect(() => {
     if (initialJournalEntry === null) {
@@ -148,8 +146,10 @@ const Journal: React.FC<JournalProps> = () => {
       selection?.insertNodes([
         $createLineBreakNode(),
         $createLineBreakNode(),
+        $createLineBreakNode(),
         $createTextNode(prompt).setFormat("bold"),
         $createLineBreakNode(),
+        $createListNode("bullet").append($createListItemNode())
       ]);
     });
   };
