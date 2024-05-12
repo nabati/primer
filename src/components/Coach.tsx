@@ -18,13 +18,14 @@ const Coach: React.FC<CoachProps> = ({ content }) => {
         method: "POST",
         body: JSON.stringify({
           model: "llama3",
-          prompt: `You are my trusted, wise and insightful mentor, emotional support and dream architect.  Help me navigate life's challenges, uncover new perspectives, and achieve my goals. You help me based on the contents of my journal. This is my last journal entry in Markdown format: \`${content}\``,
+          prompt: `You are my trusted, wise and insightful mentor, emotional support and dream architect. We already know each other - skip the introductions. Help me navigate life's challenges, uncover new perspectives, and achieve my goals. You help me based on the contents of my journal, where you give more weight to the final section of the entry. Answer briefly. This is my last journal entry in Markdown format: \`${content}\``,
           stream: false,
         }),
       });
 
       return response.json();
     },
+    enabled: content.length > 0,
   });
 
   return (
