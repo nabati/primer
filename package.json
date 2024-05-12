@@ -29,10 +29,12 @@
     "pixi.js": "^8.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-markdown": "^9.0.1",
     "react-router-dom": "^6.23.1",
     "react-tinder-card": "^1.6.4",
     "sort-by": "^1.2.0",
     "styled-components": "^6.1.10",
+    "use-debounce": "^10.0.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

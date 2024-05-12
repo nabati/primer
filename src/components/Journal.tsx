@@ -10,11 +10,18 @@ import {
   EditorState,
   LexicalEditor,
 } from "lexical";
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import styled from "styled-components";
 import Stack from "../Stack.tsx";
 import { getSupabaseClient } from "../supabaseClient.ts";
 import { useUser } from "./AuthContext.tsx";
+import Coach from "./Coach.tsx";
 import Editor from "./Editor";
 import throttle from "lodash/throttle";
 import { v4 as uuidv4 } from "uuid";
@@ -43,6 +50,8 @@ const getDefaultEntry = (): JournalEntry => ({
 });
 
 const Journal: React.FC<JournalProps> = () => {
+  const [editorContentStateful, setEditorContentStateful] =
+    useState<string>("");
   const editorRef = useRef<LexicalEditor | null>(null);
   const editorContent = useRef<string>("");
   const lastSavedEditorContent = useRef<string>("");
@@ -109,6 +118,7 @@ const Journal: React.FC<JournalProps> = () => {
   const handleChange = useCallback(
     (content: string) => {
       editorContent.current = content;
+      setEditorContentStateful(content);
       throttledSave();
     },
     [throttledSave],
@@ -159,12 +169,17 @@ const Journal: React.FC<JournalProps> = () => {
 
   return (
     <Container>
-      <Editor
-        onChange={handleChange}
-        initialValue={initialJournalEntry?.content}
-        editorRef={editorRef}
-      />
-      <Stack onSwipeRight={handleSwipeRight} />
+      <EditorContainer>
+        <Editor
+          onChange={handleChange}
+          initialValue={initialJournalEntry?.content}
+          editorRef={editorRef}
+        />
+      </EditorContainer>
+      <Sidebar>
+        <Stack onSwipeRight={handleSwipeRight} />
+        <Coach content={editorContentStateful} />
+      </Sidebar>
     </Container>
   );
 };
@@ -175,6 +190,22 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   height: calc(100vh - 128px);
+`;
+
+const EditorContainer = styled.div`
+  flex-grow: 4;
+  flex-shrink: 4;
+  align-self: stretch;
+`;
+
+const Sidebar = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-self: stretch;
+  align-items: center;
+  flex-grow: 1;
+  flex-shrink: 1;
 `;
 
 export default Journal;
