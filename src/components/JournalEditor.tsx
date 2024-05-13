@@ -1,9 +1,17 @@
+import { CheckCircle, Pending } from "@mui/icons-material";
+import { Icon } from "@mui/material";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { LexicalEditor } from "lexical";
 import throttle from "lodash/throttle";
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import styled from "styled-components";
 import { getSupabaseClient } from "../supabaseClient.ts";
 import { useUser } from "./AuthContext.tsx";
@@ -22,7 +30,8 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
 }) => {
   const user = useUser();
   const editorContent = useRef<string>("");
-  const lastSavedEditorContent = useRef<string>("");
+  const [lastSavedEditorContent, setLastSavedEditorContent] =
+    useState<string>("");
 
   // Get today's journal entry, if it exists.
   const { data: journalEntry, isFetching } = useQuery({
@@ -39,7 +48,7 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
 
       const entry = entries[0];
       editorContent.current = entry.content;
-      lastSavedEditorContent.current = entry.content;
+      setLastSavedEditorContent(entry.content);
 
       return entry;
     },
@@ -51,7 +60,7 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
       content: editorContent.current,
       user_id: user.id,
     });
-    lastSavedEditorContent.current = editorContent.current;
+    setLastSavedEditorContent(editorContent.current);
   }, [id, user.id]);
 
   const throttledSave = useMemo(
@@ -65,7 +74,7 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
   const handleChange = useCallback(
     (content: string) => {
       editorContent.current = content;
-      onChange(content);
+      onChange?.(content);
       throttledSave();
     },
     [throttledSave],
@@ -73,7 +82,7 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
 
   useEffect(() => {
     const handleBeforeUnload = (event: Event) => {
-      if (editorContent.current === lastSavedEditorContent.current) {
+      if (editorContent.current === lastSavedEditorContent) {
         return;
       }
 
@@ -85,6 +94,21 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
 
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [save]);
+
+  useEffect(() => {
+    const handleSave = (event: KeyboardEvent) => {
+      if (event.key === "s" && (event.metaKey || event.ctrlKey)) {
+        event.preventDefault();
+        save();
+      }
+    };
+
+    window.addEventListener("keydown", handleSave);
+
+    return () => {
+      window.removeEventListener("keydown", handleSave);
     };
   }, [save]);
 
@@ -105,7 +129,14 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
   }
 
   return (
-    <Box>
+    <Box style={{ position: "relative" }}>
+      <StatusContainer>
+        {editorContent.current === lastSavedEditorContent ? (
+          <CheckCircle color="success" />
+        ) : (
+          <Pending color="disabled" />
+        )}
+      </StatusContainer>
       <EditorContainer>
         <Editor
           onChange={handleChange}
@@ -116,6 +147,12 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
     </Box>
   );
 };
+
+const StatusContainer = styled.div`
+  position: absolute;
+  right: 0;
+  top: 0;
+`;
 
 const EditorContainer = styled.div`
   display: flex;
