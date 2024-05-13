@@ -148,7 +148,7 @@ const Editor: React.FC<EditorProps> = ({
   return (
     <LexicalComposer initialConfig={initialConfig}>
       <div className="editor-container">
-        <div className="editor-innor">
+        <div className="editor-inner">
           <RichTextPlugin
             contentEditable={<ContentEditable className="editor-input" />}
             placeholder={<div></div>}

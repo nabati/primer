@@ -185,27 +185,24 @@ const Journal: React.FC<JournalProps> = () => {
 };
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 4fr 2fr;
+  grid-template-rows: 1fr;
   height: calc(100vh - 128px);
 `;
 
 const EditorContainer = styled.div`
-  flex-grow: 4;
-  flex-shrink: 4;
+  display: flex;
+  flex-grow: 1;
   align-self: stretch;
 `;
 
 const Sidebar = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-self: stretch;
   align-items: center;
   flex-grow: 1;
-  flex-shrink: 1;
 `;
 
 export default Journal;

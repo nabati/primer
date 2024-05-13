@@ -18,7 +18,9 @@ const Coach: React.FC<CoachProps> = ({ content }) => {
         method: "POST",
         body: JSON.stringify({
           model: "llama3",
-          prompt: `You are my trusted, wise and insightful mentor, emotional support and dream architect. We already know each other - skip the introductions. Help me navigate life's challenges, uncover new perspectives, and achieve my goals. You help me based on the contents of my journal, where you give more weight to the final section of the entry. Answer briefly. This is my last journal entry in Markdown format: \`${content}\``,
+          prompt: `You are my trusted, wise and insightful mentor, emotional support and dream architect. Based on my last journal entry, make actionable suggestions on things I could improve: \`${content}\``,
+          // prompt: `You are my trusted, wise and insightful mentor, emotional support and dream architect. Based on my last journal entry, highlight useful reflections that I might have missed: \`${content}\``,
+          // prompt: `You are my trusted, wise and insightful mentor, emotional support and dream architect. We already know each other - skip the introductions. Help me navigate life's challenges, uncover new perspectives, and achieve my goals. You help me based on the contents of my journal, give ascending priority based on the chronology of the text sections. Answer briefly. This is my last journal entry in Markdown format: \`${content}\``,
           stream: false,
         }),
       });
@@ -48,6 +50,7 @@ const Container = styled.div`
   max-height: 40em;
   overflow-y: auto;
   width: 100%;
+  padding: 16px;
 `;
 
 export default Coach;
