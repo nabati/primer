@@ -1,8 +1,7 @@
 import { CheckCircle, Pending } from "@mui/icons-material";
-import { Icon } from "@mui/material";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { LexicalEditor } from "lexical";
 import throttle from "lodash/throttle";
 import React, {

@@ -3,8 +3,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { getSupabaseClient } from "../supabaseClient.ts";
-import getFirstNCharactersWholeWords from "../utils/getFirstNCharactersWholeWords.ts";
-import getFormattedDate from "../utils/getFormattedDate.ts";
+import JournalListCard from "./JournalListCard.tsx";
 
 type JournalSidebarProps = {
   onSelect: (id: string) => void;
@@ -34,10 +33,11 @@ const JournalSidebar: React.FC<JournalSidebarProps> = ({ onSelect }) => {
   return (
     <Box>
       {entries.map((entry: any) => (
-        <Box key={entry.id} onClick={() => onSelect(entry.id)}>
-          <i>{getFormattedDate(entry.created_at)}</i>
-          <p>{getFirstNCharactersWholeWords(entry.content, 100)}</p>
-        </Box>
+        <JournalListCard
+          entry={entry}
+          key={entry.id}
+          onClick={() => onSelect(entry.id)}
+        />
       ))}
     </Box>
   );
