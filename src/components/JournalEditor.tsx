@@ -1,4 +1,4 @@
-import { CheckCircle, Pending } from "@mui/icons-material";
+import { CheckCircle, Pending, Delete } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useQuery } from "@tanstack/react-query";
@@ -12,8 +12,10 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getSupabaseClient } from "../supabaseClient.ts";
+import getFormattedDate from "../utils/getFormattedDate.ts";
 import { useUser } from "./AuthContext.tsx";
 import Editor from "./Editor.tsx";
 
@@ -32,6 +34,7 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
   const editorContent = useRef<string>("");
   const [lastSavedEditorContent, setLastSavedEditorContent] =
     useState<string>("");
+  const navigate = useNavigate();
 
   // Get today's journal entry, if it exists.
   const { data: journalEntry, isFetching } = useQuery({
@@ -118,6 +121,19 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
     };
   }, [save]);
 
+  const handleDeleteClick = async () => {
+    if (confirm("Are you sure you want to delete this journal entry?")) {
+      await getSupabaseClient()
+        .from("journals")
+        .update({
+          is_archived: true,
+        })
+        .eq("id", id);
+    }
+
+    navigate("/journals");
+  };
+
   if (isFetching) {
     return (
       <Box>
@@ -128,13 +144,19 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
 
   return (
     <Box style={{ position: "relative" }}>
-      <StatusContainer>
-        {editorContent.current === lastSavedEditorContent ? (
-          <CheckCircle color="success" />
-        ) : (
-          <Pending color="disabled" />
-        )}
-      </StatusContainer>
+      <TopBarContainer>
+        <DateContainer>
+          {getFormattedDate(journalEntry?.created_at)}
+        </DateContainer>
+        <StatusContainer>
+          {editorContent.current === lastSavedEditorContent ? (
+            <CheckCircle color="success" />
+          ) : (
+            <Pending color="disabled" />
+          )}
+          <Delete color="error" onClick={handleDeleteClick} />
+        </StatusContainer>
+      </TopBarContainer>
       <EditorContainer>
         <Editor
           onChange={handleChange}
@@ -145,6 +167,17 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
     </Box>
   );
 };
+
+const DateContainer = styled.div`
+  font-weight: bold;
+`;
+
+const TopBarContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
 
 const StatusContainer = styled.div`
   position: absolute;

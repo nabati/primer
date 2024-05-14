@@ -16,7 +16,8 @@ const JournalSidebar: React.FC<JournalSidebarProps> = ({ onSelect }) => {
       const { data: entries } = await getSupabaseClient()
         .from("journals")
         .select("*")
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: false })
+        .eq("is_archived", false);
 
       return entries;
     },
