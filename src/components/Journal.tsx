@@ -8,7 +8,8 @@ import {
   $getSelection,
   LexicalEditor,
 } from "lexical";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import Stack from "../Stack.tsx";
 import { getSupabaseClient } from "../supabaseClient.ts";
@@ -24,12 +25,11 @@ type JournalProps = {
 };
 
 const Journal: React.FC<JournalProps> = () => {
+  const navigate = useNavigate();
+  const { id: selectedJournalId } = useParams();
   const [editorContentStateful, setEditorContentStateful] =
     useState<string>("");
   const editorRef = useRef<LexicalEditor | null>(null);
-  const [selectedJournalId, setSelectedJournalId] = useState<string | null>(
-    null,
-  );
 
   // Get today's journal entry, if it exists.
   const { data: todaysJournalEntryId, isFetching } = useQuery({
@@ -48,6 +48,23 @@ const Journal: React.FC<JournalProps> = () => {
       return entries[0].id;
     },
   });
+
+  useEffect(() => {
+    if (selectedJournalId !== undefined) {
+      return;
+    }
+
+    if (isFetching) {
+      return;
+    }
+
+    if (
+      todaysJournalEntryId !== undefined &&
+      selectedJournalId !== todaysJournalEntryId
+    ) {
+      navigate(`/journals/${todaysJournalEntryId}`);
+    }
+  }, [todaysJournalEntryId, isFetching, selectedJournalId, navigate]);
 
   const handleSwipeRight = (prompt: string) => {
     const editor = editorRef.current;
@@ -75,13 +92,15 @@ const Journal: React.FC<JournalProps> = () => {
     return <CircularProgress />;
   }
 
+  const journalId = selectedJournalId ?? todaysJournalEntryId;
   return (
     <Container>
-      <JournalSidebar onSelect={(id) => setSelectedJournalId(id)} />
+      <JournalSidebar onSelect={(id) => navigate(`/journals/${id}`)} />
 
-      {todaysJournalEntryId !== undefined && (
+      {journalId !== undefined && (
         <JournalEditor
-          id={selectedJournalId ?? todaysJournalEntryId}
+          key={journalId}
+          id={journalId}
           onChange={setEditorContentStateful}
           editorRef={editorRef}
         />
