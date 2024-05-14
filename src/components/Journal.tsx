@@ -23,11 +23,6 @@ type JournalProps = {
   //
 };
 
-type JournalEntry = {
-  id: string;
-  content: string;
-};
-
 const Journal: React.FC<JournalProps> = () => {
   const [editorContentStateful, setEditorContentStateful] =
     useState<string>("");

@@ -94,7 +94,7 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [save]);
+  }, [save, lastSavedEditorContent]);
 
   useEffect(() => {
     const handleSave = (event: KeyboardEvent) => {
@@ -119,14 +119,6 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
     );
   }
 
-  if (journalEntry === undefined) {
-    return (
-      <Box>
-        <p>Journal entry not found</p>
-      </Box>
-    );
-  }
-
   return (
     <Box style={{ position: "relative" }}>
       <StatusContainer>
@@ -139,7 +131,7 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
       <EditorContainer>
         <Editor
           onChange={handleChange}
-          initialValue={journalEntry.content}
+          initialValue={journalEntry?.content ?? ""}
           editorRef={editorRef}
         />
       </EditorContainer>
