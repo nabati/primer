@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useQuery } from "@tanstack/react-query";
 import { LexicalEditor } from "lexical";
+import { debounce } from "lodash";
 import throttle from "lodash/throttle";
 import React, {
   useCallback,
@@ -62,11 +63,17 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
     setLastSavedEditorContent(editorContent.current);
   }, [id, user.id]);
 
-  const throttledSave = useMemo(
+  const debouncedSave = useMemo(
     () =>
-      throttle(() => {
-        save();
-      }, 1000),
+      debounce(
+        () => {
+          save();
+        },
+        1000,
+        {
+          maxWait: 30000,
+        },
+      ),
     [save],
   );
 
@@ -74,9 +81,9 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
     (content: string) => {
       editorContent.current = content;
       onChange?.(content);
-      throttledSave();
+      debouncedSave();
     },
-    [throttledSave],
+    [debouncedSave],
   );
 
   useEffect(() => {
