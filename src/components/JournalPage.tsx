@@ -24,7 +24,7 @@ type JournalProps = {
   //
 };
 
-const Journal: React.FC<JournalProps> = () => {
+const JournalPage: React.FC<JournalProps> = () => {
   const navigate = useNavigate();
   const { id: selectedJournalId } = useParams();
   const [editorContentStateful, setEditorContentStateful] =
@@ -88,4 +88,4 @@ const Sidebar = styled.div`
   flex-grow: 1;
 `;
 
-export default Journal;
+export default JournalPage;

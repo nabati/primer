@@ -9,7 +9,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AuthProvider } from "./components/AuthContext.tsx";
-import Journal from "./components/Journal.tsx";
+import JournalPage from "./components/JournalPage.tsx";
 import Prompts from "./components/Prompts.tsx";
 import Layout from "./components/Layout.tsx";
 
@@ -20,15 +20,15 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Journal />,
+        element: <JournalPage />,
       },
       {
         path: "/journals",
-        element: <Journal />,
+        element: <JournalPage />,
       },
       {
         path: "/journals/:id",
-        element: <Journal />,
+        element: <JournalPage />,
       },
       {
         path: "/prompts",
