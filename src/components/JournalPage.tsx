@@ -17,6 +17,7 @@ import Coach from "./Coach.tsx";
 import { $createListNode, $createListItemNode } from "@lexical/list";
 import JournalEditor from "./JournalEditor.tsx";
 import JournalSidebar from "./JournalSidebar.tsx";
+import useCreateJournalEntry from "./useCreateJournalEntry.ts";
 import useJournalEntries from "./useJournalEntries.ts";
 
 type JournalProps = {
@@ -29,8 +30,7 @@ const JournalPage: React.FC<JournalProps> = () => {
   const [editorContentStateful, setEditorContentStateful] =
     useState<string>("");
   const editorRef = useRef<LexicalEditor | null>(null);
-  const queryClient = useQueryClient();
-  const user = useUser();
+  const createJournalEntry = useCreateJournalEntry();
 
   const { entries, isFetching } = useJournalEntries();
 
@@ -45,20 +45,9 @@ const JournalPage: React.FC<JournalProps> = () => {
     [navigate],
   );
 
-  const createNewEntry = async () => {
-    const { data: row } = await getSupabaseClient()
-      .from("journals")
-      .insert([{ content: "", user_id: user.id }])
-      .select("*")
-      .single<JournalEntry>();
-
-    if (row === null) {
-      return;
-    }
-    console.log("Should be invalidating");
-    queryClient.invalidateQueries({ queryKey: ["journals"] });
-
-    handleSelect(row.id);
+  const handleCreateClick = async () => {
+    const id = await createJournalEntry();
+    handleSelect(id);
   };
 
   const handleSwipeRight = (prompt: string) => {
@@ -86,7 +75,7 @@ const JournalPage: React.FC<JournalProps> = () => {
   return (
     <Container>
       <JournalSidebar
-        onCreateClick={createNewEntry}
+        onCreateClick={handleCreateClick}
         isLoading={isFetching}
         entries={entries}
         onSelect={handleSelect}
