@@ -33,12 +33,14 @@ const JournalSidebar: React.FC<JournalSidebarProps> = ({ onSelect }) => {
     const { data: row } = await getSupabaseClient()
       .from("journals")
       .insert([{ content: "", user_id: user.id }])
+      .select("*")
       .single<JournalEntry>();
+
 
     if (row === null) {
       return;
     }
-
+    console.log("Should be invalidating");
     queryClient.invalidateQueries({ queryKey: ["journals"] });
 
     onSelect(row.id);
