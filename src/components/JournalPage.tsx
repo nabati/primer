@@ -6,7 +6,7 @@ import {
   $getSelection,
   LexicalEditor,
 } from "lexical";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import Stack from "../Stack.tsx";
@@ -17,6 +17,7 @@ import Coach from "./Coach.tsx";
 import { $createListNode, $createListItemNode } from "@lexical/list";
 import JournalEditor from "./JournalEditor.tsx";
 import JournalSidebar from "./JournalSidebar.tsx";
+import useJournalEntries from "./useJournalEntries.ts";
 
 type JournalProps = {
   //
@@ -31,16 +32,13 @@ const JournalPage: React.FC<JournalProps> = () => {
   const queryClient = useQueryClient();
   const user = useUser();
 
-  const { data: entries = [], isFetching } = useQuery({
-    queryKey: ["journals"],
-    queryFn: async (): Promise<any> => {
-      const { data: entries } = await getSupabaseClient()
-        .from("journals")
-        .select("*")
-        .order("created_at", { ascending: false });
-      return entries;
-    },
-  });
+  const { entries, isFetching } = useJournalEntries();
+
+  useEffect(() => {
+    if (selectedJournalId === undefined && entries.length > 0) {
+      navigate(`/journals/${entries[0].id}`);
+    }
+  }, [entries, selectedJournalId]);
 
   const handleSelect = useCallback(
     (id: string) => navigate(`/journals/${id}`),

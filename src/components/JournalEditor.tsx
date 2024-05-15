@@ -1,7 +1,7 @@
 import { CheckCircle, Pending, Delete } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { LexicalEditor } from "lexical";
 import { debounce } from "lodash";
 import React, {
@@ -29,6 +29,7 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
   onChange,
   editorRef,
 }) => {
+  const queryClient = useQueryClient();
   const user = useUser();
   const editorContent = useRef<string>("");
   const [lastSavedEditorContent, setLastSavedEditorContent] =
@@ -71,7 +72,7 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
         () => {
           save();
         },
-        1000,
+        3000,
         {
           maxWait: 30000,
         },
@@ -123,9 +124,10 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
   const handleDeleteClick = async () => {
     if (confirm("Are you sure you want to delete this journal entry?")) {
       await getSupabaseClient().from("journals").delete().eq("id", id);
+      queryClient.invalidateQueries({ queryKey: ["journals"] });
+      queryClient.invalidateQueries({ queryKey: ["journals-entry", id] });
+      navigate("/journals");
     }
-
-    navigate("/journals");
   };
 
   if (isFetching) {
