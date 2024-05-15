@@ -31,41 +31,6 @@ const Journal: React.FC<JournalProps> = () => {
     useState<string>("");
   const editorRef = useRef<LexicalEditor | null>(null);
 
-  // Get today's journal entry, if it exists.
-  const { data: todaysJournalEntryId, isFetching } = useQuery({
-    queryKey: ["journals-today", getFormattedDate(new Date())],
-    queryFn: async (): Promise<string> => {
-      const { data: entries } = await getSupabaseClient()
-        .from("journals")
-        .select("*")
-        .gte("created_at", startOfDay(new Date()).toISOString())
-        .lte("created_at", endOfDay(new Date()).toISOString());
-
-      if (entries === null || entries.length === 0) {
-        return uuidv4();
-      }
-
-      return entries[0].id;
-    },
-  });
-
-  useEffect(() => {
-    if (selectedJournalId !== undefined) {
-      return;
-    }
-
-    if (isFetching) {
-      return;
-    }
-
-    if (
-      todaysJournalEntryId !== undefined &&
-      selectedJournalId !== todaysJournalEntryId
-    ) {
-      navigate(`/journals/${todaysJournalEntryId}`);
-    }
-  }, [todaysJournalEntryId, isFetching, selectedJournalId, navigate]);
-
   const handleSwipeRight = (prompt: string) => {
     const editor = editorRef.current;
 
@@ -88,19 +53,14 @@ const Journal: React.FC<JournalProps> = () => {
     });
   };
 
-  if (isFetching) {
-    return <CircularProgress />;
-  }
-
-  const journalId = selectedJournalId ?? todaysJournalEntryId;
   return (
     <Container>
       <JournalSidebar onSelect={(id) => navigate(`/journals/${id}`)} />
 
-      {journalId !== undefined && (
+      {selectedJournalId !== undefined && (
         <JournalEditor
-          key={journalId}
-          id={journalId}
+          key={selectedJournalId}
+          id={selectedJournalId}
           onChange={setEditorContentStateful}
           editorRef={editorRef}
         />

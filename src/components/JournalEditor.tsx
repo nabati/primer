@@ -4,7 +4,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useQuery } from "@tanstack/react-query";
 import { LexicalEditor } from "lexical";
 import { debounce } from "lodash";
-import throttle from "lodash/throttle";
 import React, {
   useCallback,
   useEffect,
@@ -36,7 +35,6 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
     useState<string>("");
   const navigate = useNavigate();
 
-  // Get today's journal entry, if it exists.
   const { data: journalEntry, isFetching } = useQuery({
     queryKey: ["journals-entry", id],
     queryFn: async (): Promise<any> => {
@@ -55,6 +53,7 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
 
       return entry;
     },
+    enabled: id !== undefined,
   });
 
   const save = useCallback(async () => {
@@ -123,12 +122,7 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
 
   const handleDeleteClick = async () => {
     if (confirm("Are you sure you want to delete this journal entry?")) {
-      await getSupabaseClient()
-        .from("journals")
-        .update({
-          is_archived: true,
-        })
-        .eq("id", id);
+      await getSupabaseClient().from("journals").delete().eq("id", id);
     }
 
     navigate("/journals");

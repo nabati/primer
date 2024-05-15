@@ -3,3 +3,9 @@ export type Prompt = {
   content: string;
   reviews: number;
 };
+
+export type JournalEntry = {
+  id: string;
+  content: string;
+  user_id: string;
+};
