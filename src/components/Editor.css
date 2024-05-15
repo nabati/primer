@@ -1,5 +1,4 @@
 .editor-container {
-  margin: 20px auto 20px auto;
   border-radius: 2px;
   max-width: 1024px;
   color: #000;
@@ -9,26 +8,37 @@
   text-align: left;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  height: 90%;
   overflow: hidden;
+  flex-grow: 1;
+  align-self: stretch;
 }
 
 .editor-inner {
   background: #fff;
   position: relative;
-  max-height: 90%;
+  align-self: stretch;
+  padding: 15px 0;
+  overflow: scroll;
 }
 
 .editor-input {
+  flex-grow: 1;
   resize: none;
   font-size: 15px;
   position: relative;
   tab-size: 1;
-  outline: 1px solid #cecece;
-  padding: 15px 128px;
+  padding: 16px 16px;
   caret-color: #444;
   overflow-y: scroll;
-  height: 90%;
+  border-radius: 8px;
+  align-self: stretch;
+  height: 70vh;
+  margin: 4px;
+
+  outline: 1px solid #cecece;
+  &:focus {
+    outline: 1px solid #007bff;
+  }
 }
 
 .editor-listitem {

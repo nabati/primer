@@ -144,7 +144,9 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
   }
 
   return (
-    <Box style={{ position: "relative" }}>
+    <Box
+      style={{ position: "relative", display: "flex", flexDirection: "column" }}
+    >
       <TopBarContainer>
         <DateContainer>
           {getFormattedDate(journalEntry?.created_at)}

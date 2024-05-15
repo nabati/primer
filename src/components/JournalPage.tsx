@@ -98,6 +98,7 @@ const Container = styled.div`
   grid-template-columns: 1fr 4fr 2fr;
   grid-template-rows: 1fr;
   height: calc(100vh - 128px);
+  overflow: hidden;
 `;
 
 const Sidebar = styled.div`

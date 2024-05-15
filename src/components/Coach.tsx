@@ -54,7 +54,6 @@ const Coach: React.FC<CoachProps> = ({ content }) => {
 
 const Container = styled.div`
   display: flex;
-  border: 1px solid green;
   flex-grow: 1;
   align-self: stretch;
   flex-direction: column;

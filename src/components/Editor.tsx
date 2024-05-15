@@ -147,24 +147,33 @@ const Editor: React.FC<EditorProps> = ({
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
-      <div className="editor-container">
-        <div className="editor-inner">
-          <RichTextPlugin
-            contentEditable={<ContentEditable className="editor-input" />}
-            placeholder={<div></div>}
-            ErrorBoundary={LexicalErrorBoundary}
-          />
-          <ListPlugin />
-          <TabIndentationPlugin />
-          <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
-          <OnChangePlugin onChange={handleChange} />
-          <HistoryPlugin />
-          <AutoFocusPlugin />
-          <EditorRefPlugin editorRef={editorRef} />
+      <Container>
+        <div className="editor-container">
+          <div className="editor-inner">
+            <RichTextPlugin
+              contentEditable={<ContentEditable className="editor-input" />}
+              placeholder={<div></div>}
+              ErrorBoundary={LexicalErrorBoundary}
+            />
+            <ListPlugin />
+            <TabIndentationPlugin />
+            <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
+            <OnChangePlugin onChange={handleChange} />
+            <HistoryPlugin />
+            <AutoFocusPlugin />
+            <EditorRefPlugin editorRef={editorRef} />
+          </div>
         </div>
-      </div>
+      </Container>
     </LexicalComposer>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  grid-template-rows: 10fr 1fr;
+`;
 
 export default Editor;
