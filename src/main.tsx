@@ -23,6 +23,10 @@ const router = createBrowserRouter([
         element: <Journal />,
       },
       {
+        path: "/journals",
+        element: <Journal />,
+      },
+      {
         path: "/journals/:id",
         element: <Journal />,
       },
