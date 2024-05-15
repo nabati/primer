@@ -1,3 +1,5 @@
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import Markdown from "react-markdown";
@@ -11,7 +13,7 @@ type CoachProps = {
 const Coach: React.FC<CoachProps> = ({ content }) => {
   console.log("Coach", content);
   const queryKey = useDebounce(`coach-${content}`, 3000);
-  const { data: response } = useQuery({
+  const { data: response, isFetching } = useQuery({
     queryKey,
     queryFn: async () => {
       const response = await fetch("http://localhost:11434/api/generate", {
@@ -34,8 +36,17 @@ const Coach: React.FC<CoachProps> = ({ content }) => {
     <Container>
       <h2>Coach AI</h2>
       <br />
-      {response?.response !== undefined && (
-        <Markdown>{response.response}</Markdown>
+
+      {isFetching && (
+        <Box>
+          <CircularProgress />
+        </Box>
+      )}
+
+      {!isFetching && response?.response !== undefined && (
+        <Box>
+          <Markdown>{response.response}</Markdown>
+        </Box>
       )}
     </Container>
   );
