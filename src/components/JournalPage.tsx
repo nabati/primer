@@ -1,6 +1,4 @@
-import CircularProgress from "@mui/material/CircularProgress";
-import { useQuery } from "@tanstack/react-query";
-import { endOfDay, startOfDay } from "date-fns";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   $createLineBreakNode,
   $createTextNode,
@@ -8,14 +6,14 @@ import {
   $getSelection,
   LexicalEditor,
 } from "lexical";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import Stack from "../Stack.tsx";
 import { getSupabaseClient } from "../supabaseClient.ts";
-import getFormattedDate from "../utils/getFormattedDate.ts";
+import { JournalEntry } from "../types.ts";
+import { useUser } from "./AuthContext.tsx";
 import Coach from "./Coach.tsx";
-import { v4 as uuidv4 } from "uuid";
 import { $createListNode, $createListItemNode } from "@lexical/list";
 import JournalEditor from "./JournalEditor.tsx";
 import JournalSidebar from "./JournalSidebar.tsx";
@@ -30,6 +28,40 @@ const JournalPage: React.FC<JournalProps> = () => {
   const [editorContentStateful, setEditorContentStateful] =
     useState<string>("");
   const editorRef = useRef<LexicalEditor | null>(null);
+  const queryClient = useQueryClient();
+  const user = useUser();
+
+  const { data: entries = [], isFetching } = useQuery({
+    queryKey: ["journals"],
+    queryFn: async (): Promise<any> => {
+      const { data: entries } = await getSupabaseClient()
+        .from("journals")
+        .select("*")
+        .order("created_at", { ascending: false });
+      return entries;
+    },
+  });
+
+  const handleSelect = useCallback(
+    (id: string) => navigate(`/journals/${id}`),
+    [navigate],
+  );
+
+  const createNewEntry = async () => {
+    const { data: row } = await getSupabaseClient()
+      .from("journals")
+      .insert([{ content: "", user_id: user.id }])
+      .select("*")
+      .single<JournalEntry>();
+
+    if (row === null) {
+      return;
+    }
+    console.log("Should be invalidating");
+    queryClient.invalidateQueries({ queryKey: ["journals"] });
+
+    handleSelect(row.id);
+  };
 
   const handleSwipeRight = (prompt: string) => {
     const editor = editorRef.current;
@@ -55,7 +87,12 @@ const JournalPage: React.FC<JournalProps> = () => {
 
   return (
     <Container>
-      <JournalSidebar onSelect={(id) => navigate(`/journals/${id}`)} />
+      <JournalSidebar
+        onCreateClick={createNewEntry}
+        isLoading={isFetching}
+        entries={entries}
+        onSelect={handleSelect}
+      />
 
       {selectedJournalId !== undefined && (
         <JournalEditor
