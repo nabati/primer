@@ -14,6 +14,7 @@ import React, {
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getSupabaseClient } from "../supabaseClient.ts";
+import { JournalEntry } from "../types.ts";
 import getFormattedDate from "../utils/getFormattedDate.ts";
 import { useUser } from "./AuthContext.tsx";
 import Editor from "./Editor.tsx";
@@ -122,8 +123,12 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
   }, [save]);
 
   const handleDeleteClick = async () => {
-    if (confirm("Are you sure you want to delete this journal entry?")) {
+    if (confirm(`Are you sure you want to delete this journal entry? ${id}`)) {
+      debouncedSave.cancel();
       await getSupabaseClient().from("journals").delete().eq("id", id);
+      queryClient.setQueryData(["journals"], (journalEntries: JournalEntry[]) =>
+        journalEntries.filter((journalEntry) => journalEntry.id !== id),
+      );
       queryClient.invalidateQueries({ queryKey: ["journals"] });
       queryClient.invalidateQueries({ queryKey: ["journals-entry", id] });
       navigate("/journals");

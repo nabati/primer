@@ -1,4 +1,3 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   $createLineBreakNode,
   $createTextNode,
@@ -10,9 +9,6 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import Stack from "../Stack.tsx";
-import { getSupabaseClient } from "../supabaseClient.ts";
-import { JournalEntry } from "../types.ts";
-import { useUser } from "./AuthContext.tsx";
 import Coach from "./Coach.tsx";
 import { $createListNode, $createListItemNode } from "@lexical/list";
 import JournalEditor from "./JournalEditor.tsx";
@@ -38,7 +34,7 @@ const JournalPage: React.FC<JournalProps> = () => {
     if (selectedJournalId === undefined && entries.length > 0) {
       navigate(`/journals/${entries[0].id}`);
     }
-  }, [entries, selectedJournalId]);
+  }, [entries, navigate, selectedJournalId]);
 
   const handleSelect = useCallback(
     (id: string) => navigate(`/journals/${id}`),
