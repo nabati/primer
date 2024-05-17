@@ -13,6 +13,7 @@ import Coach from "./Coach.tsx";
 import { $createListNode, $createListItemNode } from "@lexical/list";
 import JournalEditor from "./JournalEditor.tsx";
 import JournalSidebar from "./JournalSidebar.tsx";
+import { setPassiveEditorContent, usePrimerStore } from "./store.ts";
 import useCreateJournalEntry from "./useCreateJournalEntry.ts";
 import useJournalEntries from "./useJournalEntries.ts";
 
@@ -23,8 +24,6 @@ type JournalProps = {
 const JournalPage: React.FC<JournalProps> = () => {
   const navigate = useNavigate();
   const { id: selectedJournalId } = useParams();
-  const [editorContentStateful, setEditorContentStateful] =
-    useState<string>("");
   const editorRef = useRef<LexicalEditor | null>(null);
   const createJournalEntry = useCreateJournalEntry();
 
@@ -68,6 +67,8 @@ const JournalPage: React.FC<JournalProps> = () => {
     });
   };
 
+
+
   return (
     <Container>
       <JournalSidebar
@@ -81,13 +82,13 @@ const JournalPage: React.FC<JournalProps> = () => {
         <JournalEditor
           key={selectedJournalId}
           id={selectedJournalId}
-          onChange={setEditorContentStateful}
+          onChange={setPassiveEditorContent}
           editorRef={editorRef}
         />
       )}
       <Sidebar>
         <Stack onSwipeRight={handleSwipeRight} />
-        <Coach content={editorContentStateful} />
+        <Coach />
       </Sidebar>
     </Container>
   );

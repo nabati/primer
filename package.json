@@ -35,7 +35,8 @@
     "sort-by": "^1.2.0",
     "styled-components": "^6.1.10",
     "use-debounce": "^10.0.0",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
