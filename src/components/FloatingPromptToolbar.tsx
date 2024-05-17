@@ -10,7 +10,10 @@ import {
 } from "lexical";
 import { useCallback, useEffect, useRef } from "react";
 import { getDOMRangeRect } from "./getDomRangeRect.ts";
+import getRawSelection from "./getRawSelection.ts";
+import prompts from "./prompts.ts";
 import { setFloatingElemPosition } from "./setFloatingElemPosition.ts";
+import { setCoachState, setPrompt, usePassiveEditorContent } from "./store.ts";
 
 const FloatingPromptToolbar = ({
   editor,
@@ -132,10 +135,22 @@ const FloatingPromptToolbar = ({
     );
   }, [editor, $updateTextFormatFloatingToolbar]);
 
+  const editorContent = usePassiveEditorContent();
+
+  const handleDrillingClick = () => {
+    editor.getEditorState().read(() => {
+      const selection = getRawSelection();
+      if (selection === undefined) {
+        return;
+      }
+      setPrompt(prompts.selection(editorContent, selection));
+    });
+  };
+
   return (
     <div ref={popupCharStylesEditorRef} className="floating-text-format-popup">
       <Button onClick={insertComment}>
-        <QuestionAnswerIcon />
+        <QuestionAnswerIcon onClick={handleDrillingClick} />
       </Button>
     </div>
   );

@@ -35,6 +35,11 @@ export const setCoachState = (coach: RootState["coach"]) => {
   }));
 };
 
+export const usePassiveEditorContent = () =>
+  usePrimerStore((state) => state.passiveEditorContent);
+
+export const setPrompt = (prompt: string) => setCoachState({ prompt });
+
 const setDefaultPrompt = debounce(
   (content: string) => setCoachState({ prompt: prompts.default(content) }),
   3000,
