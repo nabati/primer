@@ -14,7 +14,7 @@ import {
   $convertFromMarkdownString,
   TRANSFORMERS,
 } from "@lexical/markdown";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
 import { HorizontalRuleNode } from "@lexical/react/LexicalHorizontalRuleNode";
 
@@ -24,6 +24,7 @@ import { ListNode, ListItemNode } from "@lexical/list";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import styled from "styled-components";
 import "./Editor.css";
+import FloatingPrompt from "./FloatingPrompt.tsx";
 
 const EditorTheme = {
   ltr: "ltr",
@@ -118,6 +119,9 @@ const Editor: React.FC<EditorProps> = ({
   onChange,
   editorRef,
 }) => {
+  const [floatingAnchorElement, setFloatingAnchorElement] = useState<
+    HTMLElement | undefined
+  >(undefined);
   const initialConfig = {
     namespace: "Editor",
     onError,
@@ -145,13 +149,23 @@ const Editor: React.FC<EditorProps> = ({
     [onChange],
   );
 
+  const onRef = useCallback((node: HTMLDivElement) => {
+    if (node) {
+      setFloatingAnchorElement(node);
+    }
+  }, []);
+
   return (
     <LexicalComposer initialConfig={initialConfig}>
       <Container>
         <div className="editor-container">
           <div className="editor-inner">
             <RichTextPlugin
-              contentEditable={<ContentEditable className="editor-input" />}
+              contentEditable={
+                <div ref={onRef}>
+                  <ContentEditable className="editor-input" />
+                </div>
+              }
               placeholder={<div></div>}
               ErrorBoundary={LexicalErrorBoundary}
             />
@@ -162,6 +176,7 @@ const Editor: React.FC<EditorProps> = ({
             <HistoryPlugin />
             <AutoFocusPlugin />
             <EditorRefPlugin editorRef={editorRef} />
+            <FloatingPrompt anchorElement={floatingAnchorElement} />
           </div>
         </div>
       </Container>
