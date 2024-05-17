@@ -13,7 +13,7 @@ import { getDOMRangeRect } from "./getDomRangeRect.ts";
 import getRawSelection from "./getRawSelection.ts";
 import prompts from "./prompts.ts";
 import { setFloatingElemPosition } from "./setFloatingElemPosition.ts";
-import { setCoachState, setPrompt, usePassiveEditorContent } from "./store.ts";
+import { setPrompt, usePassiveEditorContent } from "./store.ts";
 
 const FloatingPromptToolbar = ({
   editor,
@@ -22,51 +22,12 @@ const FloatingPromptToolbar = ({
   editor: LexicalEditor;
   anchorElement: HTMLElement;
 }): JSX.Element => {
-  const popupCharStylesEditorRef = useRef<HTMLDivElement | null>(null);
-
-  const insertComment = () => {};
-
-  function mouseMoveListener(e: MouseEvent) {
-    if (
-      popupCharStylesEditorRef?.current &&
-      (e.buttons === 1 || e.buttons === 3)
-    ) {
-      if (popupCharStylesEditorRef.current.style.pointerEvents !== "none") {
-        const x = e.clientX;
-        const y = e.clientY;
-        const elementUnderMouse = document.elementFromPoint(x, y);
-
-        if (!popupCharStylesEditorRef.current.contains(elementUnderMouse)) {
-          // Mouse is not over the target element => not a normal click, but probably a drag
-          popupCharStylesEditorRef.current.style.pointerEvents = "none";
-        }
-      }
-    }
-  }
-  function mouseUpListener(e: MouseEvent) {
-    if (popupCharStylesEditorRef?.current) {
-      if (popupCharStylesEditorRef.current.style.pointerEvents !== "auto") {
-        popupCharStylesEditorRef.current.style.pointerEvents = "auto";
-      }
-    }
-  }
-
-  useEffect(() => {
-    if (popupCharStylesEditorRef?.current) {
-      document.addEventListener("mousemove", mouseMoveListener);
-      document.addEventListener("mouseup", mouseUpListener);
-
-      return () => {
-        document.removeEventListener("mousemove", mouseMoveListener);
-        document.removeEventListener("mouseup", mouseUpListener);
-      };
-    }
-  }, [popupCharStylesEditorRef]);
+  const popupToolbarContainerRef = useRef<HTMLDivElement | null>(null);
 
   const $updateTextFormatFloatingToolbar = useCallback(() => {
     const selection = $getSelection();
 
-    const popupCharStylesEditorElem = popupCharStylesEditorRef.current;
+    const popupCharStylesEditorElem = popupToolbarContainerRef.current;
     const nativeSelection = window.getSelection();
 
     if (popupCharStylesEditorElem === null) {
@@ -148,9 +109,9 @@ const FloatingPromptToolbar = ({
   };
 
   return (
-    <div ref={popupCharStylesEditorRef} className="floating-text-format-popup">
-      <Button onClick={insertComment}>
-        <QuestionAnswerIcon onClick={handleDrillingClick} />
+    <div ref={popupToolbarContainerRef} className="floating-text-format-popup">
+      <Button onClick={handleDrillingClick}>
+        <QuestionAnswerIcon />
       </Button>
     </div>
   );

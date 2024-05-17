@@ -5,7 +5,7 @@ import {
   $getSelection,
   LexicalEditor,
 } from "lexical";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import Stack from "../Stack.tsx";
@@ -13,7 +13,7 @@ import Coach from "./Coach.tsx";
 import { $createListNode, $createListItemNode } from "@lexical/list";
 import JournalEditor from "./JournalEditor.tsx";
 import JournalSidebar from "./JournalSidebar.tsx";
-import { setPassiveEditorContent, usePrimerStore } from "./store.ts";
+import { setPassiveEditorContent } from "./store.ts";
 import useCreateJournalEntry from "./useCreateJournalEntry.ts";
 import useJournalEntries from "./useJournalEntries.ts";
 
