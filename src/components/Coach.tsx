@@ -37,8 +37,7 @@ const Coach: React.FC<CoachProps> = () => {
 
   return (
     <Container>
-      <h2>Coach AI</h2>
-      <br />
+      <h3>Coach AI</h3>
 
       {isFetching && (
         <Box>
@@ -60,10 +59,10 @@ const Container = styled.div`
   flex-grow: 1;
   align-self: stretch;
   flex-direction: column;
-  max-height: 40em;
   overflow-y: auto;
   width: 100%;
-  padding: 16px;
+  padding: 8px;
+  overflow-y: auto;
 `;
 
 export default Coach;

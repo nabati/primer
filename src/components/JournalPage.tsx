@@ -67,8 +67,6 @@ const JournalPage: React.FC<JournalProps> = () => {
     });
   };
 
-
-
   return (
     <Container>
       <JournalSidebar
@@ -87,7 +85,6 @@ const JournalPage: React.FC<JournalProps> = () => {
         />
       )}
       <Sidebar>
-        <Stack onSwipeRight={handleSwipeRight} />
         <Coach />
       </Sidebar>
     </Container>
@@ -107,7 +104,8 @@ const Sidebar = styled.div`
   flex-direction: column;
   align-self: stretch;
   align-items: center;
-  flex-grow: 1;
+  height: 100%;
+  overflow: hidden;
 `;
 
 export default JournalPage;
