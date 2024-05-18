@@ -1,10 +1,12 @@
+import { TextareaAutosize } from "@mui/material";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Markdown from "react-markdown";
 import styled from "styled-components";
-import { useCoachState } from "./store.ts";
-import { useChat } from "./useChat.ts";
+import { useCoachState, usePassiveEditorContent } from "./store.ts";
+import { mapMessagesToGptMessages, PrimerMessage, useChat } from "./useChat.ts";
 import { useGptPrompt } from "./useGptPrompt.tsx";
 
 type CoachProps = {
@@ -26,15 +28,43 @@ type CoachProps = {
  */
 
 const Coach: React.FC<CoachProps> = () => {
-  const { prompt } = useCoachState();
+  const passiveEditorContent = usePassiveEditorContent();
+  const [pendingMessage, setPendingMessage] = useState<string>("");
+
+  const [messages, setMessages] = useState<PrimerMessage[]>([]);
+
+  console.log("message", messages);
+
+  useEffect(() => {
+    setMessages([
+      {
+        author: "platform",
+        content: passiveEditorContent,
+      },
+    ]);
+  }, [passiveEditorContent]);
+
   const { data: response, isFetching } = useChat({
-    messages: [
+    messages: mapMessagesToGptMessages(messages),
+  });
+
+  const onSendMessage = () => {
+    if (response?.message?.content === undefined) {
+      return;
+    }
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      {
+        author: "coach",
+        content: response.message.content,
+      },
       {
         author: "user",
-        content: prompt,
+        content: pendingMessage,
       },
-    ],
-  });
+    ]);
+    setPendingMessage("");
+  };
 
   return (
     <Container>
@@ -51,6 +81,17 @@ const Coach: React.FC<CoachProps> = () => {
           <Markdown>{response.message.content}</Markdown>
         </Box>
       )}
+
+      <Box>
+        <TextareaAutosize
+          minRows={3}
+          onChange={(e) => setPendingMessage(e.target.value)}
+          value={pendingMessage}
+        />
+        <Button onClick={onSendMessage} value={pendingMessage}>
+          Send
+        </Button>
+      </Box>
     </Container>
   );
 };

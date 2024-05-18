@@ -1,11 +1,28 @@
 import { useQuery } from "@tanstack/react-query";
 
-type Message = {
+export type PrimerMessage = {
   author: "platform" | "coach" | "user";
   content: string;
 };
 
-export const useChat = ({ messages }: { messages: Message[] }) => {
+export type GptMessage = {
+  role: "user" | "assistant" | "system";
+  content: string;
+};
+
+export const mapMessagesToGptMessages = (
+  messages: PrimerMessage[],
+): GptMessage[] => {
+  return messages.map((message) => ({
+    role:
+      message.author === "platform" || message.author === "user"
+        ? "user"
+        : "assistant",
+    content: message.content,
+  }));
+};
+
+export const useChat = ({ messages }: { messages: GptMessage[] }) => {
   return useQuery({
     queryKey: ["chat", ...messages],
     queryFn: async () => {
@@ -13,19 +30,7 @@ export const useChat = ({ messages }: { messages: Message[] }) => {
         method: "POST",
         body: JSON.stringify({
           model: "llama3",
-          messages: [
-            {
-              role: "system",
-              content: "You are a helpful assistant.",
-            },
-            ...messages.map((message) => ({
-              role:
-                message.author === "platform" || message.author === "user"
-                  ? "user"
-                  : "assistant",
-              content: message.content,
-            })),
-          ],
+          messages,
           stream: false,
           options: {
             temperature: 0,
