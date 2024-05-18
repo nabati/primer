@@ -2,8 +2,7 @@ import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext
 import React, { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import FloatingPromptToolbar from "./FloatingPromptToolbar.tsx";
-import { $getSelection, $isRangeSelection } from "lexical";
-import { mergeRegister } from "@lexical/utils";
+import { $getSelection } from "lexical";
 
 type FloatingPromptProps = {
   anchorElement?: HTMLElement;
