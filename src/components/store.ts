@@ -44,7 +44,8 @@ const setDefaultPrompt = debounce(
   (content: string) => setCoachState({ prompt: prompts.default(content) }),
   3000,
   {
-    maxWait: 30000,
+    leading: true,
+    trailing: true,
   },
 );
 
