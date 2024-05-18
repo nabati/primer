@@ -4,6 +4,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import React from "react";
 import { JournalEntry } from "../types.ts";
 import JournalListCard from "./JournalListCard.tsx";
+import AddIcon from "@mui/icons-material/Add";
 
 type JournalSidebarProps = {
   entries: JournalEntry[];
@@ -29,8 +30,13 @@ const JournalSidebar: React.FC<JournalSidebarProps> = ({
   return (
     <Box>
       <div>
-        <Button variant="contained" color="primary" onClick={onCreateClick}>
-          Create new journal entry
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={onCreateClick}
+          startIcon={<AddIcon />}
+        >
+          Create journal entry
         </Button>
       </div>
       {entries.map((entry: any) => (

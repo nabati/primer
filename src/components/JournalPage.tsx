@@ -9,6 +9,7 @@ import React, { useCallback, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import Stack from "../Stack.tsx";
+import AdditionalAi from "./AdditionalAi.tsx";
 import Coach from "./Coach.tsx";
 import { $createListNode, $createListItemNode } from "@lexical/list";
 import JournalEditor from "./JournalEditor.tsx";
@@ -86,6 +87,7 @@ const JournalPage: React.FC<JournalProps> = () => {
       )}
       <Sidebar>
         <Coach />
+        {/*<AdditionalAi />*/}
       </Sidebar>
     </Container>
   );
