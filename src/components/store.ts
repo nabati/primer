@@ -1,5 +1,3 @@
-// setup zustand store
-
 import { debounce } from "lodash";
 import { create } from "zustand";
 import { useShallow } from "zustand/react/shallow";
