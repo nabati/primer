@@ -1,7 +1,7 @@
 // setup zustand store
 
 import { debounce } from "lodash";
-import create from "zustand";
+import { create } from "zustand";
 import { useShallow } from "zustand/react/shallow";
 import prompts from "./prompts.ts";
 
