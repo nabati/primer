@@ -48,7 +48,7 @@ const Coach: React.FC<CoachProps> = ({ journalId }) => {
   }, [activity]);
 
   const { data: response, isFetching } = useChat({
-    messages: mapMessagesToGptMessages(messages),
+    messages,
   });
 
   const onSendMessage = () => {

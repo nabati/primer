@@ -20,9 +20,10 @@ export const mapMessagesToGptMessages = (
         : "assistant",
     content: message.content,
   }));
-};1
+};
+1;
 
-export const useChat = ({ messages }: { messages: GptMessage[] }) => {
+export const useChat = ({ messages }: { messages: PrimerMessage[] }) => {
   return useQuery({
     queryKey: ["chat", ...messages],
     queryFn: async () => {
@@ -30,7 +31,7 @@ export const useChat = ({ messages }: { messages: GptMessage[] }) => {
         method: "POST",
         body: JSON.stringify({
           model: "llama3",
-          messages,
+          messages: mapMessagesToGptMessages(messages),
           stream: false,
           options: {
             temperature: 0,
