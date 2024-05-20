@@ -1,56 +1,53 @@
-import { debounce } from "lodash";
 import { create } from "zustand";
-import { useShallow } from "zustand/react/shallow";
-import prompts from "./prompts.ts";
+
+type Activity = {
+  type: "journal" | "drill";
+  content: string;
+};
 
 type RootState = {
-  coach: {
-    prompt: string;
-  };
   passiveEditorContent: string;
+  activity: Activity;
 };
 
 const initialState: RootState = {
-  coach: {
-    prompt: "",
-  },
   passiveEditorContent: "",
+  activity: {
+    type: "journal",
+    content: "",
+  },
 };
 
 export const usePrimerStore = create<RootState>(() => initialState);
 
-export const useCoachState = () =>
-  usePrimerStore(useShallow((state) => state.coach));
+export const usePassiveEditorContent = () =>
+  usePrimerStore((state) => state.passiveEditorContent);
 
-export const setCoachState = (coach: RootState["coach"]) => {
-  setDefaultPrompt.cancel();
+export const setPassiveEditorContent = (passiveEditorContent: string) => {
+  return usePrimerStore.setState((state) => {
+    if (state.passiveEditorContent === passiveEditorContent) {
+      return state;
+    }
+
+    return {
+      ...state,
+      passiveEditorContent,
+      activity: {
+        type: "journal",
+        content: passiveEditorContent,
+      },
+    };
+  });
+};
+
+export const setDrillContent = (content: string) => {
   return usePrimerStore.setState((state) => ({
     ...state,
-    coach: {
-      ...state.coach,
-      ...coach,
+    activity: {
+      type: "drill",
+      content,
     },
   }));
 };
 
-export const usePassiveEditorContent = () =>
-  usePrimerStore((state) => state.passiveEditorContent);
-
-export const setPrompt = (prompt: string) => setCoachState({ prompt });
-
-const setDefaultPrompt = debounce(
-  (content: string) => setCoachState({ prompt: prompts.default(content) }),
-  3000,
-  {
-    leading: true,
-    trailing: true,
-  },
-);
-
-export const setPassiveEditorContent = (passiveEditorContent: string) => {
-  setDefaultPrompt(passiveEditorContent);
-  return usePrimerStore.setState((state) => ({
-    ...state,
-    passiveEditorContent,
-  }));
-};
+export const useActivity = () => usePrimerStore((state) => state.activity);

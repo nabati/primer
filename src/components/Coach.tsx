@@ -8,7 +8,7 @@ import styled from "styled-components";
 import { useDebounce } from "use-debounce";
 import getRelatedContext from "./getRelatedContext.ts";
 import prompts from "./prompts.ts";
-import { usePassiveEditorContent } from "./store.ts";
+import { useActivity } from "./store.ts";
 import { mapMessagesToGptMessages, PrimerMessage, useChat } from "./useChat.ts";
 
 type CoachProps = {
@@ -16,11 +16,8 @@ type CoachProps = {
 };
 
 const Coach: React.FC<CoachProps> = ({ journalId }) => {
-  const passiveEditorContent = usePassiveEditorContent();
-  const [debouncedPassiveEditorContent] = useDebounce(
-    passiveEditorContent,
-    3000,
-  );
+  const activity = useActivity();
+  const [debouncedActivity, { flush }] = useDebounce(activity, 3000);
   const [pendingMessage, setPendingMessage] = useState<string>("");
 
   const [messages, setMessages] = useState<PrimerMessage[]>([]);
@@ -28,8 +25,8 @@ const Coach: React.FC<CoachProps> = ({ journalId }) => {
   useEffect(() => {
     (async () => {
       const context: string[] = await getRelatedContext(
-        debouncedPassiveEditorContent,
-        journalId,
+        activity.content,
+        activity.type === "journal" ? journalId : undefined,
       );
 
       setMessages([
@@ -37,15 +34,18 @@ const Coach: React.FC<CoachProps> = ({ journalId }) => {
           author: "platform",
           content:
             context.length > 0
-              ? prompts.defaultWithContext(
-                  debouncedPassiveEditorContent,
-                  context,
-                )
-              : prompts.default(debouncedPassiveEditorContent),
+              ? prompts.defaultWithContext(activity.content, context)
+              : prompts.default(activity.content),
         },
       ]);
     })();
-  }, [debouncedPassiveEditorContent]);
+  }, [debouncedActivity]);
+
+  useEffect(() => {
+    if (activity.type === "drill") {
+      flush();
+    }
+  }, [activity]);
 
   const { data: response, isFetching } = useChat({
     messages: mapMessagesToGptMessages(messages),

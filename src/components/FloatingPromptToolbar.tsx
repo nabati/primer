@@ -11,9 +11,8 @@ import {
 import { useCallback, useEffect, useRef } from "react";
 import { getDOMRangeRect } from "./getDomRangeRect.ts";
 import getRawSelection from "./getRawSelection.ts";
-import prompts from "./prompts.ts";
 import { setFloatingElemPosition } from "./setFloatingElemPosition.ts";
-import { setPrompt, usePassiveEditorContent } from "./store.ts";
+import { setDrillContent } from "./store.ts";
 
 const FloatingPromptToolbar = ({
   editor,
@@ -96,7 +95,7 @@ const FloatingPromptToolbar = ({
     );
   }, [editor, $updateTextFormatFloatingToolbar]);
 
-  const editorContent = usePassiveEditorContent();
+  // const editorContent = usePassiveEditorContent();
 
   const handleDrillingClick = () => {
     editor.getEditorState().read(() => {
@@ -104,7 +103,7 @@ const FloatingPromptToolbar = ({
       if (selection === undefined) {
         return;
       }
-      setPrompt(prompts.selection(editorContent, selection));
+      setDrillContent(selection);
     });
   };
 
