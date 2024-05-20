@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type Activity = {
+export type Activity = {
   type: "journal" | "drill";
   content: string;
 };

@@ -10,6 +10,7 @@ import getRelatedContext from "./getRelatedContext.ts";
 import prompts from "./prompts.ts";
 import { useActivity } from "./store.ts";
 import { mapMessagesToGptMessages, PrimerMessage, useChat } from "./useChat.ts";
+import useRelatedContext from "./useRelatedContext.ts";
 
 type CoachProps = {
   journalId: string | undefined;
@@ -22,24 +23,26 @@ const Coach: React.FC<CoachProps> = ({ journalId }) => {
 
   const [messages, setMessages] = useState<PrimerMessage[]>([]);
 
-  useEffect(() => {
-    (async () => {
-      const context: string[] = await getRelatedContext(
-        activity.content,
-        activity.type === "journal" ? journalId : undefined,
-      );
+  const { context, isFetching: isFetchingContext } = useRelatedContext({
+    activity: debouncedActivity,
+    journalId: journalId ?? "",
+  });
 
-      setMessages([
-        {
-          author: "platform",
-          content:
-            context.length > 0
-              ? prompts.defaultWithContext(activity.content, context)
-              : prompts.default(activity.content),
-        },
-      ]);
-    })();
-  }, [debouncedActivity]);
+  useEffect(() => {
+    if (isFetchingContext) {
+      return;
+    }
+
+    setMessages([
+      {
+        author: "platform",
+        content:
+          context.length > 0
+            ? prompts.defaultWithContext(activity.content, context)
+            : prompts.default(activity.content),
+      },
+    ]);
+  }, [debouncedActivity, context, isFetchingContext]);
 
   useEffect(() => {
     if (activity.type === "drill") {
@@ -69,17 +72,19 @@ const Coach: React.FC<CoachProps> = ({ journalId }) => {
     setPendingMessage("");
   };
 
+  const isFetchingComposite = isFetching || isFetchingContext;
+
   return (
     <Container>
       <h3>Coach AI</h3>
 
-      {isFetching && (
+      {isFetchingComposite && (
         <Box>
           <CircularProgress />
         </Box>
       )}
 
-      {!isFetching && response?.message !== undefined && (
+      {!isFetchingComposite && response?.message !== undefined && (
         <Box>
           <Markdown>{response.message.content}</Markdown>
         </Box>
