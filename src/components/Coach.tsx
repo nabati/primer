@@ -12,10 +12,10 @@ import { usePassiveEditorContent } from "./store.ts";
 import { mapMessagesToGptMessages, PrimerMessage, useChat } from "./useChat.ts";
 
 type CoachProps = {
-  //
+  journalId: string | undefined;
 };
 
-const Coach: React.FC<CoachProps> = () => {
+const Coach: React.FC<CoachProps> = ({ journalId }) => {
   const passiveEditorContent = usePassiveEditorContent();
   const [debouncedPassiveEditorContent] = useDebounce(
     passiveEditorContent,
@@ -27,7 +27,10 @@ const Coach: React.FC<CoachProps> = () => {
 
   useEffect(() => {
     (async () => {
-      const context: string[] = await getRelatedContext(debouncedPassiveEditorContent);
+      const context: string[] = await getRelatedContext(
+        debouncedPassiveEditorContent,
+        journalId,
+      );
 
       setMessages([
         {

@@ -1,7 +1,10 @@
 import { getSupabaseClient } from "../supabaseClient.ts";
 import generateEmbeddings from "./generateEmbeddings.ts";
 
-const getRelatedContext = async (query: string): Promise<string[]> => {
+const getRelatedContext = async (
+  query: string,
+  excludedJournalId: string | undefined,
+): Promise<string[]> => {
   if (query === "") {
     return [];
   }
@@ -12,13 +15,12 @@ const getRelatedContext = async (query: string): Promise<string[]> => {
     query_embedding: embedding, // Pass the embedding you want to compare
     match_threshold: 0.5, // Choose an appropriate threshold for your data
     match_count: 5, // Choose the number of matches
+    excluded_journal_id: excludedJournalId, // Exclude a specific journal ID
   });
 
   if (data === null) {
     return [];
   }
-
-  console.log("data", data);
 
   return data.map((d) => d.content);
 };

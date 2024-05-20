@@ -1,8 +1,8 @@
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 const getTextChunks = async (text: string): Promise<string[]> => {
   const splitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 700,
-    chunkOverlap: 200,
+    chunkSize: 500,
+    chunkOverlap: 150,
   });
 
   const documents = await splitter.createDocuments([text]);
