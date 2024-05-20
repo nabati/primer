@@ -20,7 +20,7 @@ export const mapMessagesToGptMessages = (
         : "assistant",
     content: message.content,
   }));
-};
+};1
 
 export const useChat = ({ messages }: { messages: GptMessage[] }) => {
   return useQuery({

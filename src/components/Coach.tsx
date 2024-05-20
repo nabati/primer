@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import Markdown from "react-markdown";
 import styled from "styled-components";
 import { useDebounce } from "use-debounce";
+import getRelatedContext from "./getRelatedContext.ts";
 import prompts from "./prompts.ts";
 import { usePassiveEditorContent } from "./store.ts";
 import { mapMessagesToGptMessages, PrimerMessage, useChat } from "./useChat.ts";
@@ -25,12 +26,22 @@ const Coach: React.FC<CoachProps> = () => {
   const [messages, setMessages] = useState<PrimerMessage[]>([]);
 
   useEffect(() => {
-    setMessages([
-      {
-        author: "platform",
-        content: prompts.default(debouncedPassiveEditorContent),
-      },
-    ]);
+    (async () => {
+      const context: string[] = await getRelatedContext(debouncedPassiveEditorContent);
+
+      setMessages([
+        {
+          author: "platform",
+          content:
+            context.length > 0
+              ? prompts.defaultWithContext(
+                  debouncedPassiveEditorContent,
+                  context,
+                )
+              : prompts.default(debouncedPassiveEditorContent),
+        },
+      ]);
+    })();
   }, [debouncedPassiveEditorContent]);
 
   const { data: response, isFetching } = useChat({
