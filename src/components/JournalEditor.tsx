@@ -69,7 +69,7 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
 
     await getSupabaseClient().from("chunks").delete().eq("journal_id", id);
 
-    const chunks = getTextChunks(editorContent.current);
+    const chunks = await getTextChunks(editorContent.current);
     const embeddings = await Promise.all(
       chunks.map((chunk) => generateEmbeddings(chunk)),
     );

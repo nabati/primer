@@ -12,7 +12,7 @@ const updateEmbeddings = async () => {
 
   await Promise.all(
     journals.map(async (journal: JournalEntry) => {
-      const chunks = getTextChunks(journal.content);
+      const chunks = await getTextChunks(journal.content);
 
       const embeddings = await Promise.all(
         chunks.map((chunk) => generateEmbeddings(chunk)),

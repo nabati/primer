@@ -2,7 +2,12 @@ import { getSupabaseClient } from "../supabaseClient.ts";
 import generateEmbeddings from "./generateEmbeddings.ts";
 
 const getRelatedContext = async (query: string): Promise<string[]> => {
+  if (query === "") {
+    return [];
+  }
+  
   const embedding = await generateEmbeddings(query);
+
   const { data } = await getSupabaseClient().rpc("match_chunks", {
     query_embedding: embedding, // Pass the embedding you want to compare
     match_threshold: 0.5, // Choose an appropriate threshold for your data
