@@ -18,6 +18,8 @@ import { JournalEntry } from "../types.ts";
 import getFormattedDate from "../utils/getFormattedDate.ts";
 import { useUser } from "./AuthContext.tsx";
 import Editor from "./Editor.tsx";
+import generateEmbeddings from "./generateEmbeddings.ts";
+import getTextChunks from "./getTextChunks.ts";
 
 type JournalEditorProps = {
   id: string;
@@ -64,6 +66,25 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
       content: editorContent.current,
       user_id: user.id,
     });
+
+    await getSupabaseClient().from("chunks").delete().eq("journal_id", id);
+
+    const chunks = getTextChunks(editorContent.current);
+    const embeddings = await Promise.all(
+      chunks.map((chunk) => generateEmbeddings(chunk)),
+    );
+
+    await getSupabaseClient()
+      .from("chunks")
+      .upsert(
+        embeddings.map((embedding, index) => ({
+          journal_id: id,
+          user_id: user.id,
+          content: chunks[index],
+          embedding,
+        })),
+      );
+
     setLastSavedEditorContent(editorContent.current);
   }, [id, user.id]);
 

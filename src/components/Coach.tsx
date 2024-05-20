@@ -5,44 +5,33 @@ import CircularProgress from "@mui/material/CircularProgress";
 import React, { useEffect, useState } from "react";
 import Markdown from "react-markdown";
 import styled from "styled-components";
-import { useCoachState, usePassiveEditorContent } from "./store.ts";
+import { useDebounce } from "use-debounce";
+import prompts from "./prompts.ts";
+import { usePassiveEditorContent } from "./store.ts";
 import { mapMessagesToGptMessages, PrimerMessage, useChat } from "./useChat.ts";
-import { useGptPrompt } from "./useGptPrompt.tsx";
 
 type CoachProps = {
   //
 };
 
-/**
- * Modelling this as  a coach component that uses the GPT-3 API to provide
- * responses to prompts.
- *
- * Probably we want the state to be composed of the prompts and the responses.
- * I guess some of the entries in the conversation we want to be visible, whereas some will be hidden
- * For instance, the first prompt that generates a response is likely hidden from the user.
- * If the user writes something themselves, then that is likely visible.
- *
- * From a programmatic point of view, we want to be able to either append items to the conversation
- * or replace items in the conversation entirely.
- *
- */
-
 const Coach: React.FC<CoachProps> = () => {
   const passiveEditorContent = usePassiveEditorContent();
+  const [debouncedPassiveEditorContent] = useDebounce(
+    passiveEditorContent,
+    3000,
+  );
   const [pendingMessage, setPendingMessage] = useState<string>("");
 
   const [messages, setMessages] = useState<PrimerMessage[]>([]);
-
-  console.log("message", messages);
 
   useEffect(() => {
     setMessages([
       {
         author: "platform",
-        content: passiveEditorContent,
+        content: prompts.default(debouncedPassiveEditorContent),
       },
     ]);
-  }, [passiveEditorContent]);
+  }, [debouncedPassiveEditorContent]);
 
   const { data: response, isFetching } = useChat({
     messages: mapMessagesToGptMessages(messages),
