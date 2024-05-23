@@ -49,28 +49,6 @@ const JournalPage: React.FC<JournalProps> = () => {
     handleSelect(id);
   };
 
-  const handleSwipeRight = (prompt: string) => {
-    const editor = editorRef.current;
-
-    if (editor === null) {
-      return;
-    }
-
-    editor.update(() => {
-      // Insert two new lines at the ned of the editor, append the prompt in bolded text and add another new line.
-      $getRoot().selectEnd();
-      const selection = $getSelection();
-      selection?.insertNodes([
-        $createLineBreakNode(),
-        $createLineBreakNode(),
-        $createLineBreakNode(),
-        $createTextNode(prompt).setFormat("bold"),
-        $createLineBreakNode(),
-        $createListNode("bullet").append($createListItemNode()),
-      ]);
-    });
-  };
-
   return (
     <Container>
       <JournalSidebar
