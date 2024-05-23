@@ -28,7 +28,7 @@ const JournalSidebar: React.FC<JournalSidebarProps> = ({
   }
 
   return (
-    <Box>
+    <Box style={{ height: "100%", overflow: "scroll" }}>
       <div>
         <Button
           variant="contained"
