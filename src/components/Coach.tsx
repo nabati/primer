@@ -6,10 +6,9 @@ import React, { useEffect, useState } from "react";
 import Markdown from "react-markdown";
 import styled from "styled-components";
 import { useDebounce } from "use-debounce";
-import getRelatedContext from "./getRelatedContext.ts";
 import prompts from "./prompts.ts";
 import { useActivity } from "./store.ts";
-import { mapMessagesToGptMessages, PrimerMessage, useChat } from "./useChat.ts";
+import { PrimerMessage, useChat } from "./useChat.ts";
 import useRelatedContext from "./useRelatedContext.ts";
 
 type CoachProps = {
