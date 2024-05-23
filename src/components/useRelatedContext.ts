@@ -14,7 +14,7 @@ const useRelatedContext = ({
     queryFn: async () => {
       const context: string[] = await getRelatedContext(
         activity.content,
-        activity.type === "journal" ? journalId : undefined,
+        journalId,
       );
       return context;
     },

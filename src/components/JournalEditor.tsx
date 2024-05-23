@@ -18,8 +18,6 @@ import { JournalEntry } from "../types.ts";
 import getFormattedDate from "../utils/getFormattedDate.ts";
 import { useUser } from "./AuthContext.tsx";
 import Editor from "./Editor.tsx";
-import generateEmbeddings from "./generateEmbeddings.ts";
-import getTextChunks from "./getTextChunks.ts";
 
 type JournalEditorProps = {
   id: string;
