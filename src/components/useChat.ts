@@ -36,7 +36,7 @@ export const useChat = ({ messages }: { messages: PrimerMessage[] }) => {
           messages: mapMessagesToGptMessages(messages),
           stream: false,
           options: {
-            temperature: 0.5,
+            temperature: 0,
           },
         }),
       });
