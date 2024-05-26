@@ -34,10 +34,6 @@ const getSemanticChunks = async (text: string): Promise<string[]> => {
 
     acc.push(chunk);
     return acc;
-    //
-    // const lastMergedChunk = acc[acc.length - 1] ?? "";
-    // acc[acc.length - 1] = `${lastMergedChunk} ${chunk}`;
-    // return acc;
   }, []);
   return mergedChunks;
 };
