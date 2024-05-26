@@ -1,5 +1,9 @@
+const cleanInput = (input: string): string => {
+  return input.replace(/-{2,}/g, "");
+};
+
 const markdownSplitter = (input: string): string[] => {
-  const splits = input.split("\n\n");
+  const splits = cleanInput(input).split("\n\n");
 
   if (splits.length === 1) {
     return splits;
