@@ -112,12 +112,14 @@ type EditorProps = {
    */
   onChange?: (text: string) => void;
   editorRef: React.RefObject<LexicalEditor>;
+  isFloatingPromptEnabled?: boolean;
 };
 
 const Editor: React.FC<EditorProps> = ({
   initialValue = "",
   onChange,
   editorRef,
+  isFloatingPromptEnabled = true,
 }) => {
   const [floatingAnchorElement, setFloatingAnchorElement] = useState<
     HTMLElement | undefined
@@ -176,7 +178,9 @@ const Editor: React.FC<EditorProps> = ({
             <HistoryPlugin />
             <AutoFocusPlugin />
             <EditorRefPlugin editorRef={editorRef} />
-            <FloatingPrompt anchorElement={floatingAnchorElement} />
+            {isFloatingPromptEnabled && (
+              <FloatingPrompt anchorElement={floatingAnchorElement} />
+            )}
           </div>
         </div>
       </Container>
