@@ -9,6 +9,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AuthProvider } from "./components/AuthContext.tsx";
+import Chunker from "./components/Chunker.tsx";
 import JournalPage from "./components/JournalPage.tsx";
 import Prompts from "./components/Prompts.tsx";
 import Layout from "./components/Layout.tsx";
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <Layout />,
     children: [
+      {
+        path: "/chunker",
+        element: <Chunker />,
+      },
       {
         path: "/",
         element: <JournalPage />,
