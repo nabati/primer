@@ -2,9 +2,12 @@ import cosineSimilarity from "./components/cosineSimilarity.ts";
 import generateEmbeddings from "./components/generateEmbeddings.ts";
 import markdownSplitter from "./markdownSplitter.ts";
 
-const MERGING_SIMILARITY_THRESHOLD = 0.5;
+const DEFAULT_MERGING_SIMILARITY_THRESHOLD = 0.5;
 
-const getSemanticChunks = async (text: string): Promise<string[]> => {
+const getSemanticChunks = async (
+  text: string,
+  mergingSimilarity = DEFAULT_MERGING_SIMILARITY_THRESHOLD,
+): Promise<string[]> => {
   const chunks = markdownSplitter(text);
 
   const embeddings = await Promise.all(
@@ -26,7 +29,7 @@ const getSemanticChunks = async (text: string): Promise<string[]> => {
       return acc;
     }
 
-    if (similarities[index - 1] > MERGING_SIMILARITY_THRESHOLD) {
+    if (similarities[index - 1] > mergingSimilarity) {
       const lastMergedChunk = acc[acc.length - 1] ?? "";
       acc[acc.length - 1] = `${lastMergedChunk} ${chunk}`;
       return acc;
