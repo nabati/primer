@@ -35,10 +35,7 @@ const Coach: React.FC<CoachProps> = ({ journalId }) => {
     setMessages([
       {
         author: "platform",
-        content:
-          context.length > 0
-            ? prompts.defaultWithContext(activity.content, context)
-            : prompts.default(activity.content),
+        content: prompts.defaultWithContext(activity.content, context ?? []),
       },
     ]);
   }, [debouncedActivity, context, isFetchingContext]);
