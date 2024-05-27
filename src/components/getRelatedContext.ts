@@ -1,10 +1,11 @@
 import { getSupabaseClient } from "../supabaseClient.ts";
 import generateEmbeddings from "./generateEmbeddings.ts";
+import { ContextEntry } from "./useRelatedContext.ts";
 
 const getRelatedContext = async (
   query: string,
   excludedJournalId: string | undefined,
-): Promise<string[]> => {
+): Promise<ContextEntry[]> => {
   if (query === "") {
     return [];
   }
@@ -22,8 +23,7 @@ const getRelatedContext = async (
   }
 
   console.debug("@@related context", data);
-
-  return data.map((d) => d.content);
+  return data;
 };
 
 export default getRelatedContext;
