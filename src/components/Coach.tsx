@@ -10,6 +10,7 @@ import prompts from "./prompts.ts";
 import { useActivity } from "./store.ts";
 import { PrimerMessage, useChat } from "./useChat.ts";
 import useRelatedContext from "./useRelatedContext.ts";
+import useSemanticChunks from "./useSemanticChunks.ts";
 
 type CoachProps = {
   journalId: string | undefined;
@@ -27,18 +28,26 @@ const Coach: React.FC<CoachProps> = ({ journalId }) => {
     journalId: journalId ?? "",
   });
 
+  const { data: chunks = [], isFetching: isFetchingChunks } = useSemanticChunks(
+    {
+      content: debouncedActivity.content,
+      threshold: 0.4,
+    },
+  );
+
   useEffect(() => {
-    if (isFetchingContext) {
+    if (isFetchingContext || isFetchingChunks) {
       return;
     }
 
     setMessages([
       {
         author: "platform",
+        // content: prompts.clarifier(chunks[chunks.length - 1]),
         content: prompts.defaultWithContext(activity.content, context ?? []),
       },
     ]);
-  }, [debouncedActivity, context, isFetchingContext]);
+  }, [debouncedActivity, context, isFetchingContext, isFetchingChunks]);
 
   useEffect(() => {
     if (activity.type === "drill") {
