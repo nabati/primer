@@ -8,14 +8,33 @@ import { useNavigate } from "react-router-dom";
 export type NavigationItemProps = {
   text: string;
   icon: React.ReactNode;
-  to: string;
+  to?: string;
+  onClick?: () => void;
 };
 
-const NavigationItem: React.FC<NavigationItemProps> = ({ text, icon, to }) => {
+const NavigationItem: React.FC<NavigationItemProps> = ({
+  text,
+  icon,
+  to,
+  onClick,
+}) => {
   const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (onClick !== undefined) {
+      onClick();
+      return;
+    }
+
+    if (to !== undefined) {
+      navigate(to);
+      return;
+    }
+  };
+
   return (
     <ListItem key={text} disablePadding>
-      <ListItemButton onClick={() => navigate(to)}>
+      <ListItemButton onClick={handleClick}>
         <ListItemIcon>{icon}</ListItemIcon>
         <ListItemText primary={text} />
       </ListItemButton>

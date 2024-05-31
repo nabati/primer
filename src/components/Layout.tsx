@@ -12,9 +12,11 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import LogoutIcon from "@mui/icons-material/Logout";
 import NotesIcon from "@mui/icons-material/Notes";
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import { Outlet } from "react-router-dom";
+import { getSupabaseClient } from "../supabaseClient.ts";
 import NavigationItem, { NavigationItemProps } from "./NavigationItem.tsx";
 
 const drawerWidth = 240;
@@ -79,6 +81,11 @@ const links: NavigationItemProps[] = [
     icon: <ChecklistIcon />,
     to: "/prompts",
   },
+  {
+    text: "Sign out",
+    icon: <LogoutIcon />,
+    onClick: () => getSupabaseClient().auth.signOut(),
+  },
 ];
 
 export default function Layout() {
@@ -136,8 +143,14 @@ export default function Layout() {
         </DrawerHeader>
         <Divider />
         <List>
-          {links.map(({ text, icon, to }) => (
-            <NavigationItem key={text} text={text} icon={icon} to={to} />
+          {links.map(({ text, icon, to, onClick }) => (
+            <NavigationItem
+              key={text}
+              text={text}
+              icon={icon}
+              to={to}
+              onClick={onClick}
+            />
           ))}
         </List>
       </Drawer>
