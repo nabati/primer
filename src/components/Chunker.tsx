@@ -1,11 +1,9 @@
-import { TextareaAutosize } from "@mui/material";
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import getSemanticChunks from "../getSemanticChunks.ts";
 import cosineSimilarity from "./cosineSimilarity.ts";
 import Editor from "./Editor.tsx";
 import generateEmbeddings from "./generateEmbeddings.ts";
-import getTextChunks from "./getTextChunks.ts";
 
 const getDeterministicColorByNumber = (number: number): string => {
   const colors = ["#FF6633", "#FFB399", "#FF33FF", "#FFFF99", "#00B3E6"];
@@ -14,7 +12,7 @@ const getDeterministicColorByNumber = (number: number): string => {
 
 type ChunkerProps = {};
 
-const Chunker: React.FC<ChunkerProps> = ({ ...props }) => {
+const Chunker: React.FC<ChunkerProps> = () => {
   const [text, setText] = React.useState("");
   const [chunks, setChunks] = React.useState<string[]>([]);
   const [similarities, setSimilarities] = React.useState<number[]>([]);
