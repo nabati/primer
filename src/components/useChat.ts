@@ -42,5 +42,6 @@ export const useChat = ({ messages }: { messages: PrimerMessage[] }) => {
       return response.json();
     },
     enabled: messages.length > 0,
+    staleTime: Infinity,
   });
 };
