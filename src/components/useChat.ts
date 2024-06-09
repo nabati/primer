@@ -27,12 +27,10 @@ export const useChat = ({ messages }: { messages: PrimerMessage[] }) => {
   return useQuery({
     queryKey: ["chat", ...messages],
     queryFn: async () => {
-
-
       const response = await fetch("http://localhost:11434/api/chat", {
         method: "POST",
         body: JSON.stringify({
-          model: "zephyr",
+          model: "llama3",
           messages: mapMessagesToGptMessages(messages),
           stream: false,
           options: {
