@@ -1,5 +1,5 @@
 // Update embeddings for all journals in the background if the update date is older than the
-import generateEmbeddings from "./components/generateEmbeddings.ts";
+import getEmbedding from "./components/getEmbedding.ts";
 import getTextChunks from "./components/getTextChunks.ts";
 // last update for the journal
 import { getSupabaseClient } from "./supabaseClient.ts";
@@ -15,7 +15,7 @@ const updateEmbeddings = async () => {
       const chunks = await getTextChunks(journal.content);
 
       const embeddings = await Promise.all(
-        chunks.map((chunk) => generateEmbeddings(chunk)),
+        chunks.map((chunk) => getEmbedding(chunk)),
       );
 
       await getSupabaseClient()

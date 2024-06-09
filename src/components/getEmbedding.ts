@@ -1,4 +1,4 @@
-const generateEmbeddings = async (data: string) => {
+const getEmbedding = async (data: string): Promise<number[]> => {
   const response = await fetch("http://localhost:11434/api/embeddings", {
     method: "POST",
     body: JSON.stringify({
@@ -12,4 +12,4 @@ const generateEmbeddings = async (data: string) => {
   return json.embedding;
 };
 
-export default generateEmbeddings;
+export default getEmbedding;

@@ -1,5 +1,5 @@
 import { getSupabaseClient } from "../supabaseClient.ts";
-import generateEmbeddings from "./generateEmbeddings.ts";
+import getEmbedding from "./getEmbedding.ts";
 import { ContextEntry } from "./useRelatedContext.ts";
 
 const getRelatedContext = async (
@@ -10,7 +10,7 @@ const getRelatedContext = async (
     return [];
   }
 
-  const embedding = await generateEmbeddings(query);
+  const embedding = await getEmbedding(query);
   const { data } = await getSupabaseClient().rpc("match_chunks", {
     query_embedding: embedding, // Pass the embedding you want to compare
     match_threshold: 0.6, // Choose an appropriate threshold for your data

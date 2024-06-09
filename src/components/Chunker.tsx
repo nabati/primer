@@ -3,7 +3,7 @@ import styled from "styled-components";
 import getSemanticChunks from "../getSemanticChunks.ts";
 import cosineSimilarity from "./cosineSimilarity.ts";
 import Editor from "./Editor.tsx";
-import generateEmbeddings from "./generateEmbeddings.ts";
+import getEmbedding from "./getEmbedding.ts";
 
 const getDeterministicColorByNumber = (number: number): string => {
   const colors = ["#FF6633", "#FFB399", "#FF33FF", "#FFFF99", "#00B3E6"];
@@ -22,7 +22,7 @@ const Chunker: React.FC<ChunkerProps> = () => {
       const nextChunks = await getSemanticChunks(text);
 
       const embeddings = await Promise.all(
-        nextChunks.map((chunk) => generateEmbeddings(chunk)),
+        nextChunks.map((chunk) => getEmbedding(chunk)),
       );
 
       const nextSimilarities = embeddings.map((embedding, index) => {
