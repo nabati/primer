@@ -10,7 +10,6 @@ import prompts from "./prompts.ts";
 import { useActivity } from "./store.ts";
 import { PrimerMessage, useChat } from "./useChat.ts";
 import useRelatedContext from "./useRelatedContext.ts";
-import useSemanticChunks from "./useSemanticChunks.ts";
 
 type CoachProps = {
   journalId: string | undefined;
@@ -28,15 +27,15 @@ const Coach: React.FC<CoachProps> = ({ journalId }) => {
     journalId: journalId ?? "",
   });
 
-  const { data: chunks = [], isFetching: isFetchingChunks } = useSemanticChunks(
-    {
-      content: debouncedActivity.content,
-      threshold: 0.4,
-    },
-  );
+  // const { data: chunks = [], isFetching: isFetchingChunks } = useSemanticChunks(
+  //   {
+  //     content: debouncedActivity.content,
+  //     threshold: 0.4,
+  //   },
+  // );
 
   useEffect(() => {
-    if (isFetchingContext || isFetchingChunks) {
+    if (isFetchingContext) {
       return;
     }
 
@@ -47,7 +46,7 @@ const Coach: React.FC<CoachProps> = ({ journalId }) => {
         content: prompts.defaultWithContext(activity.content, context ?? []),
       },
     ]);
-  }, [debouncedActivity, context, isFetchingContext, isFetchingChunks]);
+  }, [debouncedActivity, context, isFetchingContext]);
 
   useEffect(() => {
     if (activity.type === "drill") {
@@ -89,7 +88,7 @@ const Coach: React.FC<CoachProps> = ({ journalId }) => {
         </Box>
       )}
 
-      {!isFetchingComposite && response?.message !== undefined && (
+      {response?.message !== undefined && (
         <Box>
           <Markdown>{response.message.content}</Markdown>
         </Box>
