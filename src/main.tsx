@@ -13,6 +13,7 @@ import Chunker from "./components/Chunker.tsx";
 import JournalPage from "./components/JournalPage.tsx";
 import Prompts from "./components/Prompts.tsx";
 import Layout from "./components/Layout.tsx";
+import Priorities from "./Priorities/Priorities.tsx";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: "/chunker",
         element: <Chunker />,
+      },
+      {
+        path: '/priorities',
+        element: <Priorities />
       },
       {
         path: "/",

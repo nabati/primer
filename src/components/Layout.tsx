@@ -15,6 +15,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import LogoutIcon from "@mui/icons-material/Logout";
 import NotesIcon from "@mui/icons-material/Notes";
 import ChecklistIcon from "@mui/icons-material/Checklist";
+import StarIcon from "@mui/icons-material/Star";
 import { Outlet } from "react-router-dom";
 import { getSupabaseClient } from "../supabaseClient.ts";
 import NavigationItem, { NavigationItemProps } from "./NavigationItem.tsx";
@@ -71,6 +72,11 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 const links: NavigationItemProps[] = [
+  {
+    text: "Priorities",
+    icon: <StarIcon />,
+    to: "/priorities",
+  },
   {
     text: "Journal",
     icon: <NotesIcon />,
