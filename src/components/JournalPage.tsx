@@ -1,16 +1,9 @@
-import {
-  $createLineBreakNode,
-  $createTextNode,
-  $getRoot,
-  $getSelection,
-  LexicalEditor,
-} from "lexical";
+import { LexicalEditor } from "lexical";
 import React, { useCallback, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import updateEmbeddings from "../updateEmbeddings.ts";
 import Coach from "./Coach.tsx";
-import { $createListNode, $createListItemNode } from "@lexical/list";
 import JournalEditor from "./JournalEditor.tsx";
 import JournalSidebar from "./JournalSidebar.tsx";
 import { setPassiveEditorContent } from "./store.ts";
