@@ -1,9 +1,13 @@
 import React from "react";
+import AddPriorityCard from "./AddPriorityCard.tsx";
 
 type PrioritiesProps = {};
 
 const Priorities: React.FC<PrioritiesProps> = () => (
-  <div>Priorities</div>
+  <div>
+    <div>Priorities</div>
+    <AddPriorityCard />
+  </div>
 );
 
 export default Priorities;
