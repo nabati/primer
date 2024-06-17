@@ -2,11 +2,17 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import TextField from "@mui/material/TextField";
+import {
+  Unstable_NumberInput as NumberInput,
+  NumberInputProps,
+  numberInputClasses,
+} from "@mui/base/Unstable_NumberInput";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { getSupabaseClient } from "../supabaseClient.ts";
 import { useUser } from "../components/AuthContext.tsx";
+import QuantityInput from "../components/QuantityInput.tsx";
 
 type EntryFormProps = {
   habitId: string;
@@ -84,6 +90,8 @@ const EntryForm: React.FC<EntryFormProps> = ({ habitId }) => {
         user_id: user.id,
       };
 
+      console.log("@@newEntry", newEntry);
+
       await mutation.mutateAsync(newEntry);
     }
   };
@@ -96,11 +104,16 @@ const EntryForm: React.FC<EntryFormProps> = ({ habitId }) => {
         onChange={(newValue) => setSelectedDate(newValue)}
         // renderInput={(params) => <TextField {...params} />}
       />
-      <TextField
-        label="Value"
+      <QuantityInput
         type="number"
-        value={value ?? ""}
-        onChange={(e) => setValue(Number(e.target.value))}
+        min={0}
+        max={999}
+        step={0.5}
+        value={value ?? 0}
+        onChange={(_, value) => {
+          console.log("@@v", value);
+          setValue(value);
+        }}
       />
       <Button variant="contained" color="primary" onClick={handleSave}>
         Save
