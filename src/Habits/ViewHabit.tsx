@@ -13,7 +13,8 @@ import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { keyBy } from "lodash";
+import { keyBy, mapValues } from "lodash";
+import Heatmap from "./Heatmap/Heatmap.tsx";
 
 type ViewHabitProps = {};
 
@@ -42,7 +43,7 @@ const ViewHabit: React.FC<ViewHabitProps> = () => {
         .gte("date", format(startDate, "yyyy-MM-dd"))
         .lte("date", format(endDate, "yyyy-MM-dd"));
 
-      return keyBy(events, (event) => event.date);
+      return events;
     },
   });
 
@@ -56,44 +57,50 @@ const ViewHabit: React.FC<ViewHabitProps> = () => {
         <EntryForm habitId={id} />
       </div>
 
-      <div>
-        <TableContainer component={Paper}>
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell>Date</TableCell>
-                <TableCell>Value</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {dates.map((date) => (
-                <TableRow key={date.toISOString()}>
-                  <TableCell>{format(date, "yyyy-MM-dd")}</TableCell>
-                  <TableCell>
-                    {events?.[format(date, "yyyy-MM-dd")] !== undefined
-                      ? events?.[format(date, "yyyy-MM-dd")]?.value
-                      : ""}
-                  </TableCell>
-                </TableRow>
-              ))}
-              <TableRow>
-                <TableCell>
-                  <b>Sum</b>
-                </TableCell>
-                <TableCell>
-                  <b>
-                    {dates.reduce((sum, date) => {
-                      return (
-                        sum + (events?.[format(date, "yyyy-MM-dd")]?.value ?? 0)
-                      );
-                    }, 0)}
-                  </b>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
+      <Heatmap
+        startDate={subDays(new Date(), 30)}
+        endDate={new Date()}
+        events={events}
+      />
+
+      {/*<div>*/}
+      {/*  <TableContainer component={Paper}>*/}
+      {/*    <Table size="small">*/}
+      {/*      <TableHead>*/}
+      {/*        <TableRow>*/}
+      {/*          <TableCell>Date</TableCell>*/}
+      {/*          <TableCell>Value</TableCell>*/}
+      {/*        </TableRow>*/}
+      {/*      </TableHead>*/}
+      {/*      <TableBody>*/}
+      {/*        {dates.map((date) => (*/}
+      {/*          <TableRow key={date.toISOString()}>*/}
+      {/*            <TableCell>{format(date, "yyyy-MM-dd")}</TableCell>*/}
+      {/*            <TableCell>*/}
+      {/*              {events?.[format(date, "yyyy-MM-dd")] !== undefined*/}
+      {/*                ? events?.[format(date, "yyyy-MM-dd")]?.value*/}
+      {/*                : ""}*/}
+      {/*            </TableCell>*/}
+      {/*          </TableRow>*/}
+      {/*        ))}*/}
+      {/*        <TableRow>*/}
+      {/*          <TableCell>*/}
+      {/*            <b>Sum</b>*/}
+      {/*          </TableCell>*/}
+      {/*          <TableCell>*/}
+      {/*            <b>*/}
+      {/*              {dates.reduce((sum, date) => {*/}
+      {/*                return (*/}
+      {/*                  sum + (events?.[format(date, "yyyy-MM-dd")]?.value ?? 0)*/}
+      {/*                );*/}
+      {/*              }, 0)}*/}
+      {/*            </b>*/}
+      {/*          </TableCell>*/}
+      {/*        </TableRow>*/}
+      {/*      </TableBody>*/}
+      {/*    </Table>*/}
+      {/*  </TableContainer>*/}
+      {/*</div>*/}
 
       <div>Notes?</div>
     </div>
