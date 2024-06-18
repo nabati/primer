@@ -58,7 +58,7 @@ const ViewHabit: React.FC<ViewHabitProps> = () => {
 
       <div>
         <TableContainer component={Paper}>
-          <Table>
+          <Table size="small">
             <TableHead>
               <TableRow>
                 <TableCell>Date</TableCell>
@@ -76,6 +76,20 @@ const ViewHabit: React.FC<ViewHabitProps> = () => {
                   </TableCell>
                 </TableRow>
               ))}
+              <TableRow>
+                <TableCell>
+                  <b>Sum</b>
+                </TableCell>
+                <TableCell>
+                  <b>
+                    {dates.reduce((sum, date) => {
+                      return (
+                        sum + (events?.[format(date, "yyyy-MM-dd")]?.value ?? 0)
+                      );
+                    }, 0)}
+                  </b>
+                </TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
