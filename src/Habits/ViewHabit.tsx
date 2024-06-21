@@ -1,7 +1,7 @@
 import { subDays } from "date-fns";
-import range from "lodash/range";
 import React, { useMemo } from "react";
 import { useParams } from "react-router-dom";
+import useHabit from "../hooks/useHabit.ts";
 
 import Heatmap from "./Heatmap/Heatmap.tsx";
 import useEvents from "../hooks/useEvents.ts";
@@ -18,25 +18,29 @@ const ViewHabit: React.FC<ViewHabitProps> = () => {
     throw new Error("id is required.");
   }
 
-  const { dates, startDate, endDate } = useMemo(() => {
-    const today = new Date();
-    const dates = range(0, 30).map((i) => subDays(today, i));
+  const { data: habit, isFetching: isFetchingHabit } = useHabit({ id });
+
+  const { startDate, endDate } = useMemo(() => {
+    const date = new Date();
     return {
-      dates,
-      startDate: dates[dates.length - 1],
-      endDate: dates[0],
+      startDate: subDays(date, 30),
+      endDate: date,
     };
   }, []);
 
   const { data: events } = useEvents({ habitId: id, startDate, endDate });
 
+  if (isFetchingHabit) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
-      <div>Habit</div>
+      <h1>{habit.title}</h1>
 
       <Heatmap
-        startDate={subDays(new Date(), 30)}
-        endDate={new Date()}
+        startDate={startDate}
+        endDate={endDate}
         events={events}
         habitId={id}
       />
