@@ -10,13 +10,12 @@ const upsertEntry = async (event: Event): Promise<Event> => {
   const { data, error } = await getSupabaseClient()
     .from("events")
     .upsert(event, { onConflict: "date, habit_id" })
-    .select("*");
+    .select("*")
+    .single();
 
   if (error) {
     throw new Error(error.message);
   }
-
-  console.log(data, typeof data.date);
 
   return data;
 };
@@ -24,7 +23,7 @@ const upsertEntry = async (event: Event): Promise<Event> => {
 const useEventUpsert = () => {
   const queryClient = useQueryClient();
   const user = useUser();
-  const { mutateAsync } = useMutation({
+  const { mutateAsync, variables } = useMutation({
     mutationFn: upsertEntry,
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -34,7 +33,7 @@ const useEventUpsert = () => {
     },
   });
 
-  return useCallback(
+  const upsert = useCallback(
     async ({
       date,
       value,
@@ -52,6 +51,8 @@ const useEventUpsert = () => {
       }),
     [mutateAsync, user.id],
   );
+
+  return { upsert, variables };
 };
 
 export default useEventUpsert;

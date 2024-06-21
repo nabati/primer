@@ -23,9 +23,14 @@ const mapStreakToIntensity = (streak: number | undefined): number => {
   return Math.max(MIN_INTENSITY, MAX_INTENSITY - streak * 5);
 };
 
-const Cell: React.FC<CellProps> = ({ habitId, date, value, streak }) => {
-  const upsertEvent = useEventUpsert();
-  console.log("@@habitId", habitId);
+const Cell: React.FC<CellProps> = ({
+  habitId,
+  date,
+  value: remoteValue,
+  streak,
+}) => {
+  const { upsert: upsertEvent, variables } = useEventUpsert();
+  const value = variables?.value !== undefined ? variables.value : remoteValue;
   const handleDecrement = () => {
     upsertEvent({ date, value: Math.max((value ?? 0) - 1, 0), habitId });
   };
