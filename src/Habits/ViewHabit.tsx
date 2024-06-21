@@ -6,6 +6,7 @@ import EntryForm from "./EntryForm";
 
 import Heatmap from "./Heatmap/Heatmap.tsx";
 import useEvents from "./hooks/useEvents.ts";
+import SummaryTable from "./SummaryTable/SummaryTable.tsx";
 
 type ViewHabitProps = {};
 
@@ -40,44 +41,7 @@ const ViewHabit: React.FC<ViewHabitProps> = () => {
         events={events}
       />
 
-      {/*<div>*/}
-      {/*  <TableContainer component={Paper}>*/}
-      {/*    <Table size="small">*/}
-      {/*      <TableHead>*/}
-      {/*        <TableRow>*/}
-      {/*          <TableCell>Date</TableCell>*/}
-      {/*          <TableCell>Value</TableCell>*/}
-      {/*        </TableRow>*/}
-      {/*      </TableHead>*/}
-      {/*      <TableBody>*/}
-      {/*        {dates.map((date) => (*/}
-      {/*          <TableRow key={date.toISOString()}>*/}
-      {/*            <TableCell>{format(date, "yyyy-MM-dd")}</TableCell>*/}
-      {/*            <TableCell>*/}
-      {/*              {events?.[format(date, "yyyy-MM-dd")] !== undefined*/}
-      {/*                ? events?.[format(date, "yyyy-MM-dd")]?.value*/}
-      {/*                : ""}*/}
-      {/*            </TableCell>*/}
-      {/*          </TableRow>*/}
-      {/*        ))}*/}
-      {/*        <TableRow>*/}
-      {/*          <TableCell>*/}
-      {/*            <b>Sum</b>*/}
-      {/*          </TableCell>*/}
-      {/*          <TableCell>*/}
-      {/*            <b>*/}
-      {/*              {dates.reduce((sum, date) => {*/}
-      {/*                return (*/}
-      {/*                  sum + (events?.[format(date, "yyyy-MM-dd")]?.value ?? 0)*/}
-      {/*                );*/}
-      {/*              }, 0)}*/}
-      {/*            </b>*/}
-      {/*          </TableCell>*/}
-      {/*        </TableRow>*/}
-      {/*      </TableBody>*/}
-      {/*    </Table>*/}
-      {/*  </TableContainer>*/}
-      {/*</div>*/}
+      <SummaryTable habitId={id} />
 
       <div>Notes?</div>
     </div>

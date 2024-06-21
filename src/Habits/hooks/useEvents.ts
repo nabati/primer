@@ -1,7 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
+import { endOfDay, format, startOfDay } from "date-fns";
+import { useMemo } from "react";
 import { useUser } from "../../components/AuthContext.tsx";
 import { getSupabaseClient } from "../../supabaseClient.ts";
+import formatDateToIsoDate from "../../utils/formatDateToIsoDate.ts";
 
 const useEvents = ({
   habitId,
@@ -9,20 +11,31 @@ const useEvents = ({
   endDate,
 }: {
   habitId: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: Date | string;
+  endDate: Date | string;
 }) => {
   const user = useUser();
+
+  const alignedStartDate = useMemo(
+    () => formatDateToIsoDate(startOfDay(startDate)),
+    [startDate],
+  );
+
+  const alignedEndDate = useMemo(
+    () => formatDateToIsoDate(endOfDay(endDate)),
+    [endDate],
+  );
+
   return useQuery({
-    queryKey: ["events", habitId, startDate, endDate],
+    queryKey: ["events", habitId, alignedStartDate, alignedEndDate],
     queryFn: async () => {
       const { data: events } = await getSupabaseClient()
         .from("events")
         .select("*")
         .eq("habit_id", habitId)
         .eq("user_id", user.id)
-        .gte("date", format(startDate, "yyyy-MM-dd"))
-        .lte("date", format(endDate, "yyyy-MM-dd"));
+        .gte("date", format(alignedStartDate, "yyyy-MM-dd"))
+        .lte("date", format(alignedEndDate, "yyyy-MM-dd"));
 
       return events;
     },

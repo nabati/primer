@@ -32,7 +32,7 @@ const Heatmap: React.FC<HeatmapCalendarProps> = ({
     >((acc, date): PreparedDatum[] => {
       const eventForDate = events?.find((event) => isSameDay(event.date, date));
 
-      if (eventForDate === undefined) {
+      if (eventForDate === undefined || eventForDate.value === 0) {
         acc.push({
           date,
           value: undefined,
