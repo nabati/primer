@@ -1,7 +1,7 @@
 import { startOfYear } from "date-fns";
 import React from "react";
 import formatDateToIsoDate from "../../utils/formatDateToIsoDate.ts";
-import useEvents from "../hooks/useEvents.ts";
+import useEvents from "../../hooks/useEvents.ts";
 import { sumBy } from "lodash";
 
 type YtdCellProps = {

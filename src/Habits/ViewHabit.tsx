@@ -4,7 +4,7 @@ import React, { useMemo } from "react";
 import { useParams } from "react-router-dom";
 
 import Heatmap from "./Heatmap/Heatmap.tsx";
-import useEvents from "./hooks/useEvents.ts";
+import useEvents from "../hooks/useEvents.ts";
 import SummaryTable from "./SummaryTable/SummaryTable.tsx";
 
 type ViewHabitProps = {
@@ -33,8 +33,6 @@ const ViewHabit: React.FC<ViewHabitProps> = () => {
   return (
     <div>
       <div>Habit</div>
-
-      <div>Habit tracker calendar 1.</div>
 
       <Heatmap
         startDate={subDays(new Date(), 30)}

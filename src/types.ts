@@ -9,3 +9,11 @@ export type JournalEntry = {
   content: string;
   user_id: string;
 };
+
+export type Event = {
+  id?: string;
+  date: string;
+  value: number;
+  habit_id: string;
+  user_id: string;
+};

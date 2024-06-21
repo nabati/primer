@@ -3,7 +3,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import React from "react";
 import styled from "styled-components";
 import { format } from "date-fns";
-import useEventUpsert from "../hooks/useEventUpsert.ts";
+import useEventUpsert from "../../hooks/useEventUpsert.ts";
 
 type CellProps = {
   habitId: string;

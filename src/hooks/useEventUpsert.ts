@@ -2,9 +2,9 @@ import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useCallback } from "react";
-import { useUser } from "../../components/AuthContext.tsx";
-import { getSupabaseClient } from "../../supabaseClient.ts";
-import type { Event } from "../EntryForm";
+import { useUser } from "../components/AuthContext.tsx";
+import { getSupabaseClient } from "../supabaseClient.ts";
+import type { Event } from "../types.ts";
 
 const upsertEntry = async (event: Event): Promise<Event> => {
   const { data, error } = await getSupabaseClient()

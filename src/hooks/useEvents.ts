@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { endOfDay, format, startOfDay } from "date-fns";
 import { useMemo } from "react";
-import { useUser } from "../../components/AuthContext.tsx";
-import { getSupabaseClient } from "../../supabaseClient.ts";
-import formatDateToIsoDate from "../../utils/formatDateToIsoDate.ts";
+import { useUser } from "../components/AuthContext.tsx";
+import { getSupabaseClient } from "../supabaseClient.ts";
+import formatDateToIsoDate from "../utils/formatDateToIsoDate.ts";
 
 const useEvents = ({
   habitId,
