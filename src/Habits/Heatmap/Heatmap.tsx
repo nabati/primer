@@ -21,8 +21,7 @@ const Heatmap: React.FC<HeatmapCalendarProps> = ({
   endDate,
   events,
 }) => {
-  const diffDays = differenceInDays(endDate, startDate);
-
+  const diffDays = differenceInDays(endDate, startDate) + 1;
   const data = useMemo(() => {
     const dateRangeAsArray = range(0, diffDays).map((dayOffset) =>
       addDays(new Date(startDate), dayOffset),
