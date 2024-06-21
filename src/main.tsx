@@ -38,7 +38,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/priorities/:id",
-        element: <ViewPriority />,
+        element: <div />,
       },
       {
         path: "/",

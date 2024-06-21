@@ -5,18 +5,9 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Typography from "@mui/material/Typography";
 import React from "react";
-import { getSupabaseClient } from "../supabaseClient.ts";
-import { useQuery } from "@tanstack/react-query";
+import usePriorities from "../hooks/usePriorities.ts";
 import { CircularProgress, Link } from "@mui/material";
-
-const fetchPriorities = async () => {
-  const supabase = getSupabaseClient();
-  const { data, error } = await supabase.from("priorities").select("*");
-  if (error) throw new Error(error.message);
-  return data;
-};
 
 const truncateDescription = (description: string, maxWords: number) => {
   const words = description.split(" ");
@@ -25,20 +16,10 @@ const truncateDescription = (description: string, maxWords: number) => {
 };
 
 const ListPriorities: React.FC = () => {
-  const {
-    data: priorities,
-    error,
-    isLoading,
-  } = useQuery({
-    queryKey: ["priorities"],
-    queryFn: fetchPriorities,
-  });
+  const { data: priorities, isLoading } = usePriorities();
 
   if (isLoading) {
     return <CircularProgress />;
-  }
-  if (error) {
-    return <Typography color="error">{error.message}</Typography>;
   }
 
   return (
