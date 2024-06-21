@@ -8,10 +8,16 @@ import Heatmap from "./Heatmap/Heatmap.tsx";
 import useEvents from "./hooks/useEvents.ts";
 import SummaryTable from "./SummaryTable/SummaryTable.tsx";
 
-type ViewHabitProps = {};
+type ViewHabitProps = {
+  habitId: string;
+};
 
 const ViewHabit: React.FC<ViewHabitProps> = () => {
   const { id } = useParams<{ id: string }>();
+
+  if (id === undefined) {
+    throw new Error("id is required.");
+  }
 
   const { dates, startDate, endDate } = useMemo(() => {
     const today = new Date();
@@ -39,6 +45,7 @@ const ViewHabit: React.FC<ViewHabitProps> = () => {
         startDate={subDays(new Date(), 30)}
         endDate={new Date()}
         events={events}
+        habitId={id}
       />
 
       <SummaryTable habitId={id} />

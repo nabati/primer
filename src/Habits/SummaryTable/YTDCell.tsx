@@ -15,8 +15,6 @@ const YtdCell: React.FC<YtdCellProps> = ({ habitId }) => {
     endDate: formatDateToIsoDate(new Date()),
   });
 
-  console.log(events);
-
   return <div>{sumBy(events, (event) => event.value ?? 0)}</div>;
 };
 

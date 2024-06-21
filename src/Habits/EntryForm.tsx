@@ -1,13 +1,7 @@
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import TextField from "@mui/material/TextField";
-import {
-  Unstable_NumberInput as NumberInput,
-  NumberInputProps,
-  numberInputClasses,
-} from "@mui/base/Unstable_NumberInput";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { getSupabaseClient } from "../supabaseClient.ts";
@@ -18,7 +12,7 @@ type EntryFormProps = {
   habitId: string;
 };
 
-type Entry = {
+export type Event = {
   id?: string;
   date: string;
   value: number;
@@ -41,36 +35,16 @@ const fetchEntryByDate = async (date: string, habitId: string) => {
   return data;
 };
 
-const upsertEntry = async (entry: Entry) => {
-  const { data, error } = await getSupabaseClient()
-    .from("events")
-    .upsert(entry, { onConflict: ["date", "habit_id"] });
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data;
-};
-
 const EntryForm: React.FC<EntryFormProps> = ({ habitId }) => {
   const user = useUser();
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [value, setValue] = useState<number | null>(null);
-  const queryClient = useQueryClient();
 
   const { data: entry } = useQuery({
     queryKey: ["entry", selectedDate],
     queryFn: () =>
       fetchEntryByDate(format(selectedDate!, "yyyy-MM-dd"), habitId),
     enabled: !!selectedDate,
-  });
-
-  const mutation = useMutation({
-    mutationFn: upsertEntry,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["entry", selectedDate] });
-    },
   });
 
   useEffect(() => {
@@ -83,7 +57,7 @@ const EntryForm: React.FC<EntryFormProps> = ({ habitId }) => {
 
   const handleSave = async () => {
     if (selectedDate && value !== null) {
-      const newEntry: Entry = {
+      const newEntry: Event = {
         date: format(selectedDate, "yyyy-MM-dd"),
         value,
         habit_id: habitId,
@@ -92,7 +66,7 @@ const EntryForm: React.FC<EntryFormProps> = ({ habitId }) => {
 
       console.log("@@newEntry", newEntry);
 
-      await mutation.mutateAsync(newEntry);
+      // await mutation.mutateAsync(newEntry);
     }
   };
 

@@ -5,6 +5,7 @@ import styled from "styled-components";
 import Cell from "./Cell";
 
 type HeatmapCalendarProps = {
+  habitId: string;
   startDate: Date; // Only date portion is used
   endDate: Date; // Only date portion is used
   events: { date: Date; value: number }[];
@@ -17,6 +18,7 @@ type PreparedDatum = {
 };
 
 const Heatmap: React.FC<HeatmapCalendarProps> = ({
+  habitId,
   startDate,
   endDate,
   events,
@@ -82,6 +84,7 @@ const Heatmap: React.FC<HeatmapCalendarProps> = ({
         {data.map(({ date, value, streak }) => (
           <Cell
             key={date.toString()}
+            habitId={habitId}
             date={date}
             value={value}
             streak={streak}
