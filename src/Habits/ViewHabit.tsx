@@ -1,26 +1,16 @@
-import { useQuery } from "@tanstack/react-query";
-import { format, subDays } from "date-fns";
+import { subDays } from "date-fns";
 import range from "lodash/range";
 import React, { useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { useUser } from "../components/AuthContext.tsx";
-import { getSupabaseClient } from "../supabaseClient.ts";
 import EntryForm from "./EntryForm";
-import TableContainer from "@mui/material/TableContainer";
-import Table from "@mui/material/Table";
-import TableHead from "@mui/material/TableHead";
-import TableCell from "@mui/material/TableCell";
-import TableBody from "@mui/material/TableBody";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import { keyBy, mapValues } from "lodash";
+
 import Heatmap from "./Heatmap/Heatmap.tsx";
+import useEvents from "./hooks/useEvents.ts";
 
 type ViewHabitProps = {};
 
 const ViewHabit: React.FC<ViewHabitProps> = () => {
   const { id } = useParams<{ id: string }>();
-  const user = useUser();
 
   const { dates, startDate, endDate } = useMemo(() => {
     const today = new Date();
@@ -32,20 +22,7 @@ const ViewHabit: React.FC<ViewHabitProps> = () => {
     };
   }, []);
 
-  const { data: events } = useQuery({
-    queryKey: ["events", id, startDate, endDate],
-    queryFn: async () => {
-      const { data: events } = await getSupabaseClient()
-        .from("events")
-        .select("*")
-        .eq("habit_id", id)
-        .eq("user_id", user.id)
-        .gte("date", format(startDate, "yyyy-MM-dd"))
-        .lte("date", format(endDate, "yyyy-MM-dd"));
-
-      return events;
-    },
-  });
+  const { data: events } = useEvents({ habitId: id, startDate, endDate });
 
   return (
     <div>
