@@ -2,7 +2,6 @@ import { subDays } from "date-fns";
 import range from "lodash/range";
 import React, { useMemo } from "react";
 import { useParams } from "react-router-dom";
-import EntryForm from "./EntryForm";
 
 import Heatmap from "./Heatmap/Heatmap.tsx";
 import useEvents from "./hooks/useEvents.ts";
@@ -36,10 +35,6 @@ const ViewHabit: React.FC<ViewHabitProps> = () => {
       <div>Habit</div>
 
       <div>Habit tracker calendar 1.</div>
-
-      <div>
-        <EntryForm habitId={id} />
-      </div>
 
       <Heatmap
         startDate={subDays(new Date(), 30)}
