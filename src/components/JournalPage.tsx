@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import updateEmbeddings from "../updateEmbeddings.ts";
 import Coach from "./Coach.tsx";
-import NoteEditor from "./NoteEditor.tsx";
+import NoteEditor from "./NoteEditor/NoteEditor.tsx";
 import JournalSidebar from "./JournalSidebar.tsx";
 import { setPassiveEditorContent } from "./store.ts";
 import useCreateJournalEntry from "./useCreateJournalEntry.ts";
