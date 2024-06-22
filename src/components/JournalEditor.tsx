@@ -13,6 +13,7 @@ import React, {
 } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import useJournalEntry from "../hooks/useJournalEntry.ts";
 import { getSupabaseClient } from "../supabaseClient.ts";
 import { JournalEntry } from "../types.ts";
 import getFormattedDate from "../utils/getFormattedDate.ts";
@@ -37,26 +38,16 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
     useState<string>("");
   const navigate = useNavigate();
 
-  const { data: journalEntry, isFetching } = useQuery({
-    queryKey: ["journals-entry", id],
-    queryFn: async (): Promise<any> => {
-      const { data: entries } = await getSupabaseClient()
-        .from("journals")
-        .select("*")
-        .eq("id", id);
+  const { data: journalEntry, isFetching } = useJournalEntry({ id });
 
-      if (entries === null || entries?.length === 0) {
-        return undefined;
-      }
+  useEffect(() => {
+    if (journalEntry === undefined) {
+      return;
+    }
 
-      const entry = entries[0];
-      editorContent.current = entry.content;
-      setLastSavedEditorContent(entry.content);
-
-      return entry;
-    },
-    enabled: id !== undefined,
-  });
+    editorContent.current = journalEntry.content;
+    setLastSavedEditorContent(journalEntry.content);
+  }, [journalEntry]);
 
   const save = useCallback(async () => {
     await getSupabaseClient().from("journals").upsert({
