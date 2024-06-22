@@ -1,5 +1,6 @@
 import { Box, Stack, Tab, Tabs } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import AddPriorityCard from "./AddPriorityCard.tsx";
 import TabPanel from "./TabPanel.tsx";
 import ViewPriority from "./Priority/ViewPriority.tsx";
@@ -12,10 +13,19 @@ type PrioritiesTabsProps = {
 const ADD_PRIORITY_PANEL_VALUE = "add-priority";
 
 const PrioritiesTabs: React.FC<PrioritiesTabsProps> = ({ priorities }) => {
-  const [value, setValue] = React.useState(priorities[0].id);
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+  const { id: urlPriorityId } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
+    navigate(`/priorities/${newValue}`);
   };
+
+  useEffect(() => {
+    if (urlPriorityId === undefined && priorities.length > 0) {
+      navigate(`/priorities/${priorities[0].id}`);
+    }
+  }, [priorities, urlPriorityId]);
+
+  const value = urlPriorityId ?? ADD_PRIORITY_PANEL_VALUE;
 
   return (
     <Box sx={{ borderBottom: 1, borderColor: "divider" }}>

@@ -9,7 +9,6 @@ type ListRowProps = {
 };
 
 const ListRow: React.FC<ListRowProps> = ({ id, content, lastReviewed }) => {
-  console.log("@@lastReviewed", lastReviewed);
   return (
     <TableRow key={id}>
       <TableCell>{content}</TableCell>

@@ -21,7 +21,7 @@ const HabitCard: React.FC<HabitCardProps> = ({ id }) => {
   const { startDate, endDate } = useMemo(() => {
     const date = new Date();
     return {
-      startDate: subDays(date, 30),
+      startDate: subDays(date, 14),
       endDate: date,
     };
   }, []);

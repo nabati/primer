@@ -15,8 +15,6 @@ const useHabit = ({ id }: { id: string }) => {
         throw new Error(error.message);
       }
 
-      console.log("@@data", data);
-
       return data;
     },
   });

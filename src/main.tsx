@@ -15,8 +15,6 @@ import JournalPage from "./components/JournalPage.tsx";
 import Prompts from "./components/Prompts.tsx";
 import Layout from "./components/Layout.tsx";
 import Priorities from "./Priorities/Priorities.tsx";
-import ViewPriority from "./Priorities/Priority/ViewPriority.tsx";
-import HabitCard from "./Habits/HabitCard.tsx";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 
 const router = createBrowserRouter([
@@ -33,12 +31,8 @@ const router = createBrowserRouter([
         element: <Priorities />,
       },
       {
-        path: "/habits/:id",
-        element: <HabitCard />,
-      },
-      {
         path: "/priorities/:id",
-        element: <div />,
+        element: <Priorities />,
       },
       {
         path: "/",

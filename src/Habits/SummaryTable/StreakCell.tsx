@@ -1,4 +1,4 @@
-import { differenceInDays, isSameDay, startOfDecade } from "date-fns";
+import { differenceInDays, startOfDecade } from "date-fns";
 import { sortBy } from "lodash";
 import React, { useMemo } from "react";
 import formatDateToIsoDate from "../../utils/formatDateToIsoDate.ts";
@@ -17,13 +17,10 @@ const computeCurrentStreak = (
   let streak = 0;
   for (let i = sortedEvents.length - 1; i >= 0; i--) {
     if (differenceInDays(referenceDate, sortedEvents[i].date) > i) {
-      console.log("idff in days is wrong");
       break;
     }
 
     if (sortedEvents[i].value === 0) {
-      console.log(sortedEvents[i]);
-      console.log(";value is 0");
       break;
     }
 

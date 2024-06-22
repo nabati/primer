@@ -1,8 +1,7 @@
 import React from "react";
 import usePriorities from "../hooks/usePriorities.ts";
-import AddPriorityCard from "./AddPriorityCard.tsx";
-import { CircularProgress } from "@mui/material";
 import PrioritiesTabs from "./PrioritiesTabs.tsx";
+import CircularProgress from "@mui/material/CircularProgress";
 
 type PrioritiesProps = {};
 
@@ -13,11 +12,7 @@ const Priorities: React.FC<PrioritiesProps> = () => {
     return <CircularProgress />;
   }
 
-  return (
-    <div>
-      <PrioritiesTabs priorities={priorities} />
-    </div>
-  );
+  return <PrioritiesTabs priorities={priorities} />;
 };
 
 export default Priorities;

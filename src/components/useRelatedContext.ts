@@ -47,7 +47,6 @@ const useRelatedContext = ({
         sortBy(data.flat(), (contextEntry) => -contextEntry.similarity),
         5,
       );
-  console.log("@@relatedContenxt", context);
 
   return {
     context,
