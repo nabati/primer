@@ -66,7 +66,7 @@ const NoteEditor: React.FC<NoteEditorProps> = ({ id, onChange, editorRef }) => {
           {getFormattedDate(journalEntry?.created_at)}
         </DateContainer>
         <StatusContainer>
-          {hasUnsavedChanges ? (
+          {!hasUnsavedChanges ? (
             <CheckCircle color="success" />
           ) : (
             <Pending color="disabled" />
