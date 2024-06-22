@@ -47,6 +47,7 @@ type ViewPriorityProps = {
 };
 
 const ViewPriority: React.FC<ViewPriorityProps> = ({ id }) => {
+  const [noteId, setNoteId] = useState<string | undefined>();
   const queryClient = useQueryClient();
   const {
     data: priority,

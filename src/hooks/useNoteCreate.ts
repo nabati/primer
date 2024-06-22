@@ -3,16 +3,18 @@ import QueryKey from "../constants/QueryKey.ts";
 import TableName from "../constants/TableName.ts";
 import { getSupabaseClient } from "../supabaseClient.ts";
 import { Note } from "../types.ts";
-import { useUser } from "./AuthContext.tsx";
+import { useUser } from "../components/AuthContext.tsx";
 
-const useCreateJournalEntry = () => {
+const useNoteCreate = () => {
   const user = useUser();
   const queryClient = useQueryClient();
 
-  return async (): Promise<string> => {
+  return async ({
+    priorityId,
+  }: { priorityId?: string } = {}): Promise<string> => {
     const { data: row } = await getSupabaseClient()
       .from(TableName.NOTES)
-      .insert([{ content: "", user_id: user.id }])
+      .insert([{ content: "", user_id: user.id, priorityId }])
       .select("*")
       .single<Note>();
 
@@ -26,4 +28,4 @@ const useCreateJournalEntry = () => {
   };
 };
 
-export default useCreateJournalEntry;
+export default useNoteCreate;
