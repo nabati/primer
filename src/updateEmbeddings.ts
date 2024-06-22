@@ -3,7 +3,7 @@ import getEmbedding from "./components/getEmbedding.ts";
 import getTextChunks from "./components/getTextChunks.ts";
 // last update for the journal
 import { getSupabaseClient } from "./supabaseClient.ts";
-import { JournalEntry } from "./types.ts";
+import { Note } from "./types.ts";
 
 const updateEmbeddings = async () => {
   const { data: journals } = await getSupabaseClient().rpc(
@@ -11,7 +11,7 @@ const updateEmbeddings = async () => {
   );
 
   await Promise.all(
-    journals.map(async (journal: JournalEntry) => {
+    journals.map(async (journal: Note) => {
       const chunks = await getTextChunks(journal.content);
 
       const embeddings = await Promise.all(

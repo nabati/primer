@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import TableName from "../constants/TableName.ts";
 import { getSupabaseClient } from "../supabaseClient.ts";
 
-const useJournalEntry = ({ id }: { id: string }) => {
+const useNote = ({ id }: { id: string }) => {
   return useQuery({
     queryKey: ["journals-entry", id],
     queryFn: async (): Promise<any> => {
@@ -22,4 +22,4 @@ const useJournalEntry = ({ id }: { id: string }) => {
   });
 };
 
-export default useJournalEntry;
+export default useNote;

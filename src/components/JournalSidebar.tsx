@@ -2,12 +2,12 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import React from "react";
-import { JournalEntry } from "../types.ts";
+import { Note } from "../types.ts";
 import JournalListCard from "./JournalListCard.tsx";
 import AddIcon from "@mui/icons-material/Add";
 
 type JournalSidebarProps = {
-  entries: JournalEntry[];
+  entries: Note[];
   onSelect: (id: string) => void;
   isLoading: boolean;
   onCreateClick: () => void;

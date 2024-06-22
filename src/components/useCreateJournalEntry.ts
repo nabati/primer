@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import QueryKey from "../constants/QueryKey.ts";
 import TableName from "../constants/TableName.ts";
 import { getSupabaseClient } from "../supabaseClient.ts";
-import { JournalEntry } from "../types.ts";
+import { Note } from "../types.ts";
 import { useUser } from "./AuthContext.tsx";
 
 const useCreateJournalEntry = () => {
@@ -14,7 +14,7 @@ const useCreateJournalEntry = () => {
       .from(TableName.NOTES)
       .insert([{ content: "", user_id: user.id }])
       .select("*")
-      .single<JournalEntry>();
+      .single<Note>();
 
     if (row === null) {
       throw new Error(

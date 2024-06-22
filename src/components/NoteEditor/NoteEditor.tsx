@@ -21,7 +21,7 @@ const NoteEditor: React.FC<NoteEditorProps> = ({ id, onChange, editorRef }) => {
   const navigate = useNavigate();
 
   const {
-    journalEntry,
+    note,
     isFetching,
     onEditorContentChange,
     save,
@@ -43,9 +43,9 @@ const NoteEditor: React.FC<NoteEditorProps> = ({ id, onChange, editorRef }) => {
   useKeyboardShortcuts({ save });
 
   const handleDeleteClick = async () => {
-    if (confirm(`Are you sure you want to delete this journal entry? ${id}`)) {
+    if (confirm(`Are you sure you want to delete this note entry? ${id}`)) {
       await del();
-      navigate("/journals");
+      navigate("/notes");
     }
   };
 
@@ -62,9 +62,7 @@ const NoteEditor: React.FC<NoteEditorProps> = ({ id, onChange, editorRef }) => {
       style={{ position: "relative", display: "flex", flexDirection: "column" }}
     >
       <TopBarContainer>
-        <DateContainer>
-          {getFormattedDate(journalEntry?.created_at)}
-        </DateContainer>
+        <DateContainer>{getFormattedDate(note?.created_at)}</DateContainer>
         <StatusContainer>
           {!hasUnsavedChanges ? (
             <CheckCircle color="success" />
@@ -77,7 +75,7 @@ const NoteEditor: React.FC<NoteEditorProps> = ({ id, onChange, editorRef }) => {
       <EditorContainer>
         <Editor
           onChange={handleChange}
-          initialValue={journalEntry?.content ?? ""}
+          initialValue={note?.content ?? ""}
           editorRef={editorRef}
         />
       </EditorContainer>

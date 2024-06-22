@@ -3,7 +3,7 @@ import { useUser } from "../components/AuthContext.tsx";
 import TableName from "../constants/TableName.ts";
 import { getSupabaseClient } from "../supabaseClient.ts";
 
-const useJournalUpsert = () => {
+const useNoteUpsert = () => {
   const user = useUser();
   const queryClient = useQueryClient();
   const { mutateAsync } = useMutation({
@@ -29,4 +29,4 @@ const useJournalUpsert = () => {
   return mutateAsync;
 };
 
-export default useJournalUpsert;
+export default useNoteUpsert;

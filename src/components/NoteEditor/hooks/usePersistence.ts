@@ -3,40 +3,40 @@ import { debounce } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import QueryKey from "../../../constants/QueryKey.ts";
 import TableName from "../../../constants/TableName.ts";
-import useJournalEntry from "../../../hooks/useJournalEntry.ts";
-import useJournalUpsert from "../../../hooks/useJournalUpsert.ts";
+import useNote from "../../../hooks/useNote.ts";
+import useNoteUpsert from "../../../hooks/useNoteUpsert.ts";
 import { getSupabaseClient } from "../../../supabaseClient.ts";
-import { JournalEntry } from "../../../types.ts";
+import { Note } from "../../../types.ts";
 
 const usePersistence = ({ id }: { id: string }) => {
   const [editorContent, setEditorContent] = useState<string>("");
-  const { data: journalEntry, isFetching } = useJournalEntry({ id });
+  const { data: note, isFetching } = useNote({ id });
 
   useEffect(() => {
-    if (journalEntry?.content === undefined) {
+    if (note?.content === undefined) {
       return;
     }
 
-    setEditorContent(journalEntry.content);
-  }, [journalEntry]);
+    setEditorContent(note.content);
+  }, [note]);
 
-  const upsertJournal = useJournalUpsert();
+  const upserNote = useNoteUpsert();
 
   const saveImmediate = useCallback(async () => {
-    await upsertJournal({ id, content: editorContent });
-  }, [id, upsertJournal, editorContent]);
+    await upserNote({ id, content: editorContent });
+  }, [id, upserNote, editorContent]);
 
   const saveDebounced = useMemo(
     () =>
       debounce(
         ({ id, content }: { id: string; content: string }) =>
-          upsertJournal({ id, content }),
+          upserNote({ id, content }),
         500,
         {
           maxWait: 5000,
         },
       ),
-    [upsertJournal],
+    [upserNote],
   );
 
   useEffect(() => {
@@ -47,20 +47,18 @@ const usePersistence = ({ id }: { id: string }) => {
   const del = async () => {
     saveDebounced.cancel();
     await getSupabaseClient().from(TableName.NOTES).delete().eq("id", id);
-    queryClient.setQueryData(
-      QueryKey.notes.list(),
-      (journalEntries: JournalEntry[]) =>
-        journalEntries.filter((journalEntry) => journalEntry.id !== id),
+    queryClient.setQueryData(QueryKey.notes.list(), (notes: Note[]) =>
+      notes.filter((note) => note.id !== id),
     );
     queryClient.invalidateQueries({ queryKey: QueryKey.notes.list() });
     queryClient.invalidateQueries({ queryKey: QueryKey.notes.single(id) });
   };
 
   return {
-    journalEntry,
+    note: note,
     isFetching,
     onEditorContentChange: setEditorContent,
-    hasUnsavedChanges: editorContent !== journalEntry?.content,
+    hasUnsavedChanges: editorContent !== note?.content,
     save: saveImmediate,
     del,
   };
