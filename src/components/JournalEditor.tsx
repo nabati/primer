@@ -19,6 +19,7 @@ import { JournalEntry } from "../types.ts";
 import getFormattedDate from "../utils/getFormattedDate.ts";
 import { useUser } from "./AuthContext.tsx";
 import Editor from "./Editor.tsx";
+import useJournalUpsert from "../hooks/useJournalUpsert.ts";
 
 type JournalEditorProps = {
   id: string;
@@ -49,13 +50,11 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
     setLastSavedEditorContent(journalEntry.content);
   }, [journalEntry]);
 
-  const save = useCallback(async () => {
-    await getSupabaseClient().from("journals").upsert({
-      id,
-      content: editorContent.current,
-      user_id: user.id,
-    });
+  const upsertJournal = useJournalUpsert();
 
+  const save = useCallback(async () => {
+    await upsertJournal({ id, content: editorContent.current });
+    // TODO: Fix this? Invalidate cache instead?
     setLastSavedEditorContent(editorContent.current);
   }, [id, user.id]);
 
