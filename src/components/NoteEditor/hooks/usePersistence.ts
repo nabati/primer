@@ -2,7 +2,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { debounce } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import QueryKey from "../../../constants/QueryKey.ts";
-import queryKey from "../../../constants/QueryKey.ts";
 import TableName from "../../../constants/TableName.ts";
 import useJournalEntry from "../../../hooks/useJournalEntry.ts";
 import useJournalUpsert from "../../../hooks/useJournalUpsert.ts";
