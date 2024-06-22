@@ -1,19 +1,17 @@
+import { Card } from "@mui/material";
 import { subDays } from "date-fns";
 import React, { useMemo } from "react";
-import { useParams } from "react-router-dom";
 import useHabit from "../hooks/useHabit.ts";
 
 import Heatmap from "./Heatmap/Heatmap.tsx";
 import useEvents from "../hooks/useEvents.ts";
 import SummaryTable from "./SummaryTable/SummaryTable.tsx";
 
-type ViewHabitProps = {
-  habitId: string;
+type HabitCardProps = {
+  id: string;
 };
 
-const ViewHabit: React.FC<ViewHabitProps> = () => {
-  const { id } = useParams<{ id: string }>();
-
+const HabitCard: React.FC<HabitCardProps> = ({ id }) => {
   if (id === undefined) {
     throw new Error("id is required.");
   }
@@ -35,7 +33,7 @@ const ViewHabit: React.FC<ViewHabitProps> = () => {
   }
 
   return (
-    <div>
+    <Card sx={{padding: '16px'}}>
       <h1>{habit.title}</h1>
 
       <Heatmap
@@ -48,8 +46,8 @@ const ViewHabit: React.FC<ViewHabitProps> = () => {
       <SummaryTable habitId={id} />
 
       <div>Notes?</div>
-    </div>
+    </Card>
   );
 };
 
-export default ViewHabit;
+export default HabitCard;
