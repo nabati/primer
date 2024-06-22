@@ -1,7 +1,7 @@
 import { useQueries } from "@tanstack/react-query";
 import { sortBy, take } from "lodash";
-import getRelatedContextByEmbedding from "./getRelatedContextByEmbedding.ts";
-import { Activity } from "./store.ts";
+import getRelatedContextByEmbedding from "../components/getRelatedContextByEmbedding.ts";
+import { Activity } from "../components/store.ts";
 import useEmbeddings from "./useEmbeddings.ts";
 import useSemanticChunks from "./useSemanticChunks.ts";
 

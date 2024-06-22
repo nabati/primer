@@ -1,5 +1,5 @@
 import { useQueries } from "@tanstack/react-query";
-import getEmbedding from "./getEmbedding.ts";
+import getEmbedding from "../components/getEmbedding.ts";
 
 const useEmbeddings = (chunks: string[]) => {
   return useQueries({

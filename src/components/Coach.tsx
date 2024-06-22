@@ -9,7 +9,7 @@ import { useDebounce } from "use-debounce";
 import prompts from "./prompts.ts";
 import { useActivity } from "./store.ts";
 import { PrimerMessage, useChat } from "./useChat.ts";
-import useRelatedContext from "./useRelatedContext.ts";
+import useRelatedContext from "../hooks/useRelatedContext.ts";
 
 type CoachProps = {
   journalId: string | undefined;

@@ -1,5 +1,5 @@
 import { getSupabaseClient } from "../supabaseClient.ts";
-import { ContextEntry } from "./useRelatedContext.ts";
+import { ContextEntry } from "../hooks/useRelatedContext.ts";
 
 const getRelatedContextByEmbedding = async (
   embedding: number[],

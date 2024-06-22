@@ -1,6 +1,6 @@
 import { getSupabaseClient } from "../supabaseClient.ts";
 import getEmbedding from "./getEmbedding.ts";
-import { ContextEntry } from "./useRelatedContext.ts";
+import { ContextEntry } from "../hooks/useRelatedContext.ts";
 
 const getRelatedContext = async (
   query: string,

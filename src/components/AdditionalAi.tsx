@@ -1,7 +1,7 @@
 import React from "react";
 import prompts from "./prompts.ts";
 import { usePassiveEditorContent } from "./store.ts";
-import { useGptPrompt } from "./useGptPrompt.tsx";
+import { useGptPrompt } from "../hooks/useGptPrompt.tsx";
 
 type AdditionalAiProps = {};
 

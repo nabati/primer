@@ -1,5 +1,5 @@
 import getFormattedDate from "../utils/getFormattedDate.ts";
-import { ContextEntry } from "./useRelatedContext.ts";
+import { ContextEntry } from "../hooks/useRelatedContext.ts";
 
 const BASE_DEFAULT = `
     You are my trusted, wise and insightful mentor, emotional support and dream architect. 
