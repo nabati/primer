@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUser } from "../components/AuthContext.tsx";
+import TableName from "../constants/TableName.ts";
 import { getSupabaseClient } from "../supabaseClient.ts";
 
 const useJournalUpsert = () => {
@@ -8,7 +9,7 @@ const useJournalUpsert = () => {
   const { mutateAsync } = useMutation({
     mutationFn: async ({ id, content }: { id: string; content: string }) => {
       return getSupabaseClient()
-        .from("journals")
+        .from(TableName.JOURNALS)
         .upsert({
           id,
           content: content,

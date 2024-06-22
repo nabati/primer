@@ -1,6 +1,9 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { debounce } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import QueryKey from "../../../constants/QueryKey.ts";
+import queryKey from "../../../constants/QueryKey.ts";
+import TableName from "../../../constants/TableName.ts";
 import useJournalEntry from "../../../hooks/useJournalEntry.ts";
 import useJournalUpsert from "../../../hooks/useJournalUpsert.ts";
 import { getSupabaseClient } from "../../../supabaseClient.ts";
@@ -44,12 +47,14 @@ const usePersistence = ({ id }: { id: string }) => {
   const queryClient = useQueryClient();
   const del = async () => {
     saveDebounced.cancel();
-    await getSupabaseClient().from("journals").delete().eq("id", id);
-    queryClient.setQueryData(["journals"], (journalEntries: JournalEntry[]) =>
-      journalEntries.filter((journalEntry) => journalEntry.id !== id),
+    await getSupabaseClient().from(TableName.JOURNALS).delete().eq("id", id);
+    queryClient.setQueryData(
+      QueryKey.journals.list(),
+      (journalEntries: JournalEntry[]) =>
+        journalEntries.filter((journalEntry) => journalEntry.id !== id),
     );
-    queryClient.invalidateQueries({ queryKey: ["journals"] });
-    queryClient.invalidateQueries({ queryKey: ["journals-entry", id] });
+    queryClient.invalidateQueries({ queryKey: QueryKey.journals.list() });
+    queryClient.invalidateQueries({ queryKey: QueryKey.journals.single(id) });
   };
 
   return {
