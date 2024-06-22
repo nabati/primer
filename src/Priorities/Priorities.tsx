@@ -15,10 +15,6 @@ const Priorities: React.FC<PrioritiesProps> = () => {
 
   return (
     <div>
-      <div>Priorities</div>
-      <AddPriorityCard />
-      <hr />
-
       <PrioritiesTabs priorities={priorities} />
     </div>
   );
