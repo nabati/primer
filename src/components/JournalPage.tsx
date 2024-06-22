@@ -8,7 +8,7 @@ import JournalEditor from "./JournalEditor.tsx";
 import JournalSidebar from "./JournalSidebar.tsx";
 import { setPassiveEditorContent } from "./store.ts";
 import useCreateJournalEntry from "./useCreateJournalEntry.ts";
-import useJournalEntries from "./useJournalEntries.ts";
+import useJournalEntries from "../hooks/useJournalEntries.ts";
 
 type JournalProps = {
   //
