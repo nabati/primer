@@ -61,7 +61,6 @@ const JournalPage: React.FC<JournalProps> = () => {
       )}
       <Sidebar>
         <Coach journalId={selectedJournalId} />
-        {/*<AdditionalAi />*/}
       </Sidebar>
     </Container>
   );
