@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@mui/material";
 import YTDCell from "./YTDCell.tsx";
+import StreakCell from "./StreakCell.tsx";
 
 type SummaryTableProps = {
   habitId: string;
@@ -28,7 +29,15 @@ const SummaryTable: React.FC<SummaryTableProps> = ({ habitId }) => {
           <TableBody>
             <TableRow>
               <TableCell>
-                <b>Sum</b>
+                <b>Current Streak</b>
+              </TableCell>
+              <TableCell>
+                <StreakCell habitId={habitId} />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                <b>Sum YTD</b>
               </TableCell>
               <TableCell>
                 <YTDCell habitId={habitId} />
