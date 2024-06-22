@@ -1,7 +1,7 @@
 const QueryKey = {
-  journals: {
-    list: () => ["journals"],
-    single: (id: string) => ["journals-entry", id],
+  notes: {
+    list: () => ["notes"],
+    single: (id: string) => ["notes-entry", id],
   },
 };
 

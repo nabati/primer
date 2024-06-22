@@ -9,7 +9,7 @@ const useJournalUpsert = () => {
   const { mutateAsync } = useMutation({
     mutationFn: async ({ id, content }: { id: string; content: string }) => {
       return getSupabaseClient()
-        .from(TableName.JOURNALS)
+        .from(TableName.NOTES)
         .upsert({
           id,
           content: content,

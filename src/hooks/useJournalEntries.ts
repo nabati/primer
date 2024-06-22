@@ -5,10 +5,10 @@ import { getSupabaseClient } from "../supabaseClient.ts";
 
 const useJournalEntries = () => {
   const { data: entries = [], isFetching } = useQuery({
-    queryKey: QueryKey.journals.list(),
+    queryKey: QueryKey.notes.list(),
     queryFn: async (): Promise<any> => {
       const { data: entries } = await getSupabaseClient()
-        .from(TableName.JOURNALS)
+        .from(TableName.NOTES)
         .select("*")
         .order("created_at", { ascending: false });
       return entries;

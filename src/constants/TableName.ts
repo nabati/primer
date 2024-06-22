@@ -1,5 +1,5 @@
 const TableName = {
-  JOURNALS: "journals",
+  NOTES: "notes",
 };
 
 export default TableName;

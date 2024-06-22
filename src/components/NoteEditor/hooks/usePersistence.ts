@@ -47,14 +47,14 @@ const usePersistence = ({ id }: { id: string }) => {
   const queryClient = useQueryClient();
   const del = async () => {
     saveDebounced.cancel();
-    await getSupabaseClient().from(TableName.JOURNALS).delete().eq("id", id);
+    await getSupabaseClient().from(TableName.NOTES).delete().eq("id", id);
     queryClient.setQueryData(
-      QueryKey.journals.list(),
+      QueryKey.notes.list(),
       (journalEntries: JournalEntry[]) =>
         journalEntries.filter((journalEntry) => journalEntry.id !== id),
     );
-    queryClient.invalidateQueries({ queryKey: QueryKey.journals.list() });
-    queryClient.invalidateQueries({ queryKey: QueryKey.journals.single(id) });
+    queryClient.invalidateQueries({ queryKey: QueryKey.notes.list() });
+    queryClient.invalidateQueries({ queryKey: QueryKey.notes.single(id) });
   };
 
   return {

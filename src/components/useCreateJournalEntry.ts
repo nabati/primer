@@ -11,7 +11,7 @@ const useCreateJournalEntry = () => {
 
   return async (): Promise<string> => {
     const { data: row } = await getSupabaseClient()
-      .from(TableName.JOURNALS)
+      .from(TableName.NOTES)
       .insert([{ content: "", user_id: user.id }])
       .select("*")
       .single<JournalEntry>();
@@ -21,7 +21,7 @@ const useCreateJournalEntry = () => {
         "Something went wrong while creating a new journal entry",
       );
     }
-    queryClient.invalidateQueries({ queryKey: QueryKey.journals.list() });
+    queryClient.invalidateQueries({ queryKey: QueryKey.notes.list() });
     return row.id;
   };
 };

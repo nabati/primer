@@ -7,7 +7,7 @@ const useJournalEntry = ({ id }: { id: string }) => {
     queryKey: ["journals-entry", id],
     queryFn: async (): Promise<any> => {
       const { data } = await getSupabaseClient()
-        .from(TableName.JOURNALS)
+        .from(TableName.NOTES)
         .select("*")
         .eq("id", id)
         .single();
