@@ -2,7 +2,7 @@ import Typography from "@mui/material/Typography";
 import React from "react";
 import { getSupabaseClient } from "../supabaseClient.ts";
 import { useQuery } from "@tanstack/react-query";
-import { CircularProgress, Link } from "@mui/material";
+import { CircularProgress} from "@mui/material";
 import HabitCard from "./HabitCard.tsx";
 
 const fetchHabits = async ({ priorityId }: { priorityId: string }) => {
