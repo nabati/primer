@@ -3,7 +3,7 @@ import QueryKey from "../constants/QueryKey.ts";
 import TableName from "../constants/TableName.ts";
 import { getSupabaseClient } from "../supabaseClient.ts";
 
-const useJournalEntries = () => {
+const useNotes = () => {
   const { data: entries = [], isFetching } = useQuery({
     queryKey: QueryKey.notes.list(),
     queryFn: async (): Promise<any> => {
@@ -21,4 +21,4 @@ const useJournalEntries = () => {
   };
 };
 
-export default useJournalEntries;
+export default useNotes;

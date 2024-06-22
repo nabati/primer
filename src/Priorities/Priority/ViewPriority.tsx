@@ -155,7 +155,11 @@ const ViewPriority: React.FC<ViewPriorityProps> = ({ id }) => {
 
       <ListHabits priorityId={id} />
 
-      {id !== undefined && <AddHabitCard priorityId={id} />}
+      <hr />
+
+
+
+      {/*{id !== undefined && <AddHabitCard priorityId={id} />}*/}
     </>
   );
 };
