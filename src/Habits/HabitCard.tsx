@@ -33,7 +33,7 @@ const HabitCard: React.FC<HabitCardProps> = ({ id }) => {
   }
 
   return (
-    <Card sx={{padding: '16px'}}>
+    <Card sx={{ padding: "16px" }}>
       <h1>{habit.title}</h1>
 
       <Heatmap
@@ -44,8 +44,6 @@ const HabitCard: React.FC<HabitCardProps> = ({ id }) => {
       />
 
       <SummaryTable habitId={id} />
-
-      <div>Notes?</div>
     </Card>
   );
 };
