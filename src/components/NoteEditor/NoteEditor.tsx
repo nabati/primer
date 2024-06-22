@@ -15,9 +15,15 @@ type NoteEditorProps = {
   id: string;
   onChange?: (content: string) => void;
   editorRef: React.RefObject<LexicalEditor>;
+  priorityId?: string;
 };
 
-const NoteEditor: React.FC<NoteEditorProps> = ({ id, onChange, editorRef }) => {
+const NoteEditor: React.FC<NoteEditorProps> = ({
+  id,
+  onChange,
+  editorRef,
+  priorityId,
+}) => {
   const navigate = useNavigate();
 
   const {
@@ -29,6 +35,7 @@ const NoteEditor: React.FC<NoteEditorProps> = ({ id, onChange, editorRef }) => {
     hasUnsavedChanges,
   } = usePersistence({
     id,
+    priorityId,
   });
 
   const handleChange = useCallback(

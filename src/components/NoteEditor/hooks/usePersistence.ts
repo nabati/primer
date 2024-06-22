@@ -8,7 +8,13 @@ import useNoteUpsert from "../../../hooks/useNoteUpsert.ts";
 import { getSupabaseClient } from "../../../supabaseClient.ts";
 import { Note } from "../../../types.ts";
 
-const usePersistence = ({ id }: { id: string }) => {
+const usePersistence = ({
+  id,
+  priorityId,
+}: {
+  id: string;
+  priorityId?: string;
+}) => {
   const [editorContent, setEditorContent] = useState<string>("");
   const { data: note, isFetching } = useNote({ id });
 
@@ -20,28 +26,28 @@ const usePersistence = ({ id }: { id: string }) => {
     setEditorContent(note.content);
   }, [note]);
 
-  const upserNote = useNoteUpsert();
+  const upsertNote = useNoteUpsert();
 
   const saveImmediate = useCallback(async () => {
-    await upserNote({ id, content: editorContent });
-  }, [id, upserNote, editorContent]);
+    await upsertNote({ id, content: editorContent });
+  }, [id, upsertNote, editorContent]);
 
   const saveDebounced = useMemo(
     () =>
       debounce(
-        ({ id, content }: { id: string; content: string }) =>
-          upserNote({ id, content }),
+        ({ content }: { content: string }) =>
+          upsertNote({ id, content, priorityId }),
         500,
         {
           maxWait: 5000,
         },
       ),
-    [upserNote],
+    [upsertNote, id, priorityId],
   );
 
   useEffect(() => {
-    saveDebounced({ id, content: editorContent });
-  }, [saveDebounced, id, editorContent]);
+    saveDebounced({ content: editorContent });
+  }, [saveDebounced, editorContent]);
 
   const queryClient = useQueryClient();
   const del = async () => {

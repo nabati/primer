@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUser } from "../components/AuthContext.tsx";
+import QueryKey from "../constants/QueryKey.ts";
 import TableName from "../constants/TableName.ts";
 import { getSupabaseClient } from "../supabaseClient.ts";
 
@@ -7,22 +8,28 @@ const useNoteUpsert = () => {
   const user = useUser();
   const queryClient = useQueryClient();
   const { mutateAsync } = useMutation({
-    mutationFn: async ({ id, content }: { id: string; content: string }) => {
+    mutationFn: async ({
+      id,
+      content,
+      priorityId,
+    }: {
+      id: string;
+      content: string;
+      priorityId?: string;
+    }) => {
       return getSupabaseClient()
         .from(TableName.NOTES)
         .upsert({
           id,
           content: content,
           user_id: user.id,
+          priority_id: priorityId,
         })
         .select("*")
         .single();
     },
-    onSuccess: ({ data: journalEntry }) => {
-      queryClient.setQueryData(
-        ["journals-entry", journalEntry.id],
-        journalEntry,
-      );
+    onSuccess: ({ data: note }) => {
+      queryClient.setQueryData(QueryKey.notes.single(note.id), note);
     },
   });
 
