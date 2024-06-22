@@ -1,41 +1,27 @@
 import { CheckCircle, Pending, Delete } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { LexicalEditor } from "lexical";
 import { debounce } from "lodash";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import useJournalEntry from "../hooks/useJournalEntry.ts";
 import { getSupabaseClient } from "../supabaseClient.ts";
 import { JournalEntry } from "../types.ts";
 import getFormattedDate from "../utils/getFormattedDate.ts";
-import { useUser } from "./AuthContext.tsx";
 import Editor from "./Editor.tsx";
 import useJournalUpsert from "../hooks/useJournalUpsert.ts";
 
-type JournalEditorProps = {
+type NoteEditorProps = {
   id: string;
   onChange?: (content: string) => void;
   editorRef: React.RefObject<LexicalEditor>;
 };
 
-const JournalEditor: React.FC<JournalEditorProps> = ({
-  id,
-  onChange,
-  editorRef,
-}) => {
-  const queryClient = useQueryClient();
+const usePersistence = ({ id }: { id: string }) => {
   const [editorContent, setEditorContent] = useState<string>("");
-  const navigate = useNavigate();
-
   const { data: journalEntry, isFetching } = useJournalEntry({ id });
 
   useEffect(() => {
@@ -48,47 +34,63 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
 
   const upsertJournal = useJournalUpsert();
 
-  const save = useCallback(
-    async ({ content }: { content: string }) => {
-      await upsertJournal({ id, content });
-    },
-    [id, upsertJournal],
-  );
+  const saveImmediate = useCallback(async () => {
+    await upsertJournal({ id, content: editorContent });
+  }, [id, upsertJournal, editorContent]);
 
-  const debouncedSave = useMemo(
+  const saveDebounced = useMemo(
     () =>
       debounce(
-        ({ content }: { content: string }) => {
-          save({ content });
-        },
+        ({ id, content }: { id: string; content: string }) =>
+          upsertJournal({ id, content }),
         500,
         {
           maxWait: 5000,
         },
       ),
-    [save],
-  );
-
-  const handleChange = useCallback(
-    (content: string) => {
-      setEditorContent(content);
-      onChange?.(content);
-    },
-    [onChange],
+    [upsertJournal],
   );
 
   useEffect(() => {
-    debouncedSave({ content: editorContent });
-  }, [debouncedSave, editorContent]);
+    saveDebounced({ id, content: editorContent });
+  }, [saveDebounced, id, editorContent]);
 
+  const queryClient = useQueryClient();
+  const del = async () => {
+    saveDebounced.cancel();
+    await getSupabaseClient().from("journals").delete().eq("id", id);
+    queryClient.setQueryData(["journals"], (journalEntries: JournalEntry[]) =>
+      journalEntries.filter((journalEntry) => journalEntry.id !== id),
+    );
+    queryClient.invalidateQueries({ queryKey: ["journals"] });
+    queryClient.invalidateQueries({ queryKey: ["journals-entry", id] });
+  };
+
+  return {
+    journalEntry,
+    isFetching,
+    onEditorContentChange: setEditorContent,
+    hasUnsavedChanges: editorContent !== journalEntry?.content,
+    save: saveImmediate,
+    del,
+  };
+};
+
+const usePreventUnloadIfUnsavedChanges = ({
+  hasUnsavedChanges,
+  save,
+}: {
+  hasUnsavedChanges: boolean;
+  save: () => void;
+}) => {
   useEffect(() => {
     const handleBeforeUnload = (event: Event) => {
-      if (editorContent === journalEntry?.content) {
+      if (!hasUnsavedChanges) {
         return;
       }
 
       event.preventDefault();
-      save({ content: editorContent });
+      save();
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
@@ -96,13 +98,15 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [save, journalEntry?.content, editorContent]);
+  }, [save, hasUnsavedChanges, save]);
+};
 
+const useKeyboardShortcuts = ({ save }: { save: () => void }) => {
   useEffect(() => {
     const handleSave = (event: KeyboardEvent) => {
       if (event.key === "s" && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();
-        save({ content: editorContent });
+        save();
       }
     };
 
@@ -111,17 +115,37 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
     return () => {
       window.removeEventListener("keydown", handleSave);
     };
-  }, [save, editorContent]);
+  }, [save]);
+};
+
+const NoteEditor: React.FC<NoteEditorProps> = ({ id, onChange, editorRef }) => {
+  const navigate = useNavigate();
+
+  const {
+    journalEntry,
+    isFetching,
+    onEditorContentChange,
+    save,
+    del,
+    hasUnsavedChanges,
+  } = usePersistence({
+    id,
+  });
+
+  const handleChange = useCallback(
+    (content: string) => {
+      onEditorContentChange(content);
+      onChange?.(content);
+    },
+    [onChange, onEditorContentChange],
+  );
+
+  usePreventUnloadIfUnsavedChanges({ hasUnsavedChanges, save });
+  useKeyboardShortcuts({ save });
 
   const handleDeleteClick = async () => {
     if (confirm(`Are you sure you want to delete this journal entry? ${id}`)) {
-      debouncedSave.cancel();
-      await getSupabaseClient().from("journals").delete().eq("id", id);
-      queryClient.setQueryData(["journals"], (journalEntries: JournalEntry[]) =>
-        journalEntries.filter((journalEntry) => journalEntry.id !== id),
-      );
-      queryClient.invalidateQueries({ queryKey: ["journals"] });
-      queryClient.invalidateQueries({ queryKey: ["journals-entry", id] });
+      await del();
       navigate("/journals");
     }
   };
@@ -143,7 +167,7 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
           {getFormattedDate(journalEntry?.created_at)}
         </DateContainer>
         <StatusContainer>
-          {editorContent === journalEntry?.content ? (
+          {hasUnsavedChanges ? (
             <CheckCircle color="success" />
           ) : (
             <Pending color="disabled" />
@@ -185,4 +209,4 @@ const EditorContainer = styled.div`
   align-self: stretch;
 `;
 
-export default JournalEditor;
+export default NoteEditor;

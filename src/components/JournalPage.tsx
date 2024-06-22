@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import updateEmbeddings from "../updateEmbeddings.ts";
 import Coach from "./Coach.tsx";
-import JournalEditor from "./JournalEditor.tsx";
+import NoteEditor from "./NoteEditor.tsx";
 import JournalSidebar from "./JournalSidebar.tsx";
 import { setPassiveEditorContent } from "./store.ts";
 import useCreateJournalEntry from "./useCreateJournalEntry.ts";
@@ -52,7 +52,7 @@ const JournalPage: React.FC<JournalProps> = () => {
       />
 
       {selectedJournalId !== undefined && (
-        <JournalEditor
+        <NoteEditor
           key={selectedJournalId}
           id={selectedJournalId}
           onChange={setPassiveEditorContent}
