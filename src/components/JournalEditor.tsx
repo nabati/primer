@@ -33,40 +33,37 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
   editorRef,
 }) => {
   const queryClient = useQueryClient();
-  const user = useUser();
-  const editorContent = useRef<string>("");
-  const [lastSavedEditorContent, setLastSavedEditorContent] =
-    useState<string>("");
+  const [editorContent, setEditorContent] = useState<string>("");
   const navigate = useNavigate();
 
   const { data: journalEntry, isFetching } = useJournalEntry({ id });
 
   useEffect(() => {
-    if (journalEntry === undefined) {
+    if (journalEntry?.content === undefined) {
       return;
     }
 
-    editorContent.current = journalEntry.content;
-    setLastSavedEditorContent(journalEntry.content);
+    setEditorContent(journalEntry.content);
   }, [journalEntry]);
 
   const upsertJournal = useJournalUpsert();
 
-  const save = useCallback(async () => {
-    await upsertJournal({ id, content: editorContent.current });
-    // TODO: Fix this? Invalidate cache instead?
-    setLastSavedEditorContent(editorContent.current);
-  }, [id, user.id]);
+  const save = useCallback(
+    async ({ content }: { content: string }) => {
+      await upsertJournal({ id, content });
+    },
+    [id, upsertJournal],
+  );
 
   const debouncedSave = useMemo(
     () =>
       debounce(
-        () => {
-          save();
+        ({ content }: { content: string }) => {
+          save({ content });
         },
-        3000,
+        500,
         {
-          maxWait: 30000,
+          maxWait: 5000,
         },
       ),
     [save],
@@ -74,21 +71,24 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
 
   const handleChange = useCallback(
     (content: string) => {
-      editorContent.current = content;
+      setEditorContent(content);
       onChange?.(content);
-      debouncedSave();
     },
-    [debouncedSave],
+    [onChange],
   );
 
   useEffect(() => {
+    debouncedSave({ content: editorContent });
+  }, [debouncedSave, editorContent]);
+
+  useEffect(() => {
     const handleBeforeUnload = (event: Event) => {
-      if (editorContent.current === lastSavedEditorContent) {
+      if (editorContent === journalEntry?.content) {
         return;
       }
 
       event.preventDefault();
-      save();
+      save({ content: editorContent });
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
@@ -96,13 +96,13 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [save, lastSavedEditorContent]);
+  }, [save, journalEntry?.content, editorContent]);
 
   useEffect(() => {
     const handleSave = (event: KeyboardEvent) => {
       if (event.key === "s" && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();
-        save();
+        save({ content: editorContent });
       }
     };
 
@@ -111,7 +111,7 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
     return () => {
       window.removeEventListener("keydown", handleSave);
     };
-  }, [save]);
+  }, [save, editorContent]);
 
   const handleDeleteClick = async () => {
     if (confirm(`Are you sure you want to delete this journal entry? ${id}`)) {
@@ -143,7 +143,7 @@ const JournalEditor: React.FC<JournalEditorProps> = ({
           {getFormattedDate(journalEntry?.created_at)}
         </DateContainer>
         <StatusContainer>
-          {editorContent.current === lastSavedEditorContent ? (
+          {editorContent === journalEntry?.content ? (
             <CheckCircle color="success" />
           ) : (
             <Pending color="disabled" />
