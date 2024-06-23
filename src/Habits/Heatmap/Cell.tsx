@@ -109,6 +109,7 @@ const StyledButton = styled("button")(
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 120ms;
+  visibility: hidden;
 
   &:hover {
     cursor: pointer;
@@ -148,6 +149,12 @@ const Container = styled.div<{ intensity: number }>`
   justify-content: center;
   align-items: center;
   text-align: center;
+
+  &:hover {
+    ${StyledButton} {
+      visibility: visible;
+    }
+  }
 `;
 
 export default Cell;
