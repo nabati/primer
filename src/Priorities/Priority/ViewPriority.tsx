@@ -7,8 +7,10 @@ import {
   CardContent,
   Typography,
   CircularProgress,
+  Stack,
 } from "@mui/material";
 import ListHabits from "../../Habits/ListHabits.tsx";
+import useDeletePriority from "../../hooks/useDeletePriority.ts";
 import { getSupabaseClient } from "../../supabaseClient.ts";
 import AddHabitCard from "../../Habits/AddHabitCard.tsx";
 
@@ -66,6 +68,7 @@ const ViewPriority: React.FC<ViewPriorityProps> = ({ id }) => {
     },
   });
 
+  const { deletePriority } = useDeletePriority();
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -96,6 +99,12 @@ const ViewPriority: React.FC<ViewPriorityProps> = ({ id }) => {
     }
   };
 
+  const handleDelete = async () => {
+    if (confirm("Are you sure you want to delete this priority?")) {
+      await deletePriority({ id });
+    }
+  };
+
   return (
     <>
       <Card>
@@ -120,14 +129,24 @@ const ViewPriority: React.FC<ViewPriorityProps> = ({ id }) => {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleSave}
-                sx={{ mt: 2 }}
-              >
-                Save
-              </Button>
+              <Stack direction="row" spacing={1}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSave}
+                  sx={{ mt: 2 }}
+                >
+                  Save
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={handleDelete}
+                  sx={{ mt: 2 }}
+                >
+                  Delete
+                </Button>
+              </Stack>
             </>
           ) : (
             priority !== undefined && (
