@@ -2,7 +2,7 @@ import Typography from "@mui/material/Typography";
 import React from "react";
 import { getSupabaseClient } from "../supabaseClient.ts";
 import { useQuery } from "@tanstack/react-query";
-import { CircularProgress} from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import HabitCard from "./HabitCard.tsx";
 
 const fetchHabits = async ({ priorityId }: { priorityId: string }) => {
@@ -40,8 +40,10 @@ const ListHabits: React.FC<ListHabitProps> = ({ priorityId }) => {
 
   return (
     <>
-      {habits.map((habit) => (
-        <HabitCard key={habit.id} id={habit.id} />
+      {habits?.map((habit) => (
+        <Box key={habit.id} sx={{ py: 1 }}>
+          <HabitCard id={habit.id} />
+        </Box>
       ))}
     </>
   );

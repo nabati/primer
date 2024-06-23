@@ -29,7 +29,7 @@ const HabitCard: React.FC<HabitCardProps> = ({ id }) => {
   const { data: events } = useEvents({ habitId: id, startDate, endDate });
 
   if (isFetchingHabit) {
-    return <div>Loading...</div>;
+    return null;
   }
 
   return (

@@ -8,6 +8,7 @@ import {
   Typography,
   CircularProgress,
   Stack,
+  Box,
 } from "@mui/material";
 import styled from "styled-components";
 import ListHabits from "../../Habits/ListHabits.tsx";
@@ -173,21 +174,20 @@ const ViewPriority: React.FC<ViewPriorityProps> = ({ id }) => {
         </CardContent>
       </Card>
 
-      <hr />
-
       <Columns>
         <Column>
           <ListHabits priorityId={id} />
+          {id !== undefined && (
+            <Box sx={{ py: 1 }}>
+              <AddHabitCard priorityId={id} />
+            </Box>
+          )}
         </Column>
 
         <Column>
           <Notes priorityId={priority.id} />
         </Column>
       </Columns>
-
-      <hr />
-
-      {id !== undefined && <AddHabitCard priorityId={id} />}
     </>
   );
 };

@@ -18,7 +18,7 @@ const Notes: React.FC<NotesProps> = ({ priorityId }) => {
   };
 
   return (
-    <Card>
+    <Card sx={{ p: 1, my: 1 }}>
       <Button
         variant="contained"
         color="primary"
