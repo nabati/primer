@@ -10,7 +10,7 @@ type NoteProps = {
   note: NoteType;
 };
 
-const Note: React.FC<NoteProps> = ({ note, ...props }) => {
+const Note: React.FC<NoteProps> = ({ note }) => {
   const [isEditing, setIsEditing] = React.useState<boolean>(false);
 
   return (
