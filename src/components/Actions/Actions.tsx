@@ -32,7 +32,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
           />
         ))}
 
-        <CreateAction onComplete={handleComplete} />
+        <CreateAction onComplete={handleComplete}  />
       </Stack>
     </div>
   );

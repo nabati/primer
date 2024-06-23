@@ -1,7 +1,9 @@
+import { CheckCircle } from "@mui/icons-material";
 import React from "react";
 import Markdown from "react-markdown";
 import { Action } from "../../types.ts";
 import ActionEditor from "./ActionEditor.tsx";
+import { Button, Stack } from "@mui/material";
 
 type ActionEditorRowProps = {
   action: Action;
@@ -20,15 +22,38 @@ const ActionEditorRow: React.FC<ActionEditorRowProps> = ({
     onComplete(action);
   };
 
+  const handleComplete2: React.MouseEventHandler = (event) => {
+    event.stopPropagation();
+    onComplete({
+      ...action,
+      completed_at: new Date(),
+    });
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+  };
+
   if (!isEditing) {
     return (
       <div onClick={() => setIsEditing(true)}>
-        <Markdown>{action?.content}</Markdown>
+        <Stack direction="row">
+          <Button onClick={handleComplete2}>
+            <CheckCircle />
+          </Button>
+          <Markdown>{action?.content}</Markdown>
+        </Stack>
       </div>
     );
   }
 
-  return <ActionEditor action={action} onComplete={handleComplete} />;
+  return (
+    <ActionEditor
+      action={action}
+      onComplete={handleComplete}
+      onCancel={handleCancel}
+    />
+  );
 };
 
 export default ActionEditorRow;

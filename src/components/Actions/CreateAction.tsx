@@ -17,11 +17,21 @@ const CreateAction: React.FC<CreateActionProps> = ({ onComplete }) => {
     onComplete(action);
   };
 
+  const handleCancel = () => {
+    setIsCreating(false);
+  };
+
   if (!isCreating) {
     return <Button onClick={() => setIsCreating(true)}>Create action</Button>;
   }
 
-  return <ActionEditor action={{}} onComplete={handleComplete} />;
+  return (
+    <ActionEditor
+      action={{}}
+      onComplete={handleComplete}
+      onCancel={handleCancel}
+    />
+  );
 };
 
 export default CreateAction;
