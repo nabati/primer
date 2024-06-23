@@ -8,7 +8,6 @@ type ListNotesProps = {
 
 const ListNotes: React.FC<ListNotesProps> = ({ priorityId }) => {
   const { entries: notes } = useNotes({ priorityId });
-  console.log("@@entires", notes);
   return (
     <div>
       {notes.map((note) => (
