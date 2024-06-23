@@ -9,11 +9,15 @@ type YtdCellProps = {
 };
 
 const YtdCell: React.FC<YtdCellProps> = ({ habitId }) => {
-  const { data: events } = useEvents({
+  const { data: events, isFetching } = useEvents({
     habitId,
     startDate: formatDateToIsoDate(startOfYear(new Date())),
     endDate: formatDateToIsoDate(new Date()),
   });
+
+  if (isFetching) {
+    return <div>-</div>;
+  }
 
   return <div>{sumBy(events, (event) => event.value ?? 0)}</div>;
 };

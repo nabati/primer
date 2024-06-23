@@ -3,7 +3,6 @@ import { sortBy } from "lodash";
 import React, { useMemo } from "react";
 import formatDateToIsoDate from "../../utils/formatDateToIsoDate.ts";
 import useEvents from "../../hooks/useEvents.ts";
-import { CircularProgress } from "@mui/material";
 
 type StreakCellProps = {
   habitId: string;
@@ -39,7 +38,7 @@ const StreakCell: React.FC<StreakCellProps> = ({ habitId }) => {
   const today = useMemo(() => new Date(), []);
 
   if (isFetching) {
-    return <CircularProgress />;
+    return <div>-</div>;
   }
 
   return <div>{computeCurrentStreak(events, today)}</div>;
