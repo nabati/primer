@@ -15,7 +15,7 @@ const ActionEditorRow: React.FC<ActionEditorRowProps> = ({
 }) => {
   const [isEditing, setIsEditing] = React.useState(false);
 
-  const handleComplete = () => {
+  const handleComplete = (action: Partial<Action> & { content: string }) => {
     setIsEditing(false);
     onComplete(action);
   };

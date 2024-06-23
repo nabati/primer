@@ -12,12 +12,12 @@ type ActionsProps = {
 
 const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
   const { data } = useActions({ priorityId });
-  const { upsertAction } = useUpsertAction();
+  const { upsertAction } = useUpsertAction({ priorityId });
 
   const handleComplete = async (
     action: Partial<Action> & { content: string },
   ) => {
-    await upsertAction({ ...action, priorityId });
+    await upsertAction({ ...action });
   };
 
   return (
