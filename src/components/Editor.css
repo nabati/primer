@@ -32,7 +32,7 @@
   overflow-y: scroll;
   border-radius: 8px;
   align-self: stretch;
-  height: 70vh;
+  min-height: 20em;
   margin: 4px;
 
   outline: 1px solid #cecece;

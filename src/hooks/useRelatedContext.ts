@@ -7,17 +7,17 @@ import useSemanticChunks from "./useSemanticChunks.ts";
 
 export type ContextEntry = {
   content: string[];
-  journal_created_at: string;
-  journal_updated_at: string;
+  note_created_at: string;
+  note_updated_at: string;
   similarity: number;
 };
 
 const useRelatedContext = ({
   activity,
-  journalId,
+  noteId,
 }: {
   activity: Activity;
-  journalId: string;
+  noteId: string;
 }) => {
   const { data: chunks, isFetching: isFetchingChunks } = useSemanticChunks({
     content: activity.content,
@@ -31,7 +31,7 @@ const useRelatedContext = ({
   const { data, isPending } = useQueries({
     queries: embeddings.map((embedding) => ({
       queryKey: ["related-context", embedding],
-      queryFn: () => getRelatedContextByEmbedding(embedding, journalId),
+      queryFn: () => getRelatedContextByEmbedding(embedding, noteId),
       enabled:
         !isFetchingChunks && chunks !== undefined && !isEmbeddingsPending,
     })),

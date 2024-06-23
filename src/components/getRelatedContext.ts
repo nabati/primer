@@ -4,7 +4,7 @@ import { ContextEntry } from "../hooks/useRelatedContext.ts";
 
 const getRelatedContext = async (
   query: string,
-  excludedJournalId: string | undefined,
+  excludedNoteId: string | undefined,
 ): Promise<ContextEntry[]> => {
   if (query === "") {
     return [];
@@ -15,7 +15,7 @@ const getRelatedContext = async (
     query_embedding: embedding, // Pass the embedding you want to compare
     match_threshold: 0.6, // Choose an appropriate threshold for your data
     match_count: 5, // Choose the number of matches
-    excluded_journal_id: excludedJournalId, // Exclude a specific journal ID
+    excluded_note_id: excludedNoteId, // Exclude a specific note ID
   });
 
   if (data === null) {
