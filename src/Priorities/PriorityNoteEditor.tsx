@@ -12,11 +12,13 @@ import getFormattedDate from "../utils/getFormattedDate.ts";
 type PriorityNoteEditorProps = {
   id: string;
   priorityId?: string;
+  onComplete?: () => void;
 };
 
 const PriorityNoteEditor: React.FC<PriorityNoteEditorProps> = ({
   id,
   priorityId,
+  onComplete,
 }) => {
   const { note, isFetching, onEditorContentChange, save, hasUnsavedChanges } =
     usePersistence({
@@ -34,6 +36,13 @@ const PriorityNoteEditor: React.FC<PriorityNoteEditorProps> = ({
   usePreventUnloadIfUnsavedChanges({ hasUnsavedChanges, save });
   useKeyboardShortcuts({ save });
 
+  const handleKeyDown: React.KeyboardEventHandler = (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+      save();
+      onComplete?.();
+    }
+  };
+
   if (isFetching) {
     return (
       <Box>
@@ -45,6 +54,7 @@ const PriorityNoteEditor: React.FC<PriorityNoteEditorProps> = ({
   return (
     <Box
       style={{ position: "relative", display: "flex", flexDirection: "column" }}
+      onKeyDown={handleKeyDown}
     >
       <TopBarContainer>
         <DateContainer>{getFormattedDate(note?.created_at)}</DateContainer>
