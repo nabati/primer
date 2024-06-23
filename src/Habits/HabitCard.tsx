@@ -6,10 +6,13 @@ import useHabit from "../hooks/useHabit.ts";
 import Heatmap from "./Heatmap/Heatmap.tsx";
 import useEvents from "../hooks/useEvents.ts";
 import SummaryTable from "./SummaryTable/SummaryTable.tsx";
+import styled from "styled-components";
 
 type HabitCardProps = {
   id: string;
 };
+
+const DAYS_TO_SHOW = 12;
 
 const HabitCard: React.FC<HabitCardProps> = ({ id }) => {
   if (id === undefined) {
@@ -21,7 +24,7 @@ const HabitCard: React.FC<HabitCardProps> = ({ id }) => {
   const { startDate, endDate } = useMemo(() => {
     const date = new Date();
     return {
-      startDate: subDays(date, 14),
+      startDate: subDays(date, DAYS_TO_SHOW - 1),
       endDate: date,
     };
   }, []);
@@ -34,7 +37,7 @@ const HabitCard: React.FC<HabitCardProps> = ({ id }) => {
 
   return (
     <Card sx={{ padding: "16px" }}>
-      <h1>{habit.title}</h1>
+      <Title>{habit.title}</Title>
 
       <Heatmap
         startDate={startDate}
@@ -47,5 +50,10 @@ const HabitCard: React.FC<HabitCardProps> = ({ id }) => {
     </Card>
   );
 };
+
+const Title = styled.div`
+  font-size: 1.2em;
+  font-weight: bold;
+`;
 
 export default HabitCard;

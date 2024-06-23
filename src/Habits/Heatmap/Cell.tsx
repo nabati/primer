@@ -140,7 +140,7 @@ const Value = styled.div`
 `;
 
 const Container = styled.div<{ $intensity: number }>`
-  width: 6em;
+  width: 5em;
   height: 5em;
   overflow: hidden;
   background-color: ${(props) => `hsl(135, 100%, ${props.$intensity}%)`};
