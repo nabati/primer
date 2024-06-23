@@ -1,23 +1,27 @@
 import { Button } from "@mui/material";
 import React from "react";
-import useCreateAction from "../../hooks/useCreateAction";
+import { Action } from "../../types.ts";
+import ActionEditor from "./ActionEditor.tsx";
 
 type CreateActionProps = {
-  priorityId: string;
+  onComplete: ({ content }: { content: string }) => void;
 };
 
-const CreateAction: React.FC<CreateActionProps> = ({ ...props }) => {
-  const { createAction } = useCreateAction();
+const CreateAction: React.FC<CreateActionProps> = ({ onComplete }) => {
+  const [isCreating, setIsCreating] = React.useState(false);
 
-  const handleCreateActionClick = async () => {
-    const content = prompt("Enter action");
-
-    if (content) {
-      await createAction({ priorityId: props.priorityId, content });
-    }
+  const handleComplete = async (
+    action: Partial<Action> & { content: string },
+  ) => {
+    setIsCreating(false);
+    onComplete(action);
   };
 
-  return <Button onClick={handleCreateActionClick}>Create action</Button>;
+  if (!isCreating) {
+    return <Button onClick={() => setIsCreating(true)}>Create action</Button>;
+  }
+
+  return <ActionEditor action={{}} onComplete={handleComplete} />;
 };
 
 export default CreateAction;

@@ -10,6 +10,7 @@ const useActions = ({ priorityId }: { priorityId?: string } = {}) => {
       let query = getSupabaseClient()
         .from(TableName.ACTIONS)
         .select("*")
+        .is("completed_at", null)
         .order("created_at", { ascending: false });
 
       if (priorityId !== undefined) {
