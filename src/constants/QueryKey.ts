@@ -11,6 +11,13 @@ const QueryKey = {
     list: () => ["priorities"],
     single: (id: string) => ["priority", id],
   },
+  actions: {
+    list: ({ priorityId }: { priorityId?: string } = {}) => [
+      "actions",
+      "priority-id",
+      priorityId,
+    ],
+  },
 };
 
 export default QueryKey;

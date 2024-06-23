@@ -11,6 +11,7 @@ import {
   Box,
 } from "@mui/material";
 import styled from "styled-components";
+import Actions from "../../components/Actions/Actions.tsx";
 import ListHabits from "../../Habits/ListHabits.tsx";
 import useDeletePriority from "../../hooks/useDeletePriority.ts";
 import { getSupabaseClient } from "../../supabaseClient.ts";
@@ -187,6 +188,10 @@ const ViewPriority: React.FC<ViewPriorityProps> = ({ id }) => {
         <Column>
           <Notes priorityId={priority.id} />
         </Column>
+
+        <Column>
+          <Actions priorityId={priority.id} />
+        </Column>
       </Columns>
     </>
   );
@@ -194,7 +199,7 @@ const ViewPriority: React.FC<ViewPriorityProps> = ({ id }) => {
 
 const Columns = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 16px;
 `;
 

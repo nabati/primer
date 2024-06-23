@@ -19,3 +19,12 @@ export type Event = {
   habit_id: string;
   user_id: string;
 };
+
+export type Action = {
+  id: string;
+  content: string;
+  user_id: string;
+  priority_id: string;
+  completed_at: Date;
+  created_at: Date;
+};
