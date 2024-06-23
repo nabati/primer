@@ -37,9 +37,9 @@ const usePersistence = ({
       debounce(
         ({ content }: { content: string }) =>
           upsertNote({ id, content, priorityId }),
-        500,
+        3000,
         {
-          maxWait: 5000,
+          maxWait: 10000,
         },
       ),
     [upsertNote, id, priorityId],
