@@ -1,6 +1,10 @@
 const QueryKey = {
   notes: {
-    list: () => ["notes"],
+    list: ({ priorityId }: { priorityId?: string } = {}) => [
+      "notes",
+      "priority-id",
+      priorityId,
+    ],
     single: (id: string) => ["notes-entry", id],
   },
   priorities: {

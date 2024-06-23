@@ -1,7 +1,8 @@
 import { Button, Card } from "@mui/material";
 import React from "react";
-import useCreateNote from "../hooks/useCreateNote.ts";
-import PriorityNoteEditor from "./PriorityNoteEditor.tsx";
+import useCreateNote from "../../hooks/useCreateNote.ts";
+import PriorityNoteEditor from "../PriorityNoteEditor.tsx";
+import ListNotes from "./ListNotes.tsx";
 
 type NotesProps = { priorityId: string };
 
@@ -30,6 +31,8 @@ const Notes: React.FC<NotesProps> = ({ priorityId }) => {
       {isEditingNoteId && (
         <PriorityNoteEditor id={isEditingNoteId} priorityId={priorityId} />
       )}
+
+      <ListNotes priorityId={priorityId} />
     </Card>
   );
 };

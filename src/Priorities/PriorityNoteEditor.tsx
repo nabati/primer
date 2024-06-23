@@ -11,7 +11,7 @@ import getFormattedDate from "../utils/getFormattedDate.ts";
 
 type PriorityNoteEditorProps = {
   id: string;
-  priorityId: string;
+  priorityId?: string;
 };
 
 const PriorityNoteEditor: React.FC<PriorityNoteEditorProps> = ({

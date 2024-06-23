@@ -9,11 +9,12 @@ import {
   CircularProgress,
   Stack,
 } from "@mui/material";
+import styled from "styled-components";
 import ListHabits from "../../Habits/ListHabits.tsx";
 import useDeletePriority from "../../hooks/useDeletePriority.ts";
 import { getSupabaseClient } from "../../supabaseClient.ts";
 import AddHabitCard from "../../Habits/AddHabitCard.tsx";
-import Notes from "../Notes.tsx";
+import Notes from "../Notes/Notes.tsx";
 
 interface Priority {
   id: string;
@@ -174,15 +175,29 @@ const ViewPriority: React.FC<ViewPriorityProps> = ({ id }) => {
 
       <hr />
 
-      <ListHabits priorityId={id} />
+      <Columns>
+        <Column>
+          <ListHabits priorityId={id} />
+        </Column>
+
+        <Column>
+          <Notes priorityId={priority.id} />
+        </Column>
+      </Columns>
 
       <hr />
-
-      <Notes />
 
       {id !== undefined && <AddHabitCard priorityId={id} />}
     </>
   );
 };
+
+const Columns = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+`;
+
+const Column = styled.div``;
 
 export default ViewPriority;

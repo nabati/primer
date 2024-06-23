@@ -5,7 +5,7 @@ import { getSupabaseClient } from "../supabaseClient.ts";
 
 const useNotes = ({ priorityId }: { priorityId?: string } = {}) => {
   const { data: entries = [], isFetching } = useQuery({
-    queryKey: QueryKey.notes.list(),
+    queryKey: QueryKey.notes.list({ priorityId }),
     queryFn: async (): Promise<any> => {
       let query = getSupabaseClient()
         .from(TableName.NOTES)
