@@ -34,7 +34,7 @@ const Heatmap: React.FC<HeatmapCalendarProps> = ({
     >((acc, date): PreparedDatum[] => {
       const eventForDate = events?.find((event) => isSameDay(event.date, date));
 
-      if (eventForDate === undefined || eventForDate.value === 0) {
+      if (eventForDate === undefined) {
         acc.push({
           date,
           value: undefined,
@@ -44,7 +44,7 @@ const Heatmap: React.FC<HeatmapCalendarProps> = ({
       }
 
       const lastEntry = acc[acc.length - 1];
-      if (lastEntry === undefined) {
+      if (lastEntry === undefined && eventForDate.value > 0) {
         acc.push({
           date,
           value: eventForDate.value,
@@ -57,7 +57,10 @@ const Heatmap: React.FC<HeatmapCalendarProps> = ({
         differenceInDays(
           startOfDay(eventForDate.date),
           startOfDay(lastEntry.date),
-        ) === 1
+        ) === 1 &&
+        eventForDate.value > 0 &&
+        lastEntry.value !== undefined &&
+        lastEntry.value > 0
       ) {
         acc.push({
           date: date,
@@ -70,7 +73,7 @@ const Heatmap: React.FC<HeatmapCalendarProps> = ({
       acc.push({
         date: date,
         value: eventForDate.value,
-        streak: 1,
+        streak: eventForDate.value > 0 ? 1 : 0,
       });
       return acc;
     }, [] as PreparedDatum[]);
