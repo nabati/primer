@@ -8,9 +8,9 @@ import {
   Typography,
   CircularProgress,
 } from "@mui/material";
-import AddHabitCard from "../../Habits/AddHabitCard.tsx";
 import ListHabits from "../../Habits/ListHabits.tsx";
 import { getSupabaseClient } from "../../supabaseClient.ts";
+import AddHabitCard from "../../Habits/AddHabitCard.tsx";
 
 interface Priority {
   id: string;
@@ -158,9 +158,7 @@ const ViewPriority: React.FC<ViewPriorityProps> = ({ id }) => {
 
       <hr />
 
-
-
-      {/*{id !== undefined && <AddHabitCard priorityId={id} />}*/}
+      {id !== undefined && <AddHabitCard priorityId={id} />}
     </>
   );
 };
