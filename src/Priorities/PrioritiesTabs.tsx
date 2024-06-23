@@ -31,7 +31,7 @@ const PrioritiesTabs: React.FC<PrioritiesTabsProps> = ({ priorities }) => {
     <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
       <Tabs value={value} onChange={handleTabChange} variant="scrollable">
         {priorities.map((priority) => (
-          <Tab label={priority.title} value={priority.id} />
+          <Tab key={priority.id} label={priority.title} value={priority.id} />
         ))}
         <Tab
           label={
@@ -45,7 +45,7 @@ const PrioritiesTabs: React.FC<PrioritiesTabsProps> = ({ priorities }) => {
       </Tabs>
 
       {priorities.map((priority) => (
-        <TabPanel value={value} index={priority.id}>
+        <TabPanel key={priority.id} value={value} index={priority.id}>
           <ViewPriority id={priority.id} />
         </TabPanel>
       ))}

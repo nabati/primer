@@ -42,7 +42,7 @@ const Cell: React.FC<CellProps> = ({
   // Fix so that it actually does something on the backend
 
   return (
-    <Container intensity={mapStreakToIntensity(streak)}>
+    <Container $intensity={mapStreakToIntensity(streak)}>
       <DateC>{format(date, "dd/MM")}</DateC>
       <ValueContainer>
         <StyledButton onClick={handleDecrement}>
@@ -139,11 +139,11 @@ const Value = styled.div`
   font-weight: bold;
 `;
 
-const Container = styled.div<{ intensity: number }>`
+const Container = styled.div<{ $intensity: number }>`
   width: 6em;
   height: 5em;
   overflow: hidden;
-  background-color: ${(props) => `hsl(135, 100%, ${props.intensity}%)`};
+  background-color: ${(props) => `hsl(135, 100%, ${props.$intensity}%)`};
   display: flex;
   flex-direction: column;
   justify-content: center;
