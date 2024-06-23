@@ -111,7 +111,7 @@ type EditorProps = {
    * @param text
    */
   onChange?: (text: string) => void;
-  editorRef: React.RefObject<LexicalEditor>;
+  editorRef?: React.RefObject<LexicalEditor>;
   isFloatingPromptEnabled?: boolean;
 };
 
@@ -177,7 +177,9 @@ const Editor: React.FC<EditorProps> = ({
             <OnChangePlugin onChange={handleChange} />
             <HistoryPlugin />
             <AutoFocusPlugin />
-            <EditorRefPlugin editorRef={editorRef} />
+            {editorRef !== undefined && (
+              <EditorRefPlugin editorRef={editorRef} />
+            )}
             {isFloatingPromptEnabled && (
               <FloatingPrompt anchorElement={floatingAnchorElement} />
             )}

@@ -14,14 +14,12 @@ const useCreateNote = () => {
   }: { priorityId?: string } = {}): Promise<string> => {
     const { data: row } = await getSupabaseClient()
       .from(TableName.NOTES)
-      .insert([{ content: "", user_id: user.id, priorityId }])
+      .insert([{ content: "", user_id: user.id, priority_id: priorityId }])
       .select("*")
       .single<Note>();
 
     if (row === null) {
-      throw new Error(
-        "Something went wrong while creating a new journal entry",
-      );
+      throw new Error("Something went wrong while creating a new note");
     }
     queryClient.invalidateQueries({ queryKey: QueryKey.notes.list() });
     return row.id;

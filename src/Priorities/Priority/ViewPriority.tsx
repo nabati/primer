@@ -13,6 +13,7 @@ import ListHabits from "../../Habits/ListHabits.tsx";
 import useDeletePriority from "../../hooks/useDeletePriority.ts";
 import { getSupabaseClient } from "../../supabaseClient.ts";
 import AddHabitCard from "../../Habits/AddHabitCard.tsx";
+import Notes from "../Notes.tsx";
 
 interface Priority {
   id: string;
@@ -176,6 +177,8 @@ const ViewPriority: React.FC<ViewPriorityProps> = ({ id }) => {
       <ListHabits priorityId={id} />
 
       <hr />
+
+      <Notes />
 
       {id !== undefined && <AddHabitCard priorityId={id} />}
     </>
