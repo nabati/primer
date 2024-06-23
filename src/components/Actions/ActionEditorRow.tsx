@@ -15,6 +15,11 @@ const ActionEditorRow: React.FC<ActionEditorRowProps> = ({
 }) => {
   const [isEditing, setIsEditing] = React.useState(false);
 
+  const handleComplete = () => {
+    setIsEditing(false);
+    onComplete(action);
+  };
+
   if (!isEditing) {
     return (
       <div onClick={() => setIsEditing(true)}>
@@ -23,7 +28,7 @@ const ActionEditorRow: React.FC<ActionEditorRowProps> = ({
     );
   }
 
-  return <ActionEditor action={action} onComplete={onComplete} />;
+  return <ActionEditor action={action} onComplete={handleComplete} />;
 };
 
 export default ActionEditorRow;
