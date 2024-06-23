@@ -4,7 +4,7 @@ import QueryKey from "../constants/QueryKey.ts";
 import TableName from "../constants/TableName.ts";
 import { getSupabaseClient } from "../supabaseClient.ts";
 
-const useNoteUpsert = () => {
+const useUpsertNote = () => {
   const user = useUser();
   const queryClient = useQueryClient();
   const { mutateAsync } = useMutation({
@@ -36,4 +36,4 @@ const useNoteUpsert = () => {
   return mutateAsync;
 };
 
-export default useNoteUpsert;
+export default useUpsertNote;

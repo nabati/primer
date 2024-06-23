@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import QueryKey from "../../../constants/QueryKey.ts";
 import TableName from "../../../constants/TableName.ts";
 import useNote from "../../../hooks/useNote.ts";
-import useNoteUpsert from "../../../hooks/useNoteUpsert.ts";
+import useUpsertNote from "../../../hooks/useUpsertNote.ts";
 import { getSupabaseClient } from "../../../supabaseClient.ts";
 import { Note } from "../../../types.ts";
 
@@ -26,7 +26,7 @@ const usePersistence = ({
     setEditorContent(note.content);
   }, [note]);
 
-  const upsertNote = useNoteUpsert();
+  const upsertNote = useUpsertNote();
 
   const saveImmediate = useCallback(async () => {
     await upsertNote({ id, content: editorContent });

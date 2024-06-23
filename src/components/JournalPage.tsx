@@ -7,7 +7,7 @@ import Coach from "./Coach.tsx";
 import NoteEditor from "./NoteEditor/NoteEditor.tsx";
 import JournalSidebar from "./JournalSidebar.tsx";
 import { setPassiveEditorContent } from "./store.ts";
-import useNoteCreate from "../hooks/useNoteCreate.ts";
+import useCreateNote from "../hooks/useCreateNote.ts";
 import useNotes from "../hooks/useNotes.ts";
 
 type JournalProps = {
@@ -18,7 +18,7 @@ const JournalPage: React.FC<JournalProps> = () => {
   const navigate = useNavigate();
   const { id: selectedJournalId } = useParams();
   const editorRef = useRef<LexicalEditor | null>(null);
-  const createJournalEntry = useNoteCreate();
+  const createJournalEntry = useCreateNote();
 
   const { entries, isFetching } = useNotes();
 

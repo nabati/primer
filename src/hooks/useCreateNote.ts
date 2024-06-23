@@ -5,7 +5,7 @@ import { getSupabaseClient } from "../supabaseClient.ts";
 import { Note } from "../types.ts";
 import { useUser } from "../components/AuthContext.tsx";
 
-const useNoteCreate = () => {
+const useCreateNote = () => {
   const user = useUser();
   const queryClient = useQueryClient();
 
@@ -28,4 +28,4 @@ const useNoteCreate = () => {
   };
 };
 
-export default useNoteCreate;
+export default useCreateNote;

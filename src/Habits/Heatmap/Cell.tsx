@@ -3,7 +3,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import React from "react";
 import styled from "styled-components";
 import { format } from "date-fns";
-import useEventUpsert from "../../hooks/useEventUpsert.ts";
+import useUpsertEvent from "../../hooks/useUpsertEvent.ts";
 
 type CellProps = {
   habitId: string;
@@ -29,7 +29,7 @@ const Cell: React.FC<CellProps> = ({
   value: remoteValue,
   streak,
 }) => {
-  const { upsert: upsertEvent, variables } = useEventUpsert();
+  const { upsert: upsertEvent, variables } = useUpsertEvent();
   const value = variables?.value !== undefined ? variables.value : remoteValue;
   const handleDecrement = () => {
     upsertEvent({ date, value: Math.max((value ?? 0) - 1, 0), habitId });

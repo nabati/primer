@@ -20,7 +20,7 @@ const upsertEntry = async (event: Event): Promise<Event> => {
   return data;
 };
 
-const useEventUpsert = () => {
+const useUpsertEvent = () => {
   const queryClient = useQueryClient();
   const user = useUser();
   const { mutateAsync, variables } = useMutation({
@@ -55,4 +55,4 @@ const useEventUpsert = () => {
   return { upsert, variables };
 };
 
-export default useEventUpsert;
+export default useUpsertEvent;
