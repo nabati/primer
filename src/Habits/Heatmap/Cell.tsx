@@ -48,7 +48,7 @@ const Cell: React.FC<CellProps> = ({
         <StyledButton onClick={handleDecrement}>
           <RemoveIcon fontSize="inherit" />
         </StyledButton>
-        <Value>{value}</Value>
+        <Value>{value === undefined ? "-" : value}</Value>
         <StyledButton onClick={handleIncrement}>
           <AddIcon fontSize="small" />
         </StyledButton>
@@ -140,7 +140,7 @@ const Value = styled.div`
 `;
 
 const Container = styled.div<{ intensity: number }>`
-  width: 5em;
+  width: 6em;
   height: 5em;
   overflow: hidden;
   background-color: ${(props) => `hsl(135, 100%, ${props.intensity}%)`};
