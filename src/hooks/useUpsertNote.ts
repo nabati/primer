@@ -3,6 +3,7 @@ import { useUser } from "../components/AuthContext.tsx";
 import QueryKey from "../constants/QueryKey.ts";
 import TableName from "../constants/TableName.ts";
 import { getSupabaseClient } from "../supabaseClient.ts";
+import { Note } from "../types.ts";
 
 const useUpsertNote = () => {
   const user = useUser();
@@ -29,7 +30,24 @@ const useUpsertNote = () => {
         .single();
     },
     onSuccess: ({ data: note }) => {
+      queryClient.setQueryData(
+        QueryKey.notes.list({
+          priorityId: note.priority_id,
+        }),
+        (oldNotes: Note[]) =>
+          oldNotes.map((oldNote: Note) =>
+            oldNote.id === note.id ? note : oldNote,
+          ),
+      );
       queryClient.setQueryData(QueryKey.notes.single(note.id), note);
+    },
+    onError: (_, { id, priorityId }) => {
+      queryClient.invalidateQueries({
+        queryKey: QueryKey.notes.list({ priorityId }),
+      });
+      queryClient.invalidateQueries({
+        queryKey: QueryKey.notes.single(id),
+      });
     },
   });
 
