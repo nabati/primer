@@ -13,6 +13,7 @@ const QueryKey = {
       "priority-id",
       priorityId,
     ],
+    single: ({ id }: { id: string }) => ["habit", id],
   },
   priorities: {
     list: () => ["priorities"],

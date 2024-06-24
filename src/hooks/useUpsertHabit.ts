@@ -9,8 +9,8 @@ const useUpsertHabit = ({ priorityId }: { priorityId: string }) => {
   const queryClient = useQueryClient();
   const user = useUser();
   const { mutateAsync } = useMutation({
-    mutationFn: async (habit: Partial<Habit>) => {
-      return getSupabaseClient()
+    mutationFn: async (habit: Habit) =>
+      getSupabaseClient()
         .from(TableName.HABITS)
         .upsert(
           {
@@ -22,11 +22,13 @@ const useUpsertHabit = ({ priorityId }: { priorityId: string }) => {
           },
         )
         .select("*")
-        .single();
-    },
-    onSuccess: (_) => {
+        .single(),
+    onSuccess: ({ data: { id } }) => {
       queryClient.invalidateQueries({
         queryKey: QueryKey.habits.list({ priorityId }),
+      });
+      queryClient.invalidateQueries({
+        queryKey: QueryKey.habits.single({ id }),
       });
     },
   });

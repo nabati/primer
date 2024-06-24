@@ -1,35 +1,15 @@
 import Typography from "@mui/material/Typography";
 import React from "react";
-import { getSupabaseClient } from "../supabaseClient.ts";
-import { useQuery } from "@tanstack/react-query";
+import useHabits from "../hooks/useHabits.ts";
 import { Box, CircularProgress } from "@mui/material";
 import HabitCard from "./HabitCard.tsx";
-
-const fetchHabits = async ({ priorityId }: { priorityId: string }) => {
-  const supabase = getSupabaseClient();
-  const { data, error } = await supabase
-    .from("habits")
-    .select("*")
-    .eq("priority_id", priorityId);
-  if (error) {
-    throw new Error(error.message);
-  }
-  return data;
-};
 
 type ListHabitProps = {
   priorityId: string;
 };
 
 const ListHabits: React.FC<ListHabitProps> = ({ priorityId }) => {
-  const {
-    data: habits,
-    error,
-    isLoading,
-  } = useQuery({
-    queryKey: ["habits"],
-    queryFn: () => fetchHabits({ priorityId }),
-  });
+  const { data: habits, error, isLoading } = useHabits({ priorityId });
 
   if (isLoading) {
     return <CircularProgress />;
