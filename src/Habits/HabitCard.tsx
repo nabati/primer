@@ -1,7 +1,9 @@
 import { Card } from "@mui/material";
 import { subDays } from "date-fns";
 import React, { useMemo } from "react";
+import EditableField from "../components/EditableField.tsx";
 import useHabit from "../hooks/useHabit.ts";
+import useUpsertHabit from "../hooks/useUpsertHabit.ts";
 
 import Heatmap from "./Heatmap/Heatmap.tsx";
 import useEvents from "../hooks/useEvents.ts";
@@ -30,14 +32,27 @@ const HabitCard: React.FC<HabitCardProps> = ({ id }) => {
   }, []);
 
   const { data: events } = useEvents({ habitId: id, startDate, endDate });
+  const { upsertHabit } = useUpsertHabit({ priorityId: habit?.priority_id });
+
+  const handleComplete = (title: string) => {
+    upsertHabit({
+      ...habit,
+      title,
+    });
+  };
 
   if (isFetchingHabit) {
     return null;
   }
 
   return (
-    <Card sx={{ padding: "16px" }}>
-      <Title>{habit.title}</Title>
+    <Card sx={{ p: 2 }}>
+      <EditableField
+        display={<Title>{habit.title}</Title>}
+        initialValue={habit.title}
+        onCancel={() => {}}
+        onComplete={handleComplete}
+      />
 
       <Heatmap
         startDate={startDate}
