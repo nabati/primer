@@ -8,7 +8,7 @@ import NoteEditor from "./NoteEditor/NoteEditor.tsx";
 import JournalSidebar from "./JournalSidebar.tsx";
 import { setPassiveEditorContent } from "./store.ts";
 import useCreateNote from "../hooks/useCreateNote.ts";
-import useNotes from "../hooks/useNotes.ts";
+import useListNotes from "../hooks/useListNotes.ts";
 
 type JournalProps = {
   //
@@ -20,7 +20,7 @@ const JournalPage: React.FC<JournalProps> = () => {
   const editorRef = useRef<LexicalEditor | null>(null);
   const createJournalEntry = useCreateNote();
 
-  const { entries, isFetching } = useNotes();
+  const { entries, isFetching } = useListNotes();
 
   useEffect(() => {
     updateEmbeddings();

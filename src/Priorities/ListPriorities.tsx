@@ -6,7 +6,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import React from "react";
-import usePriorities from "../hooks/usePriorities.ts";
+import useListPriorities from "../hooks/useListPriorities.ts";
 import { CircularProgress, Link } from "@mui/material";
 
 const truncateDescription = (description: string, maxWords: number) => {
@@ -16,7 +16,7 @@ const truncateDescription = (description: string, maxWords: number) => {
 };
 
 const ListPriorities: React.FC = () => {
-  const { data: priorities, isLoading } = usePriorities();
+  const { data: priorities, isLoading } = useListPriorities();
 
   if (isLoading) {
     return <CircularProgress />;

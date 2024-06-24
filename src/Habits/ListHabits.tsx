@@ -1,6 +1,6 @@
 import Typography from "@mui/material/Typography";
 import React from "react";
-import useHabits from "../hooks/useHabits.ts";
+import useListHabits from "../hooks/useListHabits.ts";
 import { Box, CircularProgress } from "@mui/material";
 import HabitCard from "./HabitCard.tsx";
 
@@ -9,7 +9,7 @@ type ListHabitProps = {
 };
 
 const ListHabits: React.FC<ListHabitProps> = ({ priorityId }) => {
-  const { data: habits, error, isLoading } = useHabits({ priorityId });
+  const { data: habits, error, isLoading } = useListHabits({ priorityId });
 
   if (isLoading) {
     return <CircularProgress />;

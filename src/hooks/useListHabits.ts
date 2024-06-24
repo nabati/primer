@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import QueryKey from "../constants/QueryKey.ts";
 import { getSupabaseClient } from "../supabaseClient.ts";
 
-const useHabits = ({ priorityId }: { priorityId: string }) => {
+const useListHabits = ({ priorityId }: { priorityId: string }) => {
   return useQuery({
     queryKey: QueryKey.habits.list({ priorityId }),
     queryFn: async () => {
@@ -18,4 +18,4 @@ const useHabits = ({ priorityId }: { priorityId: string }) => {
   });
 };
 
-export default useHabits;
+export default useListHabits;

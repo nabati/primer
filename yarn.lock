@@ -6395,6 +6395,7 @@ __metadata:
     react-dom: "npm:^18.2.0"
     react-markdown: "npm:^9.0.1"
     react-router-dom: "npm:^6.23.1"
+    react-smooth-dnd: "npm:^0.11.1"
     react-tinder-card: "npm:^1.6.4"
     sort-by: "npm:^1.2.0"
     styled-components: "npm:^6.1.10"
@@ -6448,7 +6449,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:>=15.6.0, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -6573,6 +6574,18 @@ __metadata:
   peerDependencies:
     react: ">=16.8"
   checksum: 10c0/091949805745136350ab049b2a96281bf38742c9d3651019fb48ea79c5eafbfb0379f1d3e636602dd56b0ef278389e8fd25be983dc2c0ffd1103d06dfa8019f3
+  languageName: node
+  linkType: hard
+
+"react-smooth-dnd@npm:^0.11.1":
+  version: 0.11.1
+  resolution: "react-smooth-dnd@npm:0.11.1"
+  dependencies:
+    prop-types: "npm:>=15.6.0"
+    smooth-dnd: "npm:0.12.1"
+  peerDependencies:
+    react: ^16.3.0
+  checksum: 10c0/65603836a51353e394639e298232989fb9ef5f322f98ccca24e877dd6f194dd5ef1c71fdd22f09478142a64fd64a72f176c9ce02e238a520633284a021e8bbc6
   languageName: node
   linkType: hard
 
@@ -6913,6 +6926,13 @@ __metadata:
   version: 4.2.0
   resolution: "smart-buffer@npm:4.2.0"
   checksum: 10c0/a16775323e1404dd43fabafe7460be13a471e021637bc7889468eb45ce6a6b207261f454e4e530a19500cc962c4cc5348583520843b363f4193cee5c00e1e539
+  languageName: node
+  linkType: hard
+
+"smooth-dnd@npm:0.12.1":
+  version: 0.12.1
+  resolution: "smooth-dnd@npm:0.12.1"
+  checksum: 10c0/0b0fe64501fc91df9ca8f0f74b7e4fbe1f61938a1821a407331789c66ec73c81f92e561c5765d22db3be74a1ed85bffe5d873cd7c6ec93297849779bce41ae70
   languageName: node
   linkType: hard
 

@@ -6,7 +6,7 @@ import useHabit from "../hooks/useHabit.ts";
 import useUpsertHabit from "../hooks/useUpsertHabit.ts";
 
 import Heatmap from "./Heatmap/Heatmap.tsx";
-import useEvents from "../hooks/useEvents.ts";
+import useListEvents from "../hooks/useListEvents.ts";
 import SummaryTable from "./SummaryTable/SummaryTable.tsx";
 import styled from "styled-components";
 
@@ -31,7 +31,7 @@ const HabitCard: React.FC<HabitCardProps> = ({ id }) => {
     };
   }, []);
 
-  const { data: events } = useEvents({ habitId: id, startDate, endDate });
+  const { data: events } = useListEvents({ habitId: id, startDate, endDate });
   const { upsertHabit } = useUpsertHabit({ priorityId: habit?.priority_id });
 
   const handleComplete = (title: string) => {

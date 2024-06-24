@@ -1,5 +1,5 @@
 import React from "react";
-import useActions from "../../hooks/useActions.ts";
+import useListActions from "../../hooks/useListActions.ts";
 import useUpsertAction from "../../hooks/useUpsertAction.ts";
 import ActionEditorRow from "./ActionEditorRow.tsx";
 import CreateAction from "./CreateAction.tsx";
@@ -11,7 +11,7 @@ type ActionsProps = {
 };
 
 const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
-  const { data } = useActions({ priorityId });
+  const { data } = useListActions({ priorityId });
   const { upsertAction } = useUpsertAction({ priorityId });
 
   const handleComplete = async (

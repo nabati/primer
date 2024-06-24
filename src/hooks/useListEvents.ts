@@ -5,7 +5,7 @@ import { useUser } from "../components/AuthContext.tsx";
 import { getSupabaseClient } from "../supabaseClient.ts";
 import formatDateToIsoDate from "../utils/formatDateToIsoDate.ts";
 
-const useEvents = ({
+const useListEvents = ({
   habitId,
   startDate,
   endDate,
@@ -42,4 +42,4 @@ const useEvents = ({
   });
 };
 
-export default useEvents;
+export default useListEvents;

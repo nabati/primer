@@ -1,5 +1,5 @@
 import React from "react";
-import useNotes from "../../hooks/useNotes.ts";
+import useListNotes from "../../hooks/useListNotes.ts";
 import Note from "./Note.tsx";
 
 type ListNotesProps = {
@@ -7,7 +7,7 @@ type ListNotesProps = {
 };
 
 const ListNotes: React.FC<ListNotesProps> = ({ priorityId }) => {
-  const { entries: notes } = useNotes({ priorityId });
+  const { entries: notes } = useListNotes({ priorityId });
   return (
     <div>
       {notes.map((note) => (

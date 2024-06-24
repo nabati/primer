@@ -1,16 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
+import QueryKey from "../constants/QueryKey.ts";
 import TableName from "../constants/TableName.ts";
 import { getSupabaseClient } from "../supabaseClient.ts";
-import QueryKey from "../constants/QueryKey";
 
-const useActions = ({ priorityId }: { priorityId?: string } = {}) => {
-  return useQuery({
-    queryKey: QueryKey.actions.list({ priorityId }),
-    queryFn: async () => {
+const useListNotes = ({ priorityId }: { priorityId?: string } = {}) => {
+  const { data: entries = [], isFetching } = useQuery({
+    queryKey: QueryKey.notes.list({ priorityId }),
+    queryFn: async (): Promise<any> => {
       let query = getSupabaseClient()
-        .from(TableName.ACTIONS)
+        .from(TableName.NOTES)
         .select("*")
-        .is("completed_at", null)
         .order("created_at", { ascending: false });
 
       if (priorityId !== undefined) {
@@ -26,6 +25,11 @@ const useActions = ({ priorityId }: { priorityId?: string } = {}) => {
       return entries;
     },
   });
+
+  return {
+    entries,
+    isFetching,
+  };
 };
 
-export default useActions;
+export default useListNotes;

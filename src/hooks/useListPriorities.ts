@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getSupabaseClient } from "../supabaseClient.ts";
 
-const usePriorities = () => {
+const useListPriorities = () => {
   return useQuery({
     queryKey: ["priorities"],
     queryFn: async () => {
@@ -15,4 +15,4 @@ const usePriorities = () => {
   });
 };
 
-export default usePriorities;
+export default useListPriorities;
