@@ -23,7 +23,7 @@ const useArrowsForCyclingThroughPriorities = ({
 }) => {
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
-      if (event.altKey && event.key === "ArrowRight") {
+      if (event.ctrlKey && event.altKey && event.key === "ArrowRight") {
         const currentIndex = priorities.findIndex(
           (priority) => priority.id === value,
         );
@@ -34,7 +34,7 @@ const useArrowsForCyclingThroughPriorities = ({
         return;
       }
 
-      if (event.altKey && event.key === "ArrowLeft") {
+      if (event.ctrlKey && event.altKey && event.key === "ArrowLeft") {
         const currentIndex = priorities.findIndex(
           (priority) => priority.id === value,
         );
@@ -56,6 +56,22 @@ const useArrowsForCyclingThroughPriorities = ({
   }, [handleKeyDown]);
 };
 
+const useNavigateToFirstPriorityByDefault = ({
+  navigate,
+  priorities,
+  urlPriorityId,
+}: {
+  navigate: ReturnType<typeof useNavigate>;
+  priorities: Priority[];
+  urlPriorityId: string | undefined;
+}) => {
+  useEffect(() => {
+    if (urlPriorityId === undefined && priorities.length > 0) {
+      navigate(`/priorities/${priorities[0].id}`);
+    }
+  }, [navigate, priorities, urlPriorityId]);
+};
+
 const PrioritiesTabs: React.FC<PrioritiesTabsProps> = ({ priorities }) => {
   const { id: urlPriorityId } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -63,11 +79,11 @@ const PrioritiesTabs: React.FC<PrioritiesTabsProps> = ({ priorities }) => {
     navigate(`/priorities/${newValue}`);
   };
 
-  useEffect(() => {
-    if (urlPriorityId === undefined && priorities.length > 0) {
-      navigate(`/priorities/${priorities[0].id}`);
-    }
-  }, [navigate, priorities, urlPriorityId]);
+  useNavigateToFirstPriorityByDefault({
+    navigate,
+    priorities,
+    urlPriorityId,
+  });
 
   useArrowsForCyclingThroughPriorities({
     priorities,
