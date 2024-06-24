@@ -27,4 +27,5 @@ export type Action = {
   priority_id: string;
   completed_at: Date;
   created_at: Date;
+  head_id: string; // links to the previous action
 };

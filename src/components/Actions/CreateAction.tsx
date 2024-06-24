@@ -4,10 +4,11 @@ import { Action } from "../../types.ts";
 import ActionEditor from "./ActionEditor.tsx";
 
 type CreateActionProps = {
+  headId: string | undefined;
   onComplete: ({ content }: { content: string }) => void;
 };
 
-const CreateAction: React.FC<CreateActionProps> = ({ onComplete }) => {
+const CreateAction: React.FC<CreateActionProps> = ({ headId, onComplete }) => {
   const [isCreating, setIsCreating] = React.useState(false);
 
   const handleComplete = async (
@@ -30,7 +31,9 @@ const CreateAction: React.FC<CreateActionProps> = ({ onComplete }) => {
 
   return (
     <ActionEditor
-      action={{}}
+      action={{
+        head_id: headId,
+      }}
       onComplete={handleComplete}
       onCancel={handleCancel}
     />
