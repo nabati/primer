@@ -6,7 +6,6 @@ const useHabits = ({ priorityId }: { priorityId: string }) => {
   return useQuery({
     queryKey: QueryKey.habits.list({ priorityId }),
     queryFn: async () => {
-      console.log("@@useQueryFn", priorityId);
       const { data, error } = await getSupabaseClient()
         .from("habits")
         .select("*")
