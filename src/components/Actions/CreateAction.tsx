@@ -15,6 +15,9 @@ const CreateAction: React.FC<CreateActionProps> = ({ onComplete }) => {
   ) => {
     setIsCreating(false);
     onComplete(action);
+    setTimeout(() => {
+      setIsCreating(true);
+    }, 100);
   };
 
   const handleCancel = () => {
