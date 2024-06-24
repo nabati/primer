@@ -10,6 +10,7 @@ import {
   Stack,
   Box,
 } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 import styled from "styled-components";
 import Actions from "../../components/Actions/Actions.tsx";
 import ListHabits from "../../Habits/ListHabits.tsx";
@@ -155,20 +156,21 @@ const ViewPriority: React.FC<ViewPriorityProps> = ({ id }) => {
           ) : (
             priority !== undefined && (
               <>
-                <Typography variant="h5" component="div">
-                  {priority.title}
-                </Typography>
+                <Stack direction="row" alignItems="center" gap={0}>
+                  <Typography variant="h5" component="div">
+                    {priority.title}
+                  </Typography>
+                  <Button
+                    variant="text"
+                    color="primary"
+                    onClick={handleEdit}
+                    size="small"
+                    startIcon={<EditIcon />}
+                  />
+                </Stack>
                 <Typography variant="body1" component="div">
                   {priority.description}
                 </Typography>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleEdit}
-                  sx={{ mt: 2 }}
-                >
-                  Edit
-                </Button>
               </>
             )
           )}

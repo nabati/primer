@@ -1,5 +1,5 @@
 import { Box, Stack, Tab, Tabs } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AddPriorityCard from "./AddPriorityCard.tsx";
 import TabPanel from "./TabPanel.tsx";
@@ -12,6 +12,50 @@ type PrioritiesTabsProps = {
 
 const ADD_PRIORITY_PANEL_VALUE = "add-priority";
 
+const useArrowsForCyclingThroughPriorities = ({
+  priorities,
+  value,
+  navigate,
+}: {
+  priorities: Priority[];
+  value: string;
+  navigate: ReturnType<typeof useNavigate>;
+}) => {
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.altKey && event.key === "ArrowRight") {
+        const currentIndex = priorities.findIndex(
+          (priority) => priority.id === value,
+        );
+        const nextIndex = currentIndex + 1;
+        if (nextIndex < priorities.length) {
+          navigate(`/priorities/${priorities[nextIndex].id}`);
+        }
+        return;
+      }
+
+      if (event.altKey && event.key === "ArrowLeft") {
+        const currentIndex = priorities.findIndex(
+          (priority) => priority.id === value,
+        );
+        const previousIndex = currentIndex - 1;
+        if (previousIndex >= 0) {
+          navigate(`/priorities/${priorities[previousIndex].id}`);
+        }
+      }
+      return;
+    },
+    [navigate, priorities, value],
+  );
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleKeyDown]);
+};
+
 const PrioritiesTabs: React.FC<PrioritiesTabsProps> = ({ priorities }) => {
   const { id: urlPriorityId } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -23,7 +67,13 @@ const PrioritiesTabs: React.FC<PrioritiesTabsProps> = ({ priorities }) => {
     if (urlPriorityId === undefined && priorities.length > 0) {
       navigate(`/priorities/${priorities[0].id}`);
     }
-  }, [priorities, urlPriorityId]);
+  }, [navigate, priorities, urlPriorityId]);
+
+  useArrowsForCyclingThroughPriorities({
+    priorities,
+    value: urlPriorityId ?? ADD_PRIORITY_PANEL_VALUE,
+    navigate,
+  });
 
   const value = urlPriorityId ?? ADD_PRIORITY_PANEL_VALUE;
 
