@@ -29,7 +29,11 @@ const Notes: React.FC<NotesProps> = ({ priorityId }) => {
       </Button>
 
       {isEditingNoteId && (
-        <PriorityNoteEditor id={isEditingNoteId} priorityId={priorityId} />
+        <PriorityNoteEditor
+          id={isEditingNoteId}
+          priorityId={priorityId}
+          onComplete={() => setIsEditingNoteId(undefined)}
+        />
       )}
 
       <ListNotes priorityId={priorityId} />

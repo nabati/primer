@@ -36,7 +36,9 @@ const ActionEditorRow: React.FC<ActionEditorRowProps> = ({
 
   if (!isEditing) {
     return (
-      <div onClick={() => setIsEditing(true)}>
+      <div
+      // onClick={() => setIsEditing(true)}
+      >
         <Stack direction="row">
           <Button onClick={handleComplete2}>
             <CheckCircle />
