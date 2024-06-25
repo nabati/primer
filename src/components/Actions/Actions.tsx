@@ -61,10 +61,14 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
         ...action,
         head_id: undefined,
       },
-      {
-        ...nextAction,
-        head_id: previousAction?.id,
-      },
+      ...(nextAction !== undefined
+        ? [
+            {
+              ...nextAction,
+              head_id: previousAction?.id,
+            },
+          ]
+        : []),
     ]);
   };
 
