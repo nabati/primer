@@ -1,6 +1,7 @@
-import { CheckCircle } from "@mui/icons-material";
+import { CheckCircle, CircleOutlined } from "@mui/icons-material";
 import React from "react";
 import Markdown from "react-markdown";
+import styled from "styled-components";
 import { Action } from "../../types.ts";
 import ActionEditor from "./ActionEditor.tsx";
 import { Button, Stack } from "@mui/material";
@@ -16,6 +17,7 @@ const ActionEditorRow: React.FC<ActionEditorRowProps> = ({
   onComplete,
 }) => {
   const [isEditing, setIsEditing] = React.useState(false);
+  const [isHovering, setIsHovering] = React.useState(false);
 
   const handleComplete = (action: Partial<Action> & { content: string }) => {
     setIsEditing(false);
@@ -39,11 +41,15 @@ const ActionEditorRow: React.FC<ActionEditorRowProps> = ({
       <div
       // onClick={() => setIsEditing(true)}
       >
-        <Stack direction="row">
-          <Button onClick={handleComplete2}>
-            <CheckCircle />
-          </Button>
-          <Markdown>{action?.content}</Markdown>
+        <Stack direction="row" gap={0}>
+          <CheckmarkButton
+            onClick={handleComplete2}
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+          >
+            {isHovering ? <CheckCircle /> : <CircleOutlined />}
+          </CheckmarkButton>
+          <StyledMarkdown>{action?.content}</StyledMarkdown>
         </Stack>
       </div>
     );
@@ -57,5 +63,20 @@ const ActionEditorRow: React.FC<ActionEditorRowProps> = ({
     />
   );
 };
+
+const CheckmarkButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ccc;
+  padding: 4px;
+  cursor: pointer;
+`;
+
+const StyledMarkdown = styled(Markdown)`
+  display: flex;
+  align-items: center;
+  padding: 4px;
+`;
 
 export default ActionEditorRow;
