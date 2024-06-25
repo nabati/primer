@@ -17,9 +17,6 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
   const { upsertAction } = useUpsertAction({ priorityId });
   const actions = useSortedActions(data ?? []);
 
-  console.log("data", data);
-  console.log("actions", actions);
-
   const handleComplete = async (
     action: Partial<Action> & { content: string },
   ) => {
