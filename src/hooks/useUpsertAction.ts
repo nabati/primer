@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { sortActions } from "../components/Actions/hooks/useSortedActions.ts";
 
 import { useUser } from "../components/AuthContext.tsx";
 import QueryKey from "../constants/QueryKey.ts";
@@ -10,7 +11,12 @@ const useUpsertAction = ({ priorityId }: { priorityId: string }) => {
   const queryClient = useQueryClient();
   const user = useUser();
   const { mutateAsync } = useMutation({
-    mutationFn: async (action: Partial<Action>) => {
+    mutationFn: async (
+      action: Partial<Action> & {
+        id: string;
+        head_id: string | undefined | null;
+      },
+    ) => {
       return getSupabaseClient()
         .from(TableName.ACTIONS)
         .upsert(
@@ -25,6 +31,17 @@ const useUpsertAction = ({ priorityId }: { priorityId: string }) => {
         )
         .select("*")
         .single();
+    },
+    onMutate: (action) => {
+      queryClient.cancelQueries({
+        queryKey: QueryKey.actions.list({ priorityId }),
+      });
+      queryClient.setQueryData(
+        QueryKey.actions.list({ priorityId }),
+        (prevActions: Action[]) => {
+          return sortActions([...prevActions, action]);
+        },
+      );
     },
     onSuccess: (_) => {
       queryClient.invalidateQueries({

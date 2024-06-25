@@ -16,6 +16,7 @@ const ActionEditor: React.FC<ActionEditorProps> = ({
   const [content, setContent] = React.useState(action?.content ?? "");
   const handleKeyDown: React.KeyboardEventHandler = (event) => {
     if (event.key === "Enter") {
+      event.preventDefault();
       onComplete({ ...action, content });
     }
 

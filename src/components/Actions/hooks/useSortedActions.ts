@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Action } from "../../../types.ts";
 
-const findLinkedChild = (actions: Action[], headId: string): Action[] => {
+const findLinkedChild = <T extends X>(actions: T[], headId: string): T[] => {
   const action = actions.find((action) => action.head_id === headId);
 
   if (action === undefined) {
@@ -17,7 +17,12 @@ const findLinkedChild = (actions: Action[], headId: string): Action[] => {
   return [action, ...linkedChild];
 };
 
-export const sortActions = (actions: Action[]): Action[] => {
+type X = {
+  id: string;
+  head_id: string | null | undefined;
+};
+
+export const sortActions = <T extends X>(actions: T[]): T[] => {
   const headlessActions = actions.filter(
     (action) => action.head_id === null || action.head_id === undefined,
   );

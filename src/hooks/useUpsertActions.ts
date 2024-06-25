@@ -27,6 +27,9 @@ const useUpsertAction = ({ priorityId }: { priorityId: string }) => {
         .select("*");
     },
     onMutate: async (actions) => {
+      queryClient.cancelQueries({
+        queryKey: QueryKey.actions.list({ priorityId }),
+      });
       queryClient.setQueryData(
         QueryKey.actions.list({ priorityId }),
         (prevActions: Action[]) =>
