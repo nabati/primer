@@ -43,7 +43,29 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
   const handleComplete = async (
     action: Partial<Action> & { content: string },
   ) => {
-    await upsertAction({ ...action });
+    if (action.completed_at === undefined) {
+      // Single row action
+      await upsertAction({ ...action });
+      return;
+    }
+
+    // Multiple row action
+    const actionIndex = actions.findIndex(
+      (currentAction) => currentAction.id === action.id,
+    );
+    const previousAction = actions[actionIndex - 1];
+    const nextAction = actions[actionIndex + 1];
+
+    await upsertActions([
+      {
+        ...action,
+        head_id: undefined,
+      },
+      {
+        ...nextAction,
+        head_id: previousAction?.id,
+      },
+    ]);
   };
 
   const onDragEnd: OnDragEndResponder = ({ destination, source, ...other }) => {

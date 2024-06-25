@@ -31,20 +31,26 @@ const useUpsertAction = ({ priorityId }: { priorityId: string }) => {
         QueryKey.actions.list({ priorityId }),
         (prevActions: Action[]) =>
           sortActions(
-            prevActions?.map((prevAction) => {
-              const matchingUpdatedAction = actions.find(
-                (action) => action.id === prevAction.id,
-              );
+            prevActions
+              ?.map((prevAction) => {
+                const matchingUpdatedAction = actions.find(
+                  (action) => action.id === prevAction.id,
+                );
 
-              if (matchingUpdatedAction) {
-                return {
-                  ...prevAction,
-                  ...matchingUpdatedAction,
-                };
-              }
+                if (matchingUpdatedAction) {
+                  return {
+                    ...prevAction,
+                    ...matchingUpdatedAction,
+                  };
+                }
 
-              return prevAction;
-            }),
+                return prevAction;
+              })
+              .filter(
+                (action) =>
+                  action.completed_at === null ||
+                  action.completed_at === undefined,
+              ),
           ),
       );
     },
