@@ -2,11 +2,13 @@ import { useQuery } from "@tanstack/react-query";
 import TableName from "../constants/TableName.ts";
 import { getSupabaseClient } from "../supabaseClient.ts";
 import QueryKey from "../constants/QueryKey";
+import { Action } from "../types.ts";
+import { sortActions } from "../components/Actions/hooks/useSortedActions.ts";
 
 const useListActions = ({ priorityId }: { priorityId?: string } = {}) => {
   return useQuery({
     queryKey: QueryKey.actions.list({ priorityId }),
-    queryFn: async () => {
+    queryFn: async (): Promise<Action[]> => {
       let query = getSupabaseClient()
         .from(TableName.ACTIONS)
         .select("*")
@@ -23,7 +25,7 @@ const useListActions = ({ priorityId }: { priorityId?: string } = {}) => {
 
       const { data: entries } = await query;
 
-      return entries;
+      return sortActions(entries as Action[]);
     },
   });
 };

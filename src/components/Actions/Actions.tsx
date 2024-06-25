@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useListActions from "../../hooks/useListActions.ts";
 import useUpsertAction from "../../hooks/useUpsertAction.ts";
 import useUpsertActions from "../../hooks/useUpsertActions.ts";
@@ -7,6 +7,7 @@ import CreateAction from "./CreateAction.tsx";
 import Stack from "@mui/material/Stack";
 import { Action } from "../../types.ts";
 import { last } from "lodash";
+import getLinkedActionList from "./getLinkedActionList.ts";
 import useSortedActions from "./hooks/useSortedActions.ts";
 import {
   DragDropContext,
@@ -14,6 +15,7 @@ import {
   Draggable,
   OnDragEndResponder,
 } from "react-beautiful-dnd";
+import isValidActionList from "./isValidActionList.ts";
 import ShamefulStrictModeDroppable from "./ShamefulStrictModeDroppable.tsx";
 
 type ActionsProps = {
@@ -24,6 +26,18 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
   const { data } = useListActions({ priorityId });
   const { upsertAction } = useUpsertAction({ priorityId });
   const { upsertActions } = useUpsertActions({ priorityId });
+  useEffect(() => {
+    if (data === undefined) {
+      return;
+    }
+
+    if (!isValidActionList(data)) {
+      // This should really only be run if there have been previous issues
+      console.warn("@@not valid action list");
+      upsertActions(getLinkedActionList(data));
+    }
+  }, [data, upsertActions]);
+
   const actions = useSortedActions(data ?? []);
 
   const handleComplete = async (
@@ -45,15 +59,19 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
     const sourceActionAfter =
       source.index < actions.length - 1 ? actions[source.index + 1] : undefined;
 
-    // TODO: Double check this one. Is it always defined, also at the end?
-    const destinationAction = actions[destination.index];
-
-    if (!destinationAction) {
-      throw new Error("Expected this to be defined - confirm");
-    }
+    const computedDestinationIndex =
+      source.index > destination.index
+        ? destination.index
+        : destination.index + 1;
+    const destinationAction =
+      computedDestinationIndex < actions.length
+        ? actions[computedDestinationIndex]
+        : undefined;
 
     const destinationActionBefore =
-      destination.index > 0 ? actions[destination.index - 1] : undefined;
+      computedDestinationIndex > 0
+        ? actions[computedDestinationIndex - 1]
+        : undefined;
 
     const updatedActions = [
       // Link together the sourceAction with the item before the destinationAction
@@ -80,11 +98,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
     ];
 
     upsertActions(updatedActions);
-    console.log("@@onDragEnd", destination);
   };
-
-  // TODO: Handle the complete case also. You need to stitch the next item in the list with the
-  // previous one.
 
   return (
     <div>

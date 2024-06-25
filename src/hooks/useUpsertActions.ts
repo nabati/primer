@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { sortActions } from "../components/Actions/hooks/useSortedActions.ts";
 
 import { useUser } from "../components/AuthContext.tsx";
 import QueryKey from "../constants/QueryKey.ts";
@@ -29,20 +30,22 @@ const useUpsertAction = ({ priorityId }: { priorityId: string }) => {
       queryClient.setQueryData(
         QueryKey.actions.list({ priorityId }),
         (prevActions: Action[]) =>
-          prevActions?.map((prevAction) => {
-            const matchingUpdatedAction = actions.find(
-              (action) => action.id === prevAction.id,
-            );
+          sortActions(
+            prevActions?.map((prevAction) => {
+              const matchingUpdatedAction = actions.find(
+                (action) => action.id === prevAction.id,
+              );
 
-            if (matchingUpdatedAction) {
-              return {
-                ...prevAction,
-                ...matchingUpdatedAction,
-              };
-            }
+              if (matchingUpdatedAction) {
+                return {
+                  ...prevAction,
+                  ...matchingUpdatedAction,
+                };
+              }
 
-            return prevAction;
-          }),
+              return prevAction;
+            }),
+          ),
       );
     },
     onSuccess: (_) => {

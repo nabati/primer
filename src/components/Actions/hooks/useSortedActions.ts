@@ -17,7 +17,7 @@ const findLinkedChild = (actions: Action[], headId: string): Action[] => {
   return [action, ...linkedChild];
 };
 
-const sortActions = (actions: Action[]): Action[] => {
+export const sortActions = (actions: Action[]): Action[] => {
   const headlessActions = actions.filter(
     (action) => action.head_id === null || action.head_id === undefined,
   );
