@@ -39,7 +39,10 @@ const useUpsertAction = ({ priorityId }: { priorityId: string }) => {
       queryClient.setQueryData(
         QueryKey.actions.list({ priorityId }),
         (prevActions: Action[]) => {
-          return sortActions([...prevActions, action]);
+          return sortActions([
+            ...prevActions.filter((prevAction) => prevAction.id !== action.id),
+            action,
+          ]);
         },
       );
     },
