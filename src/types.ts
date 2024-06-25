@@ -28,4 +28,5 @@ export type Action = {
   completed_at: Date;
   created_at: Date;
   head_id: string; // links to the previous action
+  indentation: number;
 };

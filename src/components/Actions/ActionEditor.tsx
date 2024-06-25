@@ -8,6 +8,8 @@ type ActionEditorProps = {
   onCancel: () => void;
 };
 
+const MAX_INDENTATION = 4;
+
 const ActionEditor: React.FC<ActionEditorProps> = ({
   action,
   onComplete,
@@ -18,10 +20,32 @@ const ActionEditor: React.FC<ActionEditorProps> = ({
     if (event.key === "Enter") {
       event.preventDefault();
       onComplete({ ...action, content });
+      return;
     }
 
     if (event.key === "Escape") {
       onCancel();
+      return;
+    }
+
+    if (event.metaKey && event.key === "[") {
+      event.preventDefault();
+      onComplete({
+        ...action,
+        content,
+        indentation: Math.max(0, (action?.indentation ?? 0) - 1),
+      });
+      return;
+    }
+
+    if (event.metaKey && event.key === "]") {
+      event.preventDefault();
+      onComplete({
+        ...action,
+        content,
+        indentation: Math.min((action?.indentation ?? 0) + 1, MAX_INDENTATION),
+      });
+      return;
     }
   };
 

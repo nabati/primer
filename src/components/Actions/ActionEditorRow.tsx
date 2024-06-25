@@ -38,8 +38,9 @@ const ActionEditorRow: React.FC<ActionEditorRowProps> = ({
 
   if (!isEditing) {
     return (
-      <div
-      // onClick={() => setIsEditing(true)}
+      <Container
+        $indentation={action.indentation ?? 0}
+        onClick={() => setIsEditing(true)}
       >
         <Stack direction="row" gap={0}>
           <CheckmarkButton
@@ -51,16 +52,18 @@ const ActionEditorRow: React.FC<ActionEditorRowProps> = ({
           </CheckmarkButton>
           <StyledMarkdown>{action?.content}</StyledMarkdown>
         </Stack>
-      </div>
+      </Container>
     );
   }
 
   return (
-    <ActionEditor
-      action={action}
-      onComplete={handleComplete}
-      onCancel={handleCancel}
-    />
+    <Container $indentation={action?.indentation ?? 0}>
+      <ActionEditor
+        action={action}
+        onComplete={handleComplete}
+        onCancel={handleCancel}
+      />
+    </Container>
   );
 };
 
@@ -77,6 +80,10 @@ const StyledMarkdown = styled(Markdown)`
   display: flex;
   align-items: center;
   padding: 4px;
+`;
+
+const Container = styled.div<{ $indentation: number }>`
+  padding-left: ${(props) => props.$indentation * 16}px;
 `;
 
 export default ActionEditorRow;
