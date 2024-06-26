@@ -9,11 +9,13 @@ import { Stack } from "@mui/material";
 type ActionEditorRowProps = {
   action: Action;
   priorityId: string;
+  onUpdate: (action: Partial<Action> & { content: string }) => void;
   onComplete: (action: Partial<Action> & { content: string }) => void;
 };
 
 const ActionEditorRow: React.FC<ActionEditorRowProps> = ({
   action,
+  onUpdate,
   onComplete,
 }) => {
   const [isEditing, setIsEditing] = React.useState(false);
@@ -60,6 +62,7 @@ const ActionEditorRow: React.FC<ActionEditorRowProps> = ({
     <Container $indentation={action?.indentation ?? 0}>
       <ActionEditor
         action={action}
+        onUpdate={onUpdate}
         onComplete={handleComplete}
         onCancel={handleCancel}
       />

@@ -3,8 +3,9 @@ import React from "react";
 import { Action } from "../../types.ts";
 
 type ActionEditorProps = {
-  action: Partial<Action>;
+  action: Partial<Action> & { id: string };
   onComplete: (action: Partial<Action> & { content: string }) => void;
+  onUpdate: (action: Partial<Action> & { content: string }) => void;
   onCancel: () => void;
 };
 
@@ -14,6 +15,7 @@ const ActionEditor: React.FC<ActionEditorProps> = ({
   action,
   onComplete,
   onCancel,
+  onUpdate,
 }) => {
   const [content, setContent] = React.useState(action?.content ?? "");
   const handleKeyDown: React.KeyboardEventHandler = (event) => {
@@ -30,7 +32,7 @@ const ActionEditor: React.FC<ActionEditorProps> = ({
 
     if (event.metaKey && event.key === "[") {
       event.preventDefault();
-      onComplete({
+      onUpdate({
         ...action,
         content,
         indentation: Math.max(0, (action?.indentation ?? 0) - 1),
@@ -40,7 +42,7 @@ const ActionEditor: React.FC<ActionEditorProps> = ({
 
     if (event.metaKey && event.key === "]") {
       event.preventDefault();
-      onComplete({
+      onUpdate({
         ...action,
         content,
         indentation: Math.min((action?.indentation ?? 0) + 1, MAX_INDENTATION),

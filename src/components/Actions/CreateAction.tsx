@@ -1,8 +1,32 @@
 import { Button } from "@mui/material";
-import React from "react";
+import React, { useCallback, useEffect } from "react";
+import useWindowKeydown from "../../Priorities/Priority/hooks/useWindowKeydown.ts";
 import { Action } from "../../types.ts";
 import ActionEditor from "./ActionEditor.tsx";
 import { v4 as uuid } from "uuid";
+
+const useCreateNewActionKeyboardShortcut = (createNew: () => void) => {
+  const handleKeydown = useCallback(
+    (event: KeyboardEvent) => {
+      const tagsToIgnore = ["INPUT", "TEXTAREA"];
+      const activeElement = document.activeElement;
+      if (
+        activeElement !== null &&
+        tagsToIgnore.includes(activeElement.tagName)
+      ) {
+        return;
+      }
+
+      if (event.key === "a") {
+        event.preventDefault();
+        createNew();
+      }
+    },
+    [createNew],
+  );
+
+  useWindowKeydown(handleKeydown);
+};
 
 type CreateActionProps = {
   headId: string | undefined;
@@ -11,6 +35,11 @@ type CreateActionProps = {
 
 const CreateAction: React.FC<CreateActionProps> = ({ headId, onComplete }) => {
   const [isCreatingId, setIsCreatingId] = React.useState<string | undefined>();
+  const createNew = useCallback(() => {
+    setIsCreatingId(uuid());
+  }, []);
+
+  useCreateNewActionKeyboardShortcut(createNew);
 
   const handleComplete = async (
     action: Partial<Action> & { content: string },
@@ -24,9 +53,7 @@ const CreateAction: React.FC<CreateActionProps> = ({ headId, onComplete }) => {
   };
 
   if (isCreatingId === undefined) {
-    return (
-      <Button onClick={() => setIsCreatingId(uuid())}>Create action</Button>
-    );
+    return <Button onClick={createNew}>Create action</Button>;
   }
 
   return (

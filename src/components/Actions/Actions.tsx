@@ -41,6 +41,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
   const handleComplete = async (
     action: Partial<Action> & { content: string },
   ) => {
+    console.log("handleComplete", action);
     if (action.completed_at === null) {
       // Single row action
       await upsertAction({ ...action });
@@ -146,6 +147,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
                         <ActionEditorRow
                           action={action}
                           priorityId={action.priorityId}
+                          onUpdate={upsertAction}
                           onComplete={handleComplete}
                         />
                       </div>
