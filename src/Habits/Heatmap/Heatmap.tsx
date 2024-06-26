@@ -54,6 +54,7 @@ const Heatmap: React.FC<HeatmapCalendarProps> = ({
       }
 
       if (
+        lastEntry !== undefined &&
         differenceInDays(
           startOfDay(eventForDate.date),
           startOfDay(lastEntry.date),
