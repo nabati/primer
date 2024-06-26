@@ -4,7 +4,7 @@ import Markdown from "react-markdown";
 import styled from "styled-components";
 import { Action } from "../../types.ts";
 import ActionEditor from "./ActionEditor.tsx";
-import { Button, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 
 type ActionEditorRowProps = {
   action: Action;
