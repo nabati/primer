@@ -11,8 +11,8 @@ const useUpsertAction = ({ priorityId }: { priorityId: string }) => {
   const queryClient = useQueryClient();
   const user = useUser();
   const { mutateAsync } = useMutation({
-    mutationFn: async (actions: Partial<Action>[]) => {
-      return getSupabaseClient()
+    mutationFn: async (actions: Partial<Action>[]) =>
+      getSupabaseClient()
         .from(TableName.ACTIONS)
         .upsert(
           actions.map((action) => ({
@@ -24,8 +24,7 @@ const useUpsertAction = ({ priorityId }: { priorityId: string }) => {
             onConflict: "id",
           },
         )
-        .select("*");
-    },
+        .select("*"),
     onMutate: async (actions) => {
       queryClient.cancelQueries({
         queryKey: QueryKey.actions.list({ priorityId }),
