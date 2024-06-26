@@ -9,7 +9,7 @@ export type Note = {
   content: string;
   user_id: string;
   updated_at: Date;
-  priority_id?: string;
+  priority_id: string | null;
 };
 
 export type Event = {
@@ -25,8 +25,8 @@ export type Action = {
   content: string;
   user_id: string;
   priority_id: string;
-  completed_at: Date;
+  completed_at: Date | null;
   created_at: Date;
-  head_id: string; // links to the previous action
+  head_id: string | null;
   indentation: number;
 };
