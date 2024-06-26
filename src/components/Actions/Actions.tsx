@@ -41,8 +41,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
   const handleComplete = async (
     action: Partial<Action> & { content: string },
   ) => {
-    console.log("handleComplete", action);
-    if (action.completed_at === null) {
+    if (action.completed_at === null || action.completed_at === undefined) {
       // Single row action
       await upsertAction({ ...action });
       return;
@@ -64,7 +63,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
         ? [
             {
               ...nextAction,
-              head_id: previousAction?.id,
+              head_id: previousAction?.id ?? null,
             },
           ]
         : []),
@@ -102,7 +101,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
       // Link together the sourceAction with the item before the destinationAction
       {
         ...sourceAction,
-        head_id: destinationActionBefore?.id,
+        head_id: destinationActionBefore?.id ?? null,
       },
       ...(destinationAction !== undefined
         ? [
@@ -116,7 +115,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
         ? [
             {
               ...sourceActionAfter,
-              head_id: sourceActionBefore?.id,
+              head_id: sourceActionBefore?.id ?? null,
             },
           ]
         : []),
