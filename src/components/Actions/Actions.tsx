@@ -11,7 +11,6 @@ import getLinkedActionList from "./getLinkedActionList.ts";
 import useSortedActions from "./hooks/useSortedActions.ts";
 import {
   DragDropContext,
-  Droppable,
   Draggable,
   OnDragEndResponder,
 } from "react-beautiful-dnd";
@@ -33,7 +32,6 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
 
     if (!isValidActionList(data)) {
       // This should really only be run if there have been previous issues
-      console.warn("@@not valid action list");
       upsertActions(getLinkedActionList(data));
     }
   }, [data, upsertActions]);
@@ -43,7 +41,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
   const handleComplete = async (
     action: Partial<Action> & { content: string },
   ) => {
-    if (action.completed_at === undefined) {
+    if (action.completed_at === null) {
       // Single row action
       await upsertAction({ ...action });
       return;
@@ -59,7 +57,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
     await upsertActions([
       {
         ...action,
-        head_id: undefined,
+        head_id: null,
       },
       ...(nextAction !== undefined
         ? [
