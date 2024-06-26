@@ -1,59 +1,31 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { sortActions } from "../components/Actions/hooks/useSortedActions.ts";
+import { useCallback } from "react";
 
-import { useUser } from "../components/AuthContext.tsx";
-import QueryKey from "../constants/QueryKey.ts";
-import TableName from "../constants/TableName";
-import { getSupabaseClient } from "../supabaseClient.ts";
 import { Action } from "../types.ts";
+import useUpsertActions from "./useUpsertActions.ts";
 
 const useUpsertAction = ({ priorityId }: { priorityId: string }) => {
-  const queryClient = useQueryClient();
-  const user = useUser();
-  const { mutateAsync } = useMutation({
-    mutationFn: async (
+  const { upsertActions } = useUpsertActions({ priorityId });
+
+  const upsertAction = useCallback(
+    async (
       action: Partial<Action> & {
         id: string;
         head_id: string | undefined | null;
       },
     ) => {
-      return getSupabaseClient()
-        .from(TableName.ACTIONS)
-        .upsert(
-          {
-            ...action,
-            user_id: user.id,
-            priority_id: priorityId,
-          },
-          {
-            onConflict: "id",
-          },
-        )
-        .select("*")
-        .single();
+      const { data: actions } = await upsertActions([action]);
+
+      if (actions?.length !== 1) {
+        throw new Error("Expected exactly one action to be returned");
+      }
+
+      return { data: actions[0] };
     },
-    onMutate: (action) => {
-      queryClient.cancelQueries({
-        queryKey: QueryKey.actions.list({ priorityId }),
-      });
-      queryClient.setQueryData(
-        QueryKey.actions.list({ priorityId }),
-        (prevActions: Action[]) => {
-          return sortActions([
-            ...prevActions.filter((prevAction) => prevAction.id !== action.id),
-            action,
-          ]);
-        },
-      );
-    },
-    onSuccess: (_) => {
-      queryClient.invalidateQueries({
-        queryKey: QueryKey.actions.list({ priorityId }),
-      });
-    },
-  });
+    [upsertActions],
+  );
+
   return {
-    upsertAction: mutateAsync,
+    upsertAction,
   };
 };
 
