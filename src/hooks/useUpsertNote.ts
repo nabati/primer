@@ -34,10 +34,12 @@ const useUpsertNote = () => {
         QueryKey.notes.list({
           priorityId: note.priority_id,
         }),
-        (oldNotes: Note[]) =>
-          oldNotes.map((oldNote: Note) =>
-            oldNote.id === note.id ? note : oldNote,
-          ),
+        (oldNotes: Note[]) => {
+          return [
+            note,
+            ...oldNotes.filter((oldNote) => oldNote.id !== note.id),
+          ];
+        },
       );
       queryClient.setQueryData(QueryKey.notes.single(note.id), note);
     },

@@ -1,13 +1,11 @@
 import React from "react";
-import useListNotes from "../../hooks/useListNotes.ts";
-import Note from "./Note.tsx";
+import Note, { Note as NoteType } from "./Note.tsx";
 
 type ListNotesProps = {
-  priorityId: string;
+  notes: NoteType[];
 };
 
-const ListNotes: React.FC<ListNotesProps> = ({ priorityId }) => {
-  const { entries: notes } = useListNotes({ priorityId });
+const ListNotes: React.FC<ListNotesProps> = ({ notes }) => {
   return (
     <div>
       {notes.map((note) => (

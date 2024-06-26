@@ -1,21 +1,27 @@
 import { Button, Card } from "@mui/material";
 import React from "react";
 import useCreateNote from "../../hooks/useCreateNote.ts";
+import useListNotes from "../../hooks/useListNotes.ts";
 import PriorityNoteEditor from "../PriorityNoteEditor.tsx";
 import ListNotes from "./ListNotes.tsx";
 
 type NotesProps = { priorityId: string };
 
 const Notes: React.FC<NotesProps> = ({ priorityId }) => {
+  const { entries: notes } = useListNotes({ priorityId });
   const createNote = useCreateNote();
-  const [isEditingNoteId, setIsEditingNoteId] = React.useState<
+  const [isCreatingNoteWithId, setIsCreatingNoteWithId] = React.useState<
     string | undefined
   >();
 
   const handleCreateNoteClick = async () => {
     const noteId = await createNote({ priorityId });
-    setIsEditingNoteId(noteId);
+    setIsCreatingNoteWithId(noteId);
   };
+
+  const notesWithoutCreatingNote = notes.filter(
+    (note) => note.id !== isCreatingNoteWithId,
+  );
 
   return (
     <Card sx={{ p: 1, my: 1 }}>
@@ -28,15 +34,15 @@ const Notes: React.FC<NotesProps> = ({ priorityId }) => {
         Create note
       </Button>
 
-      {isEditingNoteId && (
+      {isCreatingNoteWithId && (
         <PriorityNoteEditor
-          id={isEditingNoteId}
+          id={isCreatingNoteWithId}
           priorityId={priorityId}
-          onComplete={() => setIsEditingNoteId(undefined)}
+          onComplete={() => setIsCreatingNoteWithId(undefined)}
         />
       )}
 
-      <ListNotes priorityId={priorityId} />
+      <ListNotes notes={notesWithoutCreatingNote} />
     </Card>
   );
 };
