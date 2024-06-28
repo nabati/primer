@@ -18,10 +18,19 @@ const ActionEditor: React.FC<ActionEditorProps> = ({
   onUpdate,
 }) => {
   const [content, setContent] = React.useState(action?.content ?? "");
+
+  const complete = () => {
+    onComplete({ ...action, content });
+  };
+
+  const handleBlur = () => {
+    complete();
+  };
+
   const handleKeyDown: React.KeyboardEventHandler = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      onComplete({ ...action, content });
+      complete();
       return;
     }
 
@@ -71,6 +80,7 @@ const ActionEditor: React.FC<ActionEditorProps> = ({
       onKeyDown={handleKeyDown}
       autoFocus
       onFocus={handleFocus}
+      onBlur={handleBlur}
     />
   );
 };
