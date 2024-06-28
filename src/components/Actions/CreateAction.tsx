@@ -12,7 +12,8 @@ const useCreateNewActionKeyboardShortcut = (createNew: () => void) => {
       const activeElement = document.activeElement;
       if (
         activeElement !== null &&
-        tagsToIgnore.includes(activeElement.tagName)
+        (tagsToIgnore.includes(activeElement.tagName) ||
+          activeElement.getAttribute("contenteditable") === "true")
       ) {
         return;
       }
