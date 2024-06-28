@@ -11,20 +11,20 @@ type ActionEditorRowProps = {
   priorityId: string;
   onUpdate: (action: Partial<Action> & { content: string }) => void;
   onComplete: (action: Partial<Action> & { content: string }) => void;
+  isEditing: boolean;
+  onEdit: () => void;
+  onCancel: () => void;
 };
 
 const ActionEditorRow: React.FC<ActionEditorRowProps> = ({
   action,
   onUpdate,
   onComplete,
+  onEdit,
+  isEditing,
+  onCancel,
 }) => {
-  const [isEditing, setIsEditing] = React.useState(false);
   const [isHovering, setIsHovering] = React.useState(false);
-
-  const handleComplete = (action: Partial<Action> & { content: string }) => {
-    setIsEditing(false);
-    onComplete(action);
-  };
 
   const handleComplete2: React.MouseEventHandler = (event) => {
     event.stopPropagation();
@@ -34,16 +34,9 @@ const ActionEditorRow: React.FC<ActionEditorRowProps> = ({
     });
   };
 
-  const handleCancel = () => {
-    setIsEditing(false);
-  };
-
   if (!isEditing) {
     return (
-      <Container
-        $indentation={action.indentation ?? 0}
-        onClick={() => setIsEditing(true)}
-      >
+      <Container $indentation={action.indentation ?? 0} onClick={onEdit}>
         <Stack direction="row" gap={0}>
           <CheckmarkButton
             onClick={handleComplete2}
@@ -63,8 +56,8 @@ const ActionEditorRow: React.FC<ActionEditorRowProps> = ({
       <ActionEditor
         action={action}
         onUpdate={onUpdate}
-        onComplete={handleComplete}
-        onCancel={handleCancel}
+        onComplete={onComplete}
+        onCancel={onCancel}
       />
     </Container>
   );

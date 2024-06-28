@@ -38,9 +38,14 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
 
   const actions = useSortedActions(data ?? []);
 
+  const [isEditingActionId, setIsEditingActionId] = React.useState<
+    string | null
+  >(null);
+
   const handleComplete = async (
     action: Partial<Action> & { content: string },
   ) => {
+    setIsEditingActionId(null);
     if (action.completed_at === null || action.completed_at === undefined) {
       // Single row action
       await upsertAction({ ...action });
@@ -144,6 +149,9 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
                         {...provided.dragHandleProps}
                       >
                         <ActionEditorRow
+                          isEditing={isEditingActionId === action.id}
+                          onEdit={() => setIsEditingActionId(action.id)}
+                          onCancel={() => setIsEditingActionId(null)}
                           action={action}
                           priorityId={action.priorityId}
                           onUpdate={upsertAction}
