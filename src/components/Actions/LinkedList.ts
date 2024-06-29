@@ -57,6 +57,22 @@ class LinkedList<T extends StringableId> {
     return [...this.items];
   }
 
+  insertAt(index: number, item: T): LinkedList<T> {
+    const nextItems = [...this.items];
+    nextItems.splice(index, 0, item);
+    return LinkedList.fromArray(nextItems);
+  }
+
+  static insertAtDiff<T extends StringableId>(
+    items: T[],
+    index: number,
+    item: T,
+  ): T[] {
+    const prevList = LinkedList.fromArray(items);
+    const nextList = prevList.insertAt(index, item);
+    return LinkedList.diff(prevList, nextList);
+  }
+
   // Returns a new LinkedList where the item will be at the specified index
   moveTo(item: T, index: number): LinkedList<T> {
     const itemIndex = this.items.findIndex(

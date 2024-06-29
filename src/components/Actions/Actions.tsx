@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import React, { useCallback, useEffect } from "react";
 import useListActions from "../../hooks/useListActions.ts";
 import useUpsertAction from "../../hooks/useUpsertAction.ts";
@@ -6,10 +7,9 @@ import useWindowKeydown from "../../Priorities/Priority/hooks/useWindowKeydown.t
 import isActiveElementDescendantOfElement from "../../utils/isActiveElementDescendantOfElement.ts";
 import isActiveElementEditable from "../../utils/isActiveElementEditable.ts";
 import ActionEditorRow from "./ActionEditorRow.tsx";
-import CreateAction from "./CreateAction.tsx";
 import Stack from "@mui/material/Stack";
 import { Action } from "../../types.ts";
-import { isEqual, last } from "lodash";
+import { last } from "lodash";
 import getLinkedActionList from "./getLinkedActionList.ts";
 import useSortedActions from "./hooks/useSortedActions.ts";
 import {
@@ -20,6 +20,7 @@ import {
 import isValidActionList from "./isValidActionList.ts";
 import LinkedList from "./LinkedList.ts";
 import ShamefulStrictModeDroppable from "./ShamefulStrictModeDroppable.tsx";
+import { v4 as uuid } from "uuid";
 
 type ActionsProps = {
   priorityId: string;
@@ -83,7 +84,32 @@ const useActionsKeyboardShortCuts = ({
   useWindowKeydown(handleKeydown);
 };
 
+const useCreateNewActionKeyboardShortcut = (createNew: () => void) => {
+  const handleKeydown = useCallback(
+    (event: KeyboardEvent) => {
+      if (isActiveElementEditable()) {
+        return;
+      }
+
+      if (event.key === "a") {
+        event.preventDefault();
+        createNew();
+      }
+    },
+    [createNew],
+  );
+
+  useWindowKeydown(handleKeydown);
+};
+
 const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
+  const [nextActionState, setNextActionState] = React.useState<{
+    id: string;
+    beforeId: string | undefined;
+  }>({
+    id: uuid(),
+    beforeId: undefined,
+  });
   const containerRef = React.useRef<HTMLDivElement>(null);
   const { data } = useListActions({ priorityId });
   const { upsertAction } = useUpsertAction({ priorityId });
@@ -111,6 +137,9 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
     setIsEditingActionId,
     containerRef,
   });
+  useCreateNewActionKeyboardShortcut(() => {
+    setIsEditingActionId(nextActionState.id);
+  });
 
   const handleComplete = async (
     action: Partial<Action> & { id: string; content: string },
@@ -123,7 +152,6 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
     }
 
     const diffActions = LinkedList.deleteDiff(actions, action);
-
     await upsertActions([
       {
         ...action,
@@ -131,6 +159,14 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
       },
       ...diffActions,
     ]);
+  };
+
+  const handleCreate = (action: Action) => {
+    setIsEditingActionId(null);
+
+    const foundIndex = actions.findIndex((a) => a.id === action.head_id);
+    const index = foundIndex === -1 ? 0 : foundIndex + 1;
+    upsertActions(LinkedList.insertAtDiff(actions, index, action));
   };
 
   const onDragEnd: OnDragEndResponder = ({ destination, source }) => {
@@ -143,14 +179,14 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
     );
   };
 
-  const handleCreateNewBefore = () => {
+  const handleCreateNew = (beforeAction: Action | undefined) => {
     // Injects an action before the specified reference action
-    setIsEditingActionId(null);
-  };
-
-  const handleCreateNewAfter = () => {
-    // Injects an action after the specified reference action
-    setIsEditingActionId(null);
+    const id = uuid();
+    setIsEditingActionId(id);
+    setNextActionState({
+      id,
+      beforeId: beforeAction?.id,
+    });
   };
 
   return (
@@ -161,38 +197,92 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
             {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
                 {actions.map((action, index) => (
-                  <Draggable
-                    key={action.id}
-                    draggableId={action.id}
-                    index={index}
-                  >
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
+                  <React.Fragment key={action.id}>
+                    {isEditingActionId === nextActionState.id &&
+                      nextActionState.beforeId === action.id && (
                         <ActionEditorRow
-                          isEditing={isEditingActionId === action.id}
-                          onEdit={() => setIsEditingActionId(action.id)}
+                          key={nextActionState.id}
+                          id={nextActionState.id}
+                          action={{
+                            id: nextActionState.id,
+                            head_id: actions[index - 1]?.id,
+                          }}
+                          onComplete={(nextAction) => {
+                            handleCreate(nextAction);
+                            const nextId = uuid();
+                            setNextActionState({
+                              id: nextId,
+                              beforeId: action.id,
+                            });
+                            setIsEditingActionId(nextId);
+                          }}
+                          onEdit={() =>
+                            setIsEditingActionId(nextActionState.id)
+                          }
                           onCancel={() => setIsEditingActionId(null)}
-                          action={action}
-                          priorityId={action.priorityId}
-                          onUpdate={upsertAction}
-                          onComplete={handleComplete}
-                          onCreateNewBefore={handleCreateNewBefore}
-                          onCreateNewAfter={handleCreateNewAfter}
+                          isEditing
                         />
-                      </div>
-                    )}
-                  </Draggable>
+                      )}
+                    <Draggable draggableId={action.id} index={index}>
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <ActionEditorRow
+                            isEditing={isEditingActionId === action.id}
+                            onEdit={() => setIsEditingActionId(action.id)}
+                            onCancel={() => setIsEditingActionId(null)}
+                            action={action}
+                            priorityId={action.priorityId}
+                            onUpdate={upsertAction}
+                            onComplete={handleComplete}
+                            onCreateNewBefore={() => handleCreateNew(action)}
+                            onCreateNewAfter={() =>
+                              handleCreateNew(actions[index + 1])
+                            }
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  </React.Fragment>
                 ))}
                 {provided.placeholder}
               </div>
             )}
           </ShamefulStrictModeDroppable>
         </DragDropContext>
-        <CreateAction onComplete={handleComplete} headId={last(actions)?.id} />
+        <>
+          {isEditingActionId == null && (
+            <Button onClick={() => setIsEditingActionId(nextActionState.id)}>
+              Create action
+            </Button>
+          )}
+          {isEditingActionId === nextActionState.id &&
+            nextActionState.beforeId === undefined && (
+              <ActionEditorRow
+                key={nextActionState.id}
+                id={nextActionState.id}
+                action={{
+                  id: isEditingActionId,
+                  head_id: last(actions)?.id ?? null,
+                }}
+                onComplete={(action) => {
+                  handleCreate(action);
+                  const nextId = uuid();
+                  setNextActionState({
+                    id: nextId,
+                    beforeId: undefined,
+                  });
+                  setIsEditingActionId(nextId);
+                }}
+                onEdit={() => setIsEditingActionId(nextActionState.id)}
+                isEditing
+                onCancel={() => setIsEditingActionId(null)}
+              />
+            )}
+        </>
       </Stack>
     </div>
   );

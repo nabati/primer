@@ -28,21 +28,10 @@ const ActionEditor: React.FC<ActionEditorProps> = ({
   };
 
   const handleBlur = () => {
-    complete();
+    onCancel();
   };
 
   const handleKeyDown: React.KeyboardEventHandler = (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      complete();
-      return;
-    }
-
-    if (event.key === "Escape") {
-      onCancel();
-      return;
-    }
-
     if (event.metaKey && event.key === "[") {
       event.preventDefault();
       onUpdate({
@@ -72,6 +61,17 @@ const ActionEditor: React.FC<ActionEditorProps> = ({
     if (event.ctrlKey && event.key === "Enter") {
       event.preventDefault();
       onCreateNewBefore?.();
+      return;
+    }
+
+    if (event.key === "Enter") {
+      event.preventDefault();
+      complete();
+      return;
+    }
+
+    if (event.key === "Escape") {
+      onCancel();
       return;
     }
   };
