@@ -9,7 +9,7 @@ import ActionEditorRow from "./ActionEditorRow.tsx";
 import CreateAction from "./CreateAction.tsx";
 import Stack from "@mui/material/Stack";
 import { Action } from "../../types.ts";
-import { last } from "lodash";
+import { isEqual, last } from "lodash";
 import getLinkedActionList from "./getLinkedActionList.ts";
 import useSortedActions from "./hooks/useSortedActions.ts";
 import {
@@ -18,6 +18,7 @@ import {
   OnDragEndResponder,
 } from "react-beautiful-dnd";
 import isValidActionList from "./isValidActionList.ts";
+import LinkedActionList from "./LinkedActionList.ts";
 import ShamefulStrictModeDroppable from "./ShamefulStrictModeDroppable.tsx";
 
 type ActionsProps = {
@@ -112,7 +113,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
   });
 
   const handleComplete = async (
-    action: Partial<Action> & { content: string },
+    action: Partial<Action> & { id: string; content: string },
   ) => {
     setIsEditingActionId(null);
     if (action.completed_at === null || action.completed_at === undefined) {
@@ -121,81 +122,41 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
       return;
     }
 
-    // Multiple row action
-    const actionIndex = actions.findIndex(
-      (currentAction) => currentAction.id === action.id,
-    );
-    const previousAction = actions[actionIndex - 1];
-    const nextAction = actions[actionIndex + 1];
+    const diffActions = LinkedActionList.deleteDiff(actions, action);
+
+    console.log("nextActions", diffActions);
 
     await upsertActions([
       {
         ...action,
         head_id: null,
       },
-      ...(nextAction !== undefined
-        ? [
-            {
-              ...nextAction,
-              head_id: previousAction?.id ?? null,
-            },
-          ]
-        : []),
+      ...diffActions,
     ]);
   };
 
-  const onDragEnd: OnDragEndResponder = ({ destination, source, ...other }) => {
+  const onDragEnd: OnDragEndResponder = ({ destination, source }) => {
     if (destination === null || destination === undefined) {
       return;
     }
 
-    const sourceAction = actions[source.index];
+    upsertActions(
+      LinkedActionList.moveToDiff(
+        actions,
+        actions[source.index],
+        destination.index,
+      ),
+    );
+  };
 
-    const sourceActionBefore =
-      source.index > 0 ? actions[source.index - 1] : undefined;
+  const handleCreateNewBefore = () => {
+    // Injects an action before the specified reference action
+    setIsEditingActionId(null);
+  };
 
-    const sourceActionAfter =
-      source.index < actions.length - 1 ? actions[source.index + 1] : undefined;
-
-    const computedDestinationIndex =
-      source.index > destination.index
-        ? destination.index
-        : destination.index + 1;
-    const destinationAction =
-      computedDestinationIndex < actions.length
-        ? actions[computedDestinationIndex]
-        : undefined;
-
-    const destinationActionBefore =
-      computedDestinationIndex > 0
-        ? actions[computedDestinationIndex - 1]
-        : undefined;
-
-    const updatedActions = [
-      // Link together the sourceAction with the item before the destinationAction
-      {
-        ...sourceAction,
-        head_id: destinationActionBefore?.id ?? null,
-      },
-      ...(destinationAction !== undefined
-        ? [
-            {
-              ...destinationAction,
-              head_id: sourceAction.id,
-            },
-          ]
-        : []),
-      ...(sourceActionAfter !== undefined
-        ? [
-            {
-              ...sourceActionAfter,
-              head_id: sourceActionBefore?.id ?? null,
-            },
-          ]
-        : []),
-    ];
-
-    upsertActions(updatedActions);
+  const handleCreateNewAfter = () => {
+    // Injects an action after the specified reference action
+    setIsEditingActionId(null);
   };
 
   return (
@@ -225,6 +186,8 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
                           priorityId={action.priorityId}
                           onUpdate={upsertAction}
                           onComplete={handleComplete}
+                          onCreateNewBefore={handleCreateNewBefore}
+                          onCreateNewAfter={handleCreateNewAfter}
                         />
                       </div>
                     )}

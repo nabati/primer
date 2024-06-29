@@ -7,6 +7,8 @@ type ActionEditorProps = {
   onComplete: (action: Partial<Action> & { content: string }) => void;
   onUpdate: (action: Partial<Action> & { content: string }) => void;
   onCancel: () => void;
+  onCreateNewBefore?: () => void;
+  onCreateNewAfter?: () => void;
 };
 
 const MAX_INDENTATION = 4;
@@ -16,6 +18,8 @@ const ActionEditor: React.FC<ActionEditorProps> = ({
   onComplete,
   onCancel,
   onUpdate,
+  onCreateNewBefore,
+  onCreateNewAfter,
 }) => {
   const [content, setContent] = React.useState(action?.content ?? "");
 
@@ -56,6 +60,18 @@ const ActionEditor: React.FC<ActionEditorProps> = ({
         content,
         indentation: Math.min((action?.indentation ?? 0) + 1, MAX_INDENTATION),
       });
+      return;
+    }
+
+    if (event.shiftKey && event.key === "Enter") {
+      event.preventDefault();
+      onCreateNewAfter?.();
+      return;
+    }
+
+    if (event.ctrlKey && event.key === "Enter") {
+      event.preventDefault();
+      onCreateNewBefore?.();
       return;
     }
   };

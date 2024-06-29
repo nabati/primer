@@ -14,6 +14,8 @@ type ActionEditorRowProps = {
   isEditing: boolean;
   onEdit: () => void;
   onCancel: () => void;
+  onCreateNewBefore?: () => void;
+  onCreateNewAfter?: () => void;
 };
 
 const ActionEditorRow: React.FC<ActionEditorRowProps> = ({
@@ -23,6 +25,8 @@ const ActionEditorRow: React.FC<ActionEditorRowProps> = ({
   onEdit,
   isEditing,
   onCancel,
+  onCreateNewBefore,
+  onCreateNewAfter,
 }) => {
   const [isHovering, setIsHovering] = React.useState(false);
 
@@ -58,6 +62,8 @@ const ActionEditorRow: React.FC<ActionEditorRowProps> = ({
         onUpdate={onUpdate}
         onComplete={onComplete}
         onCancel={onCancel}
+        onCreateNewAfter={onCreateNewBefore}
+        onCreateNewBefore={onCreateNewAfter}
       />
     </Container>
   );

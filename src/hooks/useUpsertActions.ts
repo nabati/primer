@@ -6,7 +6,6 @@ import QueryKey from "../constants/QueryKey.ts";
 import TableName from "../constants/TableName";
 import { getSupabaseClient } from "../supabaseClient.ts";
 import { Action } from "../types.ts";
-import logReturn from "../utils/logReturn.ts";
 
 const useUpsertAction = ({ priorityId }: { priorityId: string }) => {
   const queryClient = useQueryClient();
@@ -16,13 +15,11 @@ const useUpsertAction = ({ priorityId }: { priorityId: string }) => {
       getSupabaseClient()
         .from(TableName.ACTIONS)
         .upsert(
-          logReturn(
-            actions.map((action) => ({
-              ...action,
-              user_id: user.id,
-              priority_id: priorityId,
-            })),
-          ),
+          actions.map((action) => ({
+            ...action,
+            user_id: user.id,
+            priority_id: priorityId,
+          })),
           {
             onConflict: "id",
             defaultToNull: false,
