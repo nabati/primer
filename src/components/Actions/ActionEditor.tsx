@@ -6,21 +6,22 @@ import IndentationContainer from "./IndentationContainer.tsx";
 type ActionEditorProps = {
   action: Partial<Action> & { id: string };
   onComplete: (action: Partial<Action> & { content: string }) => void;
-  onUpdate: (action: Partial<Action> & { content: string }) => void;
   onCancel: () => void;
   onCreateNewBefore?: () => void;
   onCreateNewAfter?: () => void;
+  maxIndentation: number;
 };
 
-const MAX_INDENTATION = 4;
+const GLOBAL_MAX_INDENTATION = 4;
+const DEFAULT_MAX_INDENTATION = 1;
 
 const ActionEditor: React.FC<ActionEditorProps> = ({
   action,
   onComplete,
   onCancel,
-  onUpdate,
   onCreateNewBefore,
   onCreateNewAfter,
+  maxIndentation = DEFAULT_MAX_INDENTATION,
 }) => {
   const [content, setContent] = React.useState(action?.content ?? "");
   const [indentation, setIndentation] = React.useState(
@@ -44,7 +45,12 @@ const ActionEditor: React.FC<ActionEditorProps> = ({
 
     if (event.metaKey && event.key === "]") {
       event.preventDefault();
-      setIndentation(Math.min((indentation ?? 0) + 1, MAX_INDENTATION));
+      setIndentation(
+        Math.min(
+          (indentation ?? 0) + 1,
+          Math.min(maxIndentation, GLOBAL_MAX_INDENTATION),
+        ),
+      );
       return;
     }
 

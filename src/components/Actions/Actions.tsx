@@ -306,6 +306,9 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
                             });
                           }}
                           isEditing
+                          maxIndentation={
+                            actions[index - 1]?.indentation + 1 ?? 1
+                          }
                         />
                       )}
                     <Draggable draggableId={action.id} index={index}>
@@ -331,11 +334,13 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
                             }
                             action={action}
                             priorityId={action.priorityId}
-                            onUpdate={upsertAction}
                             onComplete={handleComplete}
                             onCreateNewBefore={() => handleCreateNew(action)}
                             onCreateNewAfter={() =>
                               handleCreateNew(actions[index + 1])
+                            }
+                            maxIndentation={
+                              actions[index - 1]?.indentation + 1 ?? 1
                             }
                           />
                         </div>
@@ -385,6 +390,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
                     beforeId: undefined,
                   });
                 }}
+                maxIndentation={actions[actions.length - 1]?.indentation + 1}
               />
             )}
         </>
