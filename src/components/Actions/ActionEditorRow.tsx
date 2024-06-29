@@ -12,7 +12,7 @@ type ActionEditorRowProps = {
   onUpdate: (action: Partial<Action> & { content: string }) => void;
   onComplete: (action: Partial<Action> & { content: string }) => void;
   isEditing: boolean;
-  onEdit: () => void;
+  onEdit?: () => void;
   onCancel: () => void;
   onCreateNewBefore?: () => void;
   onCreateNewAfter?: () => void;
