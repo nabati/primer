@@ -1,6 +1,7 @@
 import { TextField } from "@mui/material";
 import React from "react";
 import { Action } from "../../types.ts";
+import IndentationContainer from "./IndentationContainer.tsx";
 
 type ActionEditorProps = {
   action: Partial<Action> & { id: string };
@@ -22,9 +23,12 @@ const ActionEditor: React.FC<ActionEditorProps> = ({
   onCreateNewAfter,
 }) => {
   const [content, setContent] = React.useState(action?.content ?? "");
+  const [indentation, setIndentation] = React.useState(
+    action?.indentation ?? 0,
+  );
 
   const complete = () => {
-    onComplete({ ...action, content });
+    onComplete({ ...action, content, indentation });
   };
 
   const handleBlur = () => {
@@ -34,21 +38,13 @@ const ActionEditor: React.FC<ActionEditorProps> = ({
   const handleKeyDown: React.KeyboardEventHandler = (event) => {
     if (event.metaKey && event.key === "[") {
       event.preventDefault();
-      onUpdate({
-        ...action,
-        content,
-        indentation: Math.max(0, (action?.indentation ?? 0) - 1),
-      });
+      setIndentation(Math.max(0, (indentation ?? 0) - 1));
       return;
     }
 
     if (event.metaKey && event.key === "]") {
       event.preventDefault();
-      onUpdate({
-        ...action,
-        content,
-        indentation: Math.min((action?.indentation ?? 0) + 1, MAX_INDENTATION),
-      });
+      setIndentation(Math.min((indentation ?? 0) + 1, MAX_INDENTATION));
       return;
     }
 
@@ -84,20 +80,22 @@ const ActionEditor: React.FC<ActionEditorProps> = ({
   };
 
   return (
-    <TextField
-      label="Action"
-      variant="outlined"
-      fullWidth
-      multiline
-      rows={2}
-      margin="normal"
-      value={content}
-      onChange={(e) => setContent(e.target.value)}
-      onKeyDown={handleKeyDown}
-      autoFocus
-      onFocus={handleFocus}
-      onBlur={handleBlur}
-    />
+    <IndentationContainer $indentation={indentation ?? 0}>
+      <TextField
+        label="Action"
+        variant="outlined"
+        fullWidth
+        multiline
+        rows={2}
+        margin="normal"
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+        onKeyDown={handleKeyDown}
+        autoFocus
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+      />
+    </IndentationContainer>
   );
 };
 

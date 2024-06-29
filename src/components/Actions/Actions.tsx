@@ -70,19 +70,29 @@ const useActionsKeyboardShortCuts = ({
         });
 
         if (currentIndex === -1) {
+          if (nextActionState.beforeId !== undefined) {
+            setNextActionState({
+              id: actions[0]?.id,
+              beforeId: undefined,
+            });
+          }
           return;
         }
 
         const nextAction = actions[currentIndex + 1];
-        if (nextAction === undefined) {
+        if (nextAction !== undefined) {
+          setNextActionState({
+            id: nextAction.id,
+            beforeId: undefined,
+          });
           return;
         }
 
+        // At the bottom of the list
         setNextActionState({
-          id: nextAction.id,
+          id: uuid(),
           beforeId: undefined,
         });
-
         return;
       }
 
@@ -105,18 +115,34 @@ const useActionsKeyboardShortCuts = ({
         });
 
         if (currentIndex === -1) {
+          // Bottom of the list, creating a new one.
+          setNextActionState({
+            id: actions[actions.length - 1]?.id,
+            beforeId: undefined,
+          });
           return;
         }
 
         const previousAction = actions[currentIndex - 1];
-        if (previousAction === undefined) {
+        if (previousAction !== undefined) {
+          setNextActionState({
+            id: previousAction.id,
+            beforeId: undefined,
+          });
           return;
         }
 
-        setNextActionState({
-          id: previousAction.id,
-          beforeId: undefined,
-        });
+        // At the top of the list
+        if (
+          nextActionState.beforeId !== actions[0]?.id ||
+          nextActionState.id === undefined
+        ) {
+          setNextActionState({
+            id: uuid(),
+            beforeId: actions[0]?.id,
+          });
+          return;
+        }
 
         return;
       }

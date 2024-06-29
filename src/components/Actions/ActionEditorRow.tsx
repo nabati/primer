@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { Action } from "../../types.ts";
 import ActionEditor from "./ActionEditor.tsx";
 import { Stack } from "@mui/material";
+import IndentationContainer from "./IndentationContainer.tsx";
 
 type ActionEditorRowProps = {
   action: Action;
@@ -40,7 +41,10 @@ const ActionEditorRow: React.FC<ActionEditorRowProps> = ({
 
   if (!isEditing) {
     return (
-      <Container $indentation={action.indentation ?? 0} onClick={onEdit}>
+      <IndentationContainer
+        $indentation={action.indentation ?? 0}
+        onClick={onEdit}
+      >
         <Stack direction="row" gap={0}>
           <CheckmarkButton
             onClick={handleComplete2}
@@ -51,21 +55,19 @@ const ActionEditorRow: React.FC<ActionEditorRowProps> = ({
           </CheckmarkButton>
           <StyledMarkdown>{action?.content}</StyledMarkdown>
         </Stack>
-      </Container>
+      </IndentationContainer>
     );
   }
 
   return (
-    <Container $indentation={action?.indentation ?? 0}>
-      <ActionEditor
-        action={action}
-        onUpdate={onUpdate}
-        onComplete={onComplete}
-        onCancel={onCancel}
-        onCreateNewAfter={onCreateNewBefore}
-        onCreateNewBefore={onCreateNewAfter}
-      />
-    </Container>
+    <ActionEditor
+      action={action}
+      onUpdate={onUpdate}
+      onComplete={onComplete}
+      onCancel={onCancel}
+      onCreateNewAfter={onCreateNewBefore}
+      onCreateNewBefore={onCreateNewAfter}
+    />
   );
 };
 
@@ -82,10 +84,6 @@ const StyledMarkdown = styled(Markdown)`
   display: flex;
   align-items: center;
   padding: 4px;
-`;
-
-const Container = styled.div<{ $indentation: number }>`
-  padding-left: ${(props) => props.$indentation * 16}px;
 `;
 
 export default ActionEditorRow;
