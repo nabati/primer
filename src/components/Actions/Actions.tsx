@@ -25,7 +25,7 @@ type ActionsProps = {
   priorityId: string;
 };
 
-const useArrowKeysToNavigateKeyboardShortCuts = ({
+const useActionsKeyboardShortCuts = ({
   actions,
   isEditingActionId,
   setIsEditingActionId,
@@ -105,7 +105,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
     string | null
   >(null);
 
-  useArrowKeysToNavigateKeyboardShortCuts({
+  useActionsKeyboardShortCuts({
     actions,
     isEditingActionId,
     setIsEditingActionId,
@@ -124,8 +124,6 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
 
     const diffActions = LinkedList.deleteDiff(actions, action);
 
-    console.log("nextActions", diffActions);
-
     await upsertActions([
       {
         ...action,
@@ -141,11 +139,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
     }
 
     upsertActions(
-      LinkedList.moveToDiff(
-        actions,
-        actions[source.index],
-        destination.index,
-      ),
+      LinkedList.moveToDiff(actions, actions[source.index], destination.index),
     );
   };
 
