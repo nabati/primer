@@ -33,9 +33,10 @@ const useUpsertAction = ({ priorityId }: { priorityId: string }) => {
       queryClient.setQueryData(
         QueryKey.actions.list({ priorityId }),
         (prevActions: Action[]) =>
-          sortActions(
-            prevActions
-              ?.map((prevAction) => {
+          sortActions([
+            // Update existing actions
+            ...(prevActions ?? [])
+              .map((prevAction) => {
                 const matchingUpdatedAction = actions.find(
                   (action) => action.id === prevAction.id,
                 );
@@ -54,7 +55,14 @@ const useUpsertAction = ({ priorityId }: { priorityId: string }) => {
                   action.completed_at === null ||
                   action.completed_at === undefined,
               ),
-          ),
+            // Include new actions
+            ...(actions as Action[]).filter(
+              (action) =>
+                prevActions.find(
+                  (prevAction) => prevAction.id === action.id,
+                ) === undefined,
+            ),
+          ]),
       );
     },
     onSuccess: (_) => {
