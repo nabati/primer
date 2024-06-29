@@ -1,20 +1,15 @@
 import { Button } from "@mui/material";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import useWindowKeydown from "../../Priorities/Priority/hooks/useWindowKeydown.ts";
 import { Action } from "../../types.ts";
+import isActiveElementEditable from "../../utils/isActiveElementEditable.ts";
 import ActionEditor from "./ActionEditor.tsx";
 import { v4 as uuid } from "uuid";
 
 const useCreateNewActionKeyboardShortcut = (createNew: () => void) => {
   const handleKeydown = useCallback(
     (event: KeyboardEvent) => {
-      const tagsToIgnore = ["INPUT", "TEXTAREA"];
-      const activeElement = document.activeElement;
-      if (
-        activeElement !== null &&
-        (tagsToIgnore.includes(activeElement.tagName) ||
-          activeElement.getAttribute("contenteditable") === "true")
-      ) {
+      if (isActiveElementEditable()) {
         return;
       }
 

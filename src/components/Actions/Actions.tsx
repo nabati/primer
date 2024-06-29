@@ -1,7 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import useListActions from "../../hooks/useListActions.ts";
 import useUpsertAction from "../../hooks/useUpsertAction.ts";
 import useUpsertActions from "../../hooks/useUpsertActions.ts";
+import useWindowKeydown from "../../Priorities/Priority/hooks/useWindowKeydown.ts";
+import isActiveElementDescendantOfElement from "../../utils/isActiveElementDescendantOfElement.ts";
+import isActiveElementEditable from "../../utils/isActiveElementEditable.ts";
 import ActionEditorRow from "./ActionEditorRow.tsx";
 import CreateAction from "./CreateAction.tsx";
 import Stack from "@mui/material/Stack";
@@ -21,7 +24,66 @@ type ActionsProps = {
   priorityId: string;
 };
 
+const useArrowKeysToNavigateKeyboardShortCuts = ({
+  actions,
+  isEditingActionId,
+  setIsEditingActionId,
+  containerRef,
+}: {
+  actions: Action[];
+  isEditingActionId: string | null;
+  setIsEditingActionId: (id: string | null) => void;
+  containerRef: React.RefObject<HTMLDivElement>;
+}) => {
+  const handleKeydown = useCallback(
+    (event: KeyboardEvent) => {
+      if (
+        isActiveElementEditable() &&
+        !isActiveElementDescendantOfElement(containerRef.current)
+      ) {
+        return;
+      }
+
+      if (event.metaKey && event.key === "ArrowDown") {
+        event.preventDefault();
+        const currentIndex = actions.findIndex(
+          (action) => action.id === isEditingActionId,
+        );
+
+        if (currentIndex === -1) {
+          return;
+        }
+
+        const nextAction = actions[currentIndex + 1];
+        if (nextAction !== undefined) {
+          setIsEditingActionId(nextAction.id);
+        }
+      }
+
+      if (event.metaKey && event.key === "ArrowUp") {
+        event.preventDefault();
+        const currentIndex = actions.findIndex(
+          (action) => action.id === isEditingActionId,
+        );
+
+        if (currentIndex === -1) {
+          return;
+        }
+
+        const previousAction = actions[currentIndex - 1];
+        if (previousAction !== undefined) {
+          setIsEditingActionId(previousAction.id);
+        }
+      }
+    },
+    [actions, isEditingActionId, setIsEditingActionId],
+  );
+
+  useWindowKeydown(handleKeydown);
+};
+
 const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
+  const containerRef = React.useRef<HTMLDivElement>(null);
   const { data } = useListActions({ priorityId });
   const { upsertAction } = useUpsertAction({ priorityId });
   const { upsertActions } = useUpsertActions({ priorityId });
@@ -41,6 +103,13 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
   const [isEditingActionId, setIsEditingActionId] = React.useState<
     string | null
   >(null);
+
+  useArrowKeysToNavigateKeyboardShortCuts({
+    actions,
+    isEditingActionId,
+    setIsEditingActionId,
+    containerRef,
+  });
 
   const handleComplete = async (
     action: Partial<Action> & { content: string },
@@ -130,7 +199,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
   };
 
   return (
-    <div>
+    <div ref={containerRef}>
       <Stack direction="column" gap={1}>
         <DragDropContext onDragEnd={onDragEnd}>
           <ShamefulStrictModeDroppable droppableId="droppable">
