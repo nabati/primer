@@ -18,7 +18,7 @@ import {
   OnDragEndResponder,
 } from "react-beautiful-dnd";
 import isValidActionList from "./isValidActionList.ts";
-import LinkedActionList from "./LinkedActionList.ts";
+import LinkedList from "./LinkedList.ts";
 import ShamefulStrictModeDroppable from "./ShamefulStrictModeDroppable.tsx";
 
 type ActionsProps = {
@@ -122,7 +122,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
       return;
     }
 
-    const diffActions = LinkedActionList.deleteDiff(actions, action);
+    const diffActions = LinkedList.deleteDiff(actions, action);
 
     console.log("nextActions", diffActions);
 
@@ -141,7 +141,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
     }
 
     upsertActions(
-      LinkedActionList.moveToDiff(
+      LinkedList.moveToDiff(
         actions,
         actions[source.index],
         destination.index,

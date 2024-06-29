@@ -4,25 +4,25 @@ import { isEqual } from "lodash";
 
 type StringableId = { id: string };
 
-class LinkedActionList<T extends StringableId> {
-  private actions: T[] = [];
-  constructor(actions: T[]) {
-    this.actions = [...actions];
+class LinkedList<T extends StringableId> {
+  private items: T[] = [];
+  constructor(items: T[]) {
+    this.items = [...items];
   }
 
   /**
    * Assumes that the actions are already sorted by head_id
-   * @param actions
+   * @param items
    */
-  static fromArray<T extends StringableId>(actions: T[]): LinkedActionList<T> {
-    if (actions.length === 0) {
-      return new LinkedActionList(actions);
+  static fromArray<T extends StringableId>(items: T[]): LinkedList<T> {
+    if (items.length === 0) {
+      return new LinkedList(items);
     }
 
-    return new LinkedActionList(
-      actions.map((action, index) => ({
+    return new LinkedList(
+      items.map((action, index) => ({
         ...action,
-        head_id: actions[index - 1]?.id ?? null,
+        head_id: items[index - 1]?.id ?? null,
       })),
     );
   }
@@ -31,14 +31,14 @@ class LinkedActionList<T extends StringableId> {
    * Return the list of actions in B that have been changed compared to A
    */
   static diff<T extends StringableId>(
-    prevActionList: LinkedActionList<T>,
-    nextActionList: LinkedActionList<T>,
+    prevList: LinkedList<T>,
+    nextList: LinkedList<T>,
   ): T[] {
-    const prevActions = prevActionList.actions;
-    const nextActions = nextActionList.actions;
+    const prevItems = prevList.items;
+    const nextItems = nextList.items;
 
-    const changedActions = nextActions.filter((nextAction) => {
-      const prevAction = prevActions.find(
+    const changedActions = nextItems.filter((nextAction) => {
+      const prevAction = prevItems.find(
         (prevAction) => prevAction.id === nextAction.id,
       );
 
@@ -56,12 +56,12 @@ class LinkedActionList<T extends StringableId> {
   }
 
   getActions(): T[] {
-    return [...this.actions];
+    return [...this.items];
   }
 
   // Returns a new LinkedActionList where the action will be at the specified index
-  moveTo(action: T, index: number): LinkedActionList<T> {
-    const actionIndex = this.actions.findIndex(
+  moveTo(action: T, index: number): LinkedList<T> {
+    const actionIndex = this.items.findIndex(
       (currentAction) => currentAction.id === action.id,
     );
 
@@ -73,30 +73,30 @@ class LinkedActionList<T extends StringableId> {
       return this;
     }
 
-    if (index < 0 || index >= this.actions.length) {
+    if (index < 0 || index >= this.items.length) {
       return this;
     }
 
     // If the target index is lower than the current index, the operation is simple
     if (index < actionIndex) {
-      const nextActions = [...this.actions];
+      const nextActions = [...this.items];
       nextActions.splice(actionIndex, 1);
       nextActions.splice(index, 0, action);
-      return LinkedActionList.fromArray(nextActions);
+      return LinkedList.fromArray(nextActions);
     }
 
     if (index > actionIndex) {
-      const nextActions = [...this.actions];
+      const nextActions = [...this.items];
       nextActions.splice(index + 1, 0, action);
       nextActions.splice(actionIndex, 1);
-      return LinkedActionList.fromArray(nextActions);
+      return LinkedList.fromArray(nextActions);
     }
 
     throw new Error("This should never happen");
   }
 
-  delete(action: T): LinkedActionList<T> {
-    const actionIndex = this.actions.findIndex(
+  delete(action: T): LinkedList<T> {
+    const actionIndex = this.items.findIndex(
       (currentAction) => currentAction.id === action.id,
     );
 
@@ -104,15 +104,15 @@ class LinkedActionList<T extends StringableId> {
       return this;
     }
 
-    const nextActions = [...this.actions];
+    const nextActions = [...this.items];
     nextActions.splice(actionIndex, 1);
-    return LinkedActionList.fromArray(nextActions);
+    return LinkedList.fromArray(nextActions);
   }
 
   static deleteDiff<T extends StringableId>(actions: T[], action: T): T[] {
-    const prevList = LinkedActionList.fromArray(actions);
+    const prevList = LinkedList.fromArray(actions);
     const nextList = prevList.delete(action);
-    return LinkedActionList.diff(prevList, nextList);
+    return LinkedList.diff(prevList, nextList);
   }
 
   static moveToDiff<T extends StringableId>(
@@ -120,10 +120,10 @@ class LinkedActionList<T extends StringableId> {
     action: T,
     index: number,
   ): T[] {
-    const prevList = LinkedActionList.fromArray(actions);
+    const prevList = LinkedList.fromArray(actions);
     const nextList = prevList.moveTo(action, index);
-    return LinkedActionList.diff(prevList, nextList);
+    return LinkedList.diff(prevList, nextList);
   }
 }
 
-export default LinkedActionList;
+export default LinkedList;
