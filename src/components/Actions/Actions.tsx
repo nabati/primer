@@ -6,10 +6,11 @@ import useUpsertActions from "../../hooks/useUpsertActions.ts";
 import useWindowKeydown from "../../Priorities/Priority/hooks/useWindowKeydown.ts";
 import isActiveElementDescendantOfElement from "../../utils/isActiveElementDescendantOfElement.ts";
 import isActiveElementEditable from "../../utils/isActiveElementEditable.ts";
-import ActionEditorRow from "./ActionEditorRow.tsx";
 import Stack from "@mui/material/Stack";
 import { Action } from "../../types.ts";
 import { last } from "lodash";
+import ActionEditor from "./ActionEditor.tsx";
+import ActionView from "./ActionView.tsx";
 import getLinkedActionList from "./getLinkedActionList.ts";
 import useSortedActions from "./hooks/useSortedActions.ts";
 import {
@@ -267,6 +268,20 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
     [actions, nextActionState.id],
   );
 
+  const handleEditActionClick = () => {
+    setNextActionState({
+      id: actions[0]?.id,
+      beforeId: undefined,
+    });
+  };
+
+  const handleMarkAsComplete = (action: Action) => {
+    handleComplete({
+      ...action,
+      completed_at: new Date(),
+    });
+  };
+
   return (
     <Stack direction="column" gap={1} ref={containerRef}>
       <DragDropContext onDragEnd={onDragEnd}>
@@ -278,7 +293,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
                   {nextActionState.id !== undefined &&
                     nextActionState.beforeId === action.id &&
                     isCreatingNewAction && (
-                      <ActionEditorRow
+                      <ActionEditor
                         key={nextActionState.id}
                         id={nextActionState.id}
                         action={{
@@ -317,31 +332,38 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                       >
-                        <ActionEditorRow
-                          isEditing={nextActionState.id === action.id}
-                          onEdit={() =>
-                            setNextActionState({
-                              id: action.id,
-                              beforeId: undefined,
-                            })
-                          }
-                          onCancel={() =>
-                            setNextActionState({
-                              id: undefined,
-                              beforeId: undefined,
-                            })
-                          }
-                          action={action}
-                          priorityId={action.priorityId}
-                          onComplete={handleComplete}
-                          onCreateNewBefore={() => handleCreateNew(action)}
-                          onCreateNewAfter={() =>
-                            handleCreateNew(actions[index + 1])
-                          }
-                          maxIndentation={
-                            actions[index - 1]?.indentation + 1 ?? 1
-                          }
-                        />
+                        {nextActionState.id !== action.id && (
+                          <ActionView
+                            action={action}
+                            onClick={handleEditActionClick}
+                            onComplete={() => handleMarkAsComplete(action)}
+                          />
+                        )}
+                        {nextActionState.id === action.id && (
+                          <ActionEditor
+                            onEdit={() =>
+                              setNextActionState({
+                                id: action.id,
+                                beforeId: undefined,
+                              })
+                            }
+                            onCancel={() =>
+                              setNextActionState({
+                                id: undefined,
+                                beforeId: undefined,
+                              })
+                            }
+                            action={action}
+                            priorityId={action.priorityId}
+                            onCreateNewBefore={() => handleCreateNew(action)}
+                            onCreateNewAfter={() =>
+                              handleCreateNew(actions[index + 1])
+                            }
+                            maxIndentation={
+                              actions[index - 1]?.indentation + 1 ?? 1
+                            }
+                          />
+                        )}
                       </div>
                     )}
                   </Draggable>
@@ -368,7 +390,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
         {nextActionState.id !== undefined &&
           nextActionState.beforeId === undefined &&
           isCreatingNewAction && (
-            <ActionEditorRow
+            <ActionEditor
               key={nextActionState.id}
               id={nextActionState.id}
               action={{
