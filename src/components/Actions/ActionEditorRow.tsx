@@ -10,7 +10,6 @@ import IndentationContainer from "./IndentationContainer.tsx";
 type ActionEditorRowProps = {
   action: Action;
   priorityId: string;
-  onUpdate: (action: Partial<Action> & { content: string }) => void;
   onComplete: (action: Partial<Action> & { content: string }) => void;
   isEditing: boolean;
   onEdit?: () => void;
@@ -21,7 +20,6 @@ type ActionEditorRowProps = {
 
 const ActionEditorRow: React.FC<ActionEditorRowProps> = ({
   action,
-  onUpdate,
   onComplete,
   onEdit,
   isEditing,
@@ -62,7 +60,6 @@ const ActionEditorRow: React.FC<ActionEditorRowProps> = ({
   return (
     <ActionEditor
       action={action}
-      onUpdate={onUpdate}
       onComplete={onComplete}
       onCancel={onCancel}
       onCreateNewAfter={onCreateNewBefore}
