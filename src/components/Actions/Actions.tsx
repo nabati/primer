@@ -295,7 +295,6 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
                     isCreatingNewAction && (
                       <ActionEditor
                         key={nextActionState.id}
-                        id={nextActionState.id}
                         action={{
                           id: nextActionState.id,
                           head_id: actions[index - 1]?.id,
