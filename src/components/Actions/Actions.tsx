@@ -282,6 +282,13 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
     });
   };
 
+  const handleCancelEditAction = () => {
+    setNextActionState({
+      id: undefined,
+      beforeId: undefined,
+    });
+  };
+
   return (
     <Stack direction="column" gap={1} ref={containerRef}>
       <DragDropContext onDragEnd={onDragEnd}>
@@ -306,19 +313,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
                             beforeId: action.id,
                           });
                         }}
-                        onEdit={() =>
-                          setNextActionState({
-                            id: nextActionState.id,
-                            beforeId: undefined,
-                          })
-                        }
-                        onCancel={() => {
-                          setNextActionState({
-                            id: undefined,
-                            beforeId: undefined,
-                          });
-                        }}
-                        isEditing
+                        onCancel={handleCancelEditAction}
                         maxIndentation={
                           actions[index - 1]?.indentation + 1 ?? 1
                         }
@@ -340,18 +335,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
                         )}
                         {nextActionState.id === action.id && (
                           <ActionEditor
-                            onEdit={() =>
-                              setNextActionState({
-                                id: action.id,
-                                beforeId: undefined,
-                              })
-                            }
-                            onCancel={() =>
-                              setNextActionState({
-                                id: undefined,
-                                beforeId: undefined,
-                              })
-                            }
+                            onCancel={handleCancelEditAction}
                             action={action}
                             priorityId={action.priorityId}
                             onCreateNewBefore={() => handleCreateNew(action)}
@@ -391,7 +375,6 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
           isCreatingNewAction && (
             <ActionEditor
               key={nextActionState.id}
-              id={nextActionState.id}
               action={{
                 id: nextActionState.id,
                 head_id: last(actions)?.id ?? null,
@@ -403,13 +386,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
                   beforeId: undefined,
                 });
               }}
-              isEditing
-              onCancel={() => {
-                setNextActionState({
-                  id: undefined,
-                  beforeId: undefined,
-                });
-              }}
+              onCancel={handleCancelEditAction}
               maxIndentation={actions[actions.length - 1]?.indentation + 1}
             />
           )}
