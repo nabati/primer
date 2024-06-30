@@ -268,134 +268,132 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
   );
 
   return (
-    <div ref={containerRef}>
-      <Stack direction="column" gap={1}>
-        <DragDropContext onDragEnd={onDragEnd}>
-          <ShamefulStrictModeDroppable droppableId="droppable">
-            {(provided) => (
-              <div {...provided.droppableProps} ref={provided.innerRef}>
-                {actions.map((action, index) => (
-                  <React.Fragment key={action.id}>
-                    {nextActionState.id !== undefined &&
-                      nextActionState.beforeId === action.id &&
-                      isCreatingNewAction && (
-                        <ActionEditorRow
-                          key={nextActionState.id}
-                          id={nextActionState.id}
-                          action={{
+    <Stack direction="column" gap={1} ref={containerRef}>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <ShamefulStrictModeDroppable droppableId="droppable">
+          {(provided) => (
+            <div {...provided.droppableProps} ref={provided.innerRef}>
+              {actions.map((action, index) => (
+                <React.Fragment key={action.id}>
+                  {nextActionState.id !== undefined &&
+                    nextActionState.beforeId === action.id &&
+                    isCreatingNewAction && (
+                      <ActionEditorRow
+                        key={nextActionState.id}
+                        id={nextActionState.id}
+                        action={{
+                          id: nextActionState.id,
+                          head_id: actions[index - 1]?.id,
+                        }}
+                        onComplete={(nextAction) => {
+                          handleCreate(nextAction);
+                          setNextActionState({
+                            id: uuid(),
+                            beforeId: action.id,
+                          });
+                        }}
+                        onEdit={() =>
+                          setNextActionState({
                             id: nextActionState.id,
-                            head_id: actions[index - 1]?.id,
-                          }}
-                          onComplete={(nextAction) => {
-                            handleCreate(nextAction);
-                            setNextActionState({
-                              id: uuid(),
-                              beforeId: action.id,
-                            });
-                          }}
+                            beforeId: undefined,
+                          })
+                        }
+                        onCancel={() => {
+                          setNextActionState({
+                            id: undefined,
+                            beforeId: undefined,
+                          });
+                        }}
+                        isEditing
+                        maxIndentation={
+                          actions[index - 1]?.indentation + 1 ?? 1
+                        }
+                      />
+                    )}
+                  <Draggable draggableId={action.id} index={index}>
+                    {(provided) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <ActionEditorRow
+                          isEditing={nextActionState.id === action.id}
                           onEdit={() =>
                             setNextActionState({
-                              id: nextActionState.id,
+                              id: action.id,
                               beforeId: undefined,
                             })
                           }
-                          onCancel={() => {
+                          onCancel={() =>
                             setNextActionState({
                               id: undefined,
                               beforeId: undefined,
-                            });
-                          }}
-                          isEditing
+                            })
+                          }
+                          action={action}
+                          priorityId={action.priorityId}
+                          onComplete={handleComplete}
+                          onCreateNewBefore={() => handleCreateNew(action)}
+                          onCreateNewAfter={() =>
+                            handleCreateNew(actions[index + 1])
+                          }
                           maxIndentation={
                             actions[index - 1]?.indentation + 1 ?? 1
                           }
                         />
-                      )}
-                    <Draggable draggableId={action.id} index={index}>
-                      {(provided) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                        >
-                          <ActionEditorRow
-                            isEditing={nextActionState.id === action.id}
-                            onEdit={() =>
-                              setNextActionState({
-                                id: action.id,
-                                beforeId: undefined,
-                              })
-                            }
-                            onCancel={() =>
-                              setNextActionState({
-                                id: undefined,
-                                beforeId: undefined,
-                              })
-                            }
-                            action={action}
-                            priorityId={action.priorityId}
-                            onComplete={handleComplete}
-                            onCreateNewBefore={() => handleCreateNew(action)}
-                            onCreateNewAfter={() =>
-                              handleCreateNew(actions[index + 1])
-                            }
-                            maxIndentation={
-                              actions[index - 1]?.indentation + 1 ?? 1
-                            }
-                          />
-                        </div>
-                      )}
-                    </Draggable>
-                  </React.Fragment>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </ShamefulStrictModeDroppable>
-        </DragDropContext>
-        <>
-          {nextActionState.id == null && (
-            <Button
-              onClick={() =>
+                      </div>
+                    )}
+                  </Draggable>
+                </React.Fragment>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </ShamefulStrictModeDroppable>
+      </DragDropContext>
+      <>
+        {nextActionState.id == null && (
+          <Button
+            onClick={() =>
+              setNextActionState({
+                id: uuid(),
+                beforeId: undefined,
+              })
+            }
+          >
+            Create action
+          </Button>
+        )}
+        {nextActionState.id !== undefined &&
+          nextActionState.beforeId === undefined &&
+          isCreatingNewAction && (
+            <ActionEditorRow
+              key={nextActionState.id}
+              id={nextActionState.id}
+              action={{
+                id: nextActionState.id,
+                head_id: last(actions)?.id ?? null,
+              }}
+              onComplete={(action) => {
+                handleCreate(action);
                 setNextActionState({
                   id: uuid(),
                   beforeId: undefined,
-                })
-              }
-            >
-              Create action
-            </Button>
+                });
+              }}
+              isEditing
+              onCancel={() => {
+                setNextActionState({
+                  id: undefined,
+                  beforeId: undefined,
+                });
+              }}
+              maxIndentation={actions[actions.length - 1]?.indentation + 1}
+            />
           )}
-          {nextActionState.id !== undefined &&
-            nextActionState.beforeId === undefined &&
-            isCreatingNewAction && (
-              <ActionEditorRow
-                key={nextActionState.id}
-                id={nextActionState.id}
-                action={{
-                  id: nextActionState.id,
-                  head_id: last(actions)?.id ?? null,
-                }}
-                onComplete={(action) => {
-                  handleCreate(action);
-                  setNextActionState({
-                    id: uuid(),
-                    beforeId: undefined,
-                  });
-                }}
-                isEditing
-                onCancel={() => {
-                  setNextActionState({
-                    id: undefined,
-                    beforeId: undefined,
-                  });
-                }}
-                maxIndentation={actions[actions.length - 1]?.indentation + 1}
-              />
-            )}
-        </>
-      </Stack>
-    </div>
+      </>
+    </Stack>
   );
 };
 
