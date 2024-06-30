@@ -12,6 +12,7 @@ import { last } from "lodash";
 import ActionEditor from "./ActionEditor.tsx";
 import ActionView from "./ActionView.tsx";
 import getLinkedActionList from "./getLinkedActionList.ts";
+import useActions from "./hooks/useActions.ts";
 import useSortedActions from "./hooks/useSortedActions.ts";
 import {
   DragDropContext,
@@ -186,21 +187,8 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
     },
   );
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const { data } = useListActions({ priorityId });
-  const { upsertAction } = useUpsertAction({ priorityId });
-  const { upsertActions } = useUpsertActions({ priorityId });
-  useEffect(() => {
-    if (data === undefined) {
-      return;
-    }
 
-    if (!isValidActionList(data)) {
-      // This should really only be run if there have been previous issues
-      upsertActions(getLinkedActionList(data));
-    }
-  }, [data, upsertActions]);
-
-  const actions = useSortedActions(data ?? []);
+  const { actions, upsertActions } = useActions({ priorityId });
 
   useActionsKeyboardShortCuts({
     actions,
@@ -224,7 +212,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
     });
     if (action.completed_at === null || action.completed_at === undefined) {
       // Single row action
-      await upsertAction({ ...action });
+      await upsertActions([{ ...action }]);
       return;
     }
 
