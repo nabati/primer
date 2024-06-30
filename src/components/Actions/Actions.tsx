@@ -337,7 +337,6 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
                           <ActionEditor
                             onCancel={handleCancelEditAction}
                             action={action}
-                            priorityId={action.priorityId}
                             onCreateNewBefore={() => handleCreateNew(action)}
                             onCreateNewAfter={() =>
                               handleCreateNew(actions[index + 1])
