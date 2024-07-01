@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { useUser } from "../components/AuthContext.tsx";
+import useUser from "../hooks/useUser.ts";
 import { getSupabaseClient } from "../supabaseClient.ts";
 
 type AddHabitCardProps = {

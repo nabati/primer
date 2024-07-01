@@ -6,7 +6,7 @@ import {
   CardContent,
   Typography,
 } from "@mui/material";
-import { useUser } from "../components/AuthContext.tsx";
+import useUser from "../hooks/useUser.ts";
 import { getSupabaseClient } from "../supabaseClient.ts";
 
 const AddPriorityCard: React.FC = () => {

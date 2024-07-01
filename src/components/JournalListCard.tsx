@@ -1,15 +1,12 @@
 import Box from "@mui/material/Box";
 import React from "react";
 import styled from "styled-components";
+import {Note} from "../types.ts";
 import getFirstNCharactersWholeWords from "../utils/getFirstNCharactersWholeWords.ts";
 import getFormattedDate from "../utils/getFormattedDate.ts";
 
 type JournalListCardProps = {
-  entry: {
-    id: string;
-    content: string;
-    created_at: Date;
-  };
+  entry: Note;
   onClick: () => void;
 };
 

@@ -3,8 +3,7 @@ import QueryKey from "../constants/QueryKey.ts";
 import TableName from "../constants/TableName.ts";
 import { getSupabaseClient } from "../supabaseClient.ts";
 import { Note } from "../types.ts";
-import { useUser } from "../components/AuthContext.tsx";
-
+import useUser from "./useUser.ts";
 const useCreateNote = () => {
   const user = useUser();
   const queryClient = useQueryClient();

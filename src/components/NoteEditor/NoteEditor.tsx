@@ -64,6 +64,10 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
     );
   }
 
+  if (note === undefined) {
+    return null;
+  }
+
   return (
     <Box
       style={{ position: "relative", display: "flex", flexDirection: "column" }}

@@ -1,13 +1,19 @@
+export type User = {
+  id: string;
+};
+
 export type Prompt = {
   id: string;
   content: string;
   reviews: number;
+  lastReviewed: string;
 };
 
 export type Note = {
   id: string;
   content: string;
   user_id: string;
+  created_at: Date;
   updated_at: Date;
   priority_id: string | null;
 };

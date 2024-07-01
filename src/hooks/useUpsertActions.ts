@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { sortActions } from "../components/Actions/hooks/useSortedActions.ts";
 
-import { useUser } from "../components/AuthContext.tsx";
 import QueryKey from "../constants/QueryKey.ts";
 import TableName from "../constants/TableName";
 import { getSupabaseClient } from "../supabaseClient.ts";
 import { Action } from "../types.ts";
+import useUser from "./useUser.ts";
 
 const useUpsertAction = ({ priorityId }: { priorityId: string }) => {
   const queryClient = useQueryClient();
@@ -65,7 +65,7 @@ const useUpsertAction = ({ priorityId }: { priorityId: string }) => {
           ]),
       );
     },
-    onSuccess: (_) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: QueryKey.actions.list({ priorityId }),
       });

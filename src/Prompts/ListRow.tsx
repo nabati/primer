@@ -5,7 +5,7 @@ import React from "react";
 type ListRowProps = {
   id: string;
   content: string;
-  lastReviewed: any;
+  lastReviewed: string;
 };
 
 const ListRow: React.FC<ListRowProps> = ({ id, content, lastReviewed }) => {

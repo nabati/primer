@@ -3,9 +3,7 @@ import useListPriorities from "../hooks/useListPriorities.ts";
 import PrioritiesTabs from "./PrioritiesTabs.tsx";
 import CircularProgress from "@mui/material/CircularProgress";
 
-type PrioritiesProps = {};
-
-const Priorities: React.FC<PrioritiesProps> = () => {
+const Priorities: React.FC = () => {
   const { data: priorities = [], isLoading } = useListPriorities();
 
   if (isLoading) {

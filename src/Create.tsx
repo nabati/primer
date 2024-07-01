@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from "react";
-import { useUser } from "./components/AuthContext.tsx";
+import useUser from "./hooks/useUser.ts";
 import { getSupabaseClient } from "./supabaseClient.ts";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -20,7 +20,7 @@ const Create: React.FC = () => {
 
     // Invalidate react-query cache
     queryClient.invalidateQueries({ queryKey: ["cards"] });
-  }, [queryClient]);
+  }, [queryClient, user.id]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -35,7 +35,7 @@ const Create: React.FC = () => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [handleCreate]);
 
   return <button onClick={handleCreate}>Create card</button>;
 };

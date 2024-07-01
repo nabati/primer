@@ -2,27 +2,15 @@
 
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
-import { Session } from "@supabase/supabase-js";
+import { Session, User } from "@supabase/supabase-js";
 import React, { createContext, useState, useEffect } from "react";
 import { getSupabaseClient } from "../supabaseClient.ts";
 
-type User = {
-  id: string;
-};
-
-type AuthContextType = {
+export type AuthContextType = {
   user: User;
 };
 
-const AuthContext = createContext<AuthContextType | null>(null);
-
-export const useUser = (): User => {
-  const context = React.useContext(AuthContext);
-  if (context === null) {
-    throw new Error("useUser must be used within an AuthProvider");
-  }
-  return context.user;
-};
+export const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,

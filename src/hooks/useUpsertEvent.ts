@@ -2,9 +2,9 @@ import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useCallback } from "react";
-import { useUser } from "../components/AuthContext.tsx";
 import { getSupabaseClient } from "../supabaseClient.ts";
 import type { HabitEvent } from "../types.ts";
+import useUser from "./useUser.ts";
 
 const upsertEntry = async (event: HabitEvent): Promise<HabitEvent> => {
   const { data, error } = await getSupabaseClient()

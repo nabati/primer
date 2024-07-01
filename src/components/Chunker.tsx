@@ -10,9 +10,7 @@ const getDeterministicColorByNumber = (number: number): string => {
   return colors[number % colors.length];
 };
 
-type ChunkerProps = {};
-
-const Chunker: React.FC<ChunkerProps> = () => {
+const Chunker: React.FC = () => {
   const [text, setText] = React.useState("");
   const [chunks, setChunks] = React.useState<string[]>([]);
   const [similarities, setSimilarities] = React.useState<number[]>([]);

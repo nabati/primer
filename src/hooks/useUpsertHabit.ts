@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { useUser } from "../components/AuthContext.tsx";
 import QueryKey from "../constants/QueryKey.ts";
 import TableName from "../constants/TableName";
 import { getSupabaseClient } from "../supabaseClient.ts";
 import { Habit } from "../types.ts";
+import useUser from "./useUser.ts";
 
 const useUpsertHabit = ({ priorityId }: { priorityId: string }) => {
   const queryClient = useQueryClient();

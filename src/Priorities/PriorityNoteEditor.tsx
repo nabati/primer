@@ -51,6 +51,10 @@ const PriorityNoteEditor: React.FC<PriorityNoteEditorProps> = ({
     );
   }
 
+  if (note === undefined) {
+    return undefined;
+  }
+
   return (
     <Box
       style={{ position: "relative", display: "flex", flexDirection: "column" }}

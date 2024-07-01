@@ -22,7 +22,7 @@ const usePreventUnloadIfUnsavedChanges = ({
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [save, hasUnsavedChanges, save]);
+  }, [hasUnsavedChanges, save]);
 };
 
 export default usePreventUnloadIfUnsavedChanges;

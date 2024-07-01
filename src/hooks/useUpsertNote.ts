@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useUser } from "../components/AuthContext.tsx";
 import QueryKey from "../constants/QueryKey.ts";
 import TableName from "../constants/TableName.ts";
 import { getSupabaseClient } from "../supabaseClient.ts";
 import { Note } from "../types.ts";
+import useUser from "./useUser.ts";
 
 const useUpsertNote = () => {
   const user = useUser();

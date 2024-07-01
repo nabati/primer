@@ -46,13 +46,13 @@ const Coach: React.FC<CoachProps> = ({ journalId }) => {
         content: prompts.defaultWithContext(activity.content, context ?? []),
       },
     ]);
-  }, [debouncedActivity, context, isFetchingContext]);
+  }, [debouncedActivity, context, isFetchingContext, activity.content]);
 
   useEffect(() => {
     if (activity.type === "drill") {
       flush();
     }
-  }, [activity]);
+  }, [activity, flush]);
 
   const { data: response, isFetching } = useChat({
     messages,

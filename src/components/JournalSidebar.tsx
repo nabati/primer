@@ -39,7 +39,7 @@ const JournalSidebar: React.FC<JournalSidebarProps> = ({
           Create journal entry
         </Button>
       </div>
-      {entries.map((entry: any) => (
+      {entries.map((entry) => (
         <JournalListCard
           entry={entry}
           key={entry.id}
