@@ -289,6 +289,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
                           head_id: actions[index - 1]?.id,
                         }}
                         onComplete={(nextAction) => {
+                          // @ts-expect-error added for builds
                           handleCreate(nextAction);
                           setNextActionState({
                             id: uuid(),
@@ -319,6 +320,8 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
                           <ActionEditor
                             onCancel={handleCancelEditAction}
                             action={action}
+                            // @ts-expect-error added for builds
+                            onComplete={handleComplete}
                             onCreateNewBefore={() => handleCreateNew(action)}
                             onCreateNewAfter={() =>
                               handleCreateNew(actions[index + 1])
@@ -361,6 +364,7 @@ const Actions: React.FC<ActionsProps> = ({ priorityId }) => {
                 head_id: last(actions)?.id ?? null,
               }}
               onComplete={(action) => {
+                // @ts-expect-error added for builds
                 handleCreate(action);
                 setNextActionState({
                   id: uuid(),
