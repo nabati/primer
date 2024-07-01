@@ -5,7 +5,6 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import { useQuery } from "@tanstack/react-query";
 import { getSupabaseClient } from "../supabaseClient.ts";
 import ListRow from "./ListRow.tsx";
@@ -13,7 +12,7 @@ import Create from "../Create.tsx";
 
 type ListProps = {};
 
-const List: React.FC<ListProps> = ({ ...props }) => {
+const List: React.FC<ListProps> = () => {
   const { data: prompts } = useQuery({
     queryKey: ["cards"],
     queryFn: async (): Promise<any[]> => {

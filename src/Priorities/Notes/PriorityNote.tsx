@@ -1,16 +1,16 @@
 import EditIcon from "@mui/icons-material/Edit";
 import { Button } from "@mui/material";
 import React from "react";
-import type { Note as NoteType } from "../../types.ts";
+import type { Note } from "../../types.ts";
 import getFormattedDate from "../../utils/getFormattedDate.ts";
 import PriorityNoteEditor from "../PriorityNoteEditor.tsx";
 import Markdown from "react-markdown";
 
 type NoteProps = {
-  note: NoteType;
+  note: Note;
 };
 
-const Note: React.FC<NoteProps> = ({ note }) => {
+const PriorityNote: React.FC<NoteProps> = ({ note }) => {
   const [isEditing, setIsEditing] = React.useState<boolean>(false);
 
   return (
@@ -39,4 +39,4 @@ const Note: React.FC<NoteProps> = ({ note }) => {
   );
 };
 
-export default Note;
+export default PriorityNote;

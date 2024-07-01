@@ -3,11 +3,11 @@ import React from "react";
 import useCreateNote from "../../hooks/useCreateNote.ts";
 import useListNotes from "../../hooks/useListNotes.ts";
 import PriorityNoteEditor from "../PriorityNoteEditor.tsx";
-import ListNotes from "./ListNotes.tsx";
+import PriorityNote from "./PriorityNote.tsx";
 
 type NotesProps = { priorityId: string };
 
-const Notes: React.FC<NotesProps> = ({ priorityId }) => {
+const PriorityNotes: React.FC<NotesProps> = ({ priorityId }) => {
   const { entries: notes } = useListNotes({ priorityId });
   const createNote = useCreateNote();
   const [isCreatingNoteWithId, setIsCreatingNoteWithId] = React.useState<
@@ -42,9 +42,13 @@ const Notes: React.FC<NotesProps> = ({ priorityId }) => {
         />
       )}
 
-      <ListNotes notes={notesWithoutCreatingNote} />
+      <div>
+        {notesWithoutCreatingNote.map((note) => (
+          <PriorityNote key={note.id} note={note} />
+        ))}
+      </div>
     </Card>
   );
 };
 
-export default Notes;
+export default PriorityNotes;

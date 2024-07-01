@@ -5,7 +5,7 @@ import { Box } from "@mui/material";
 type TabPanelProps = {
   value: string;
   index: string;
-  children: React.Node;
+  children: React.ReactNode;
 };
 
 const TabPanel: React.FC<TabPanelProps> = ({

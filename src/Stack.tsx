@@ -14,7 +14,7 @@ type StackProps = {
 const Stack: React.FC<StackProps> = ({ onSwipeRight }) => {
   const { data: prompts } = useQuery({
     queryKey: ["cards"],
-    queryFn: async (): Promise<Card[]> => {
+    queryFn: async () => {
       const { data: cards } = await getSupabaseClient()
         .from("prompts")
         .select("*")

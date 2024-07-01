@@ -30,3 +30,10 @@ export type Action = {
   head_id: string | null;
   indentation: number;
 };
+
+export type Priority = {
+  id: string;
+  title: string;
+  user_id: string;
+  created_at: Date;
+};

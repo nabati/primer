@@ -1,6 +1,7 @@
 import { Box, Stack, Tab, Tabs } from "@mui/material";
 import React, { useCallback, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Priority } from "../types.ts";
 import AddPriorityCard from "./AddPriorityCard.tsx";
 import TabPanel from "./TabPanel.tsx";
 import ViewPriority from "./Priority/ViewPriority.tsx";

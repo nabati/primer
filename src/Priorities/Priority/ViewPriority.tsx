@@ -17,7 +17,7 @@ import ListHabits from "../../Habits/ListHabits.tsx";
 import useDeletePriority from "../../hooks/useDeletePriority.ts";
 import { getSupabaseClient } from "../../supabaseClient.ts";
 import AddHabitCard from "../../Habits/AddHabitCard.tsx";
-import Notes from "../Notes/Notes.tsx";
+import PriorityNotes from "../Notes/PriorityNotes.tsx";
 
 interface Priority {
   id: string;
@@ -187,11 +187,11 @@ const ViewPriority: React.FC<ViewPriorityProps> = ({ id }) => {
         </Column>
 
         <Column>
-          <Notes priorityId={priority.id} />
+          <PriorityNotes priorityId={id} />
         </Column>
 
         <Column>
-          <Actions priorityId={priority.id} />
+          <Actions priorityId={id} />
         </Column>
       </Columns>
     </>
