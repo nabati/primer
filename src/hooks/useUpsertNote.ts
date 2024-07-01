@@ -16,7 +16,7 @@ const useUpsertNote = () => {
     }: {
       id: string;
       content: string;
-      priorityId?: string;
+      priorityId?: string | null;
     }) => {
       return getSupabaseClient()
         .from(TableName.NOTES)

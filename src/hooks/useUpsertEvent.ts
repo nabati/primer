@@ -4,9 +4,9 @@ import { format } from "date-fns";
 import { useCallback } from "react";
 import { useUser } from "../components/AuthContext.tsx";
 import { getSupabaseClient } from "../supabaseClient.ts";
-import type { Event } from "../types.ts";
+import type { HabitEvent } from "../types.ts";
 
-const upsertEntry = async (event: Event): Promise<Event> => {
+const upsertEntry = async (event: HabitEvent): Promise<HabitEvent> => {
   const { data, error } = await getSupabaseClient()
     .from("events")
     .upsert(event, { onConflict: "date, habit_id" })

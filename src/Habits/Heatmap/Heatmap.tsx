@@ -2,13 +2,14 @@ import { addDays, differenceInDays, isSameDay, startOfDay } from "date-fns";
 import range from "lodash/range";
 import React, { useMemo } from "react";
 import styled from "styled-components";
+import { HabitEvent } from "../../types.ts";
 import Cell from "./Cell";
 
 type HeatmapCalendarProps = {
   habitId: string;
   startDate: Date; // Only date portion is used
   endDate: Date; // Only date portion is used
-  events: { date: Date; value: number }[];
+  events: HabitEvent[];
 };
 
 type PreparedDatum = {

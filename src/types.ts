@@ -12,7 +12,14 @@ export type Note = {
   priority_id: string | null;
 };
 
-export type Event = {
+export type Habit = {
+  id: string;
+  title: string;
+  user_id: string;
+  created_at: Date;
+};
+
+export type HabitEvent = {
   id?: string;
   date: string;
   value: number;

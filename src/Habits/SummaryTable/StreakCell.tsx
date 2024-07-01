@@ -1,6 +1,7 @@
 import { differenceInDays, startOfDecade } from "date-fns";
 import { sortBy } from "lodash";
 import React, { useMemo } from "react";
+import { HabitEvent } from "../../types.ts";
 import formatDateToIsoDate from "../../utils/formatDateToIsoDate.ts";
 import useListEvents from "../../hooks/useListEvents.ts";
 
@@ -8,10 +9,7 @@ type StreakCellProps = {
   habitId: string;
 };
 
-const computeCurrentStreak = (
-  events: { date: Date; value: number }[],
-  referenceDate: Date,
-) => {
+const computeCurrentStreak = (events: HabitEvent[], referenceDate: Date) => {
   const sortedEvents = sortBy(events, (event) => event.date);
   let streak = 0;
   for (let i = sortedEvents.length - 1; i >= 0; i--) {
@@ -29,7 +27,7 @@ const computeCurrentStreak = (
 };
 
 const StreakCell: React.FC<StreakCellProps> = ({ habitId }) => {
-  const { data: events, isFetching } = useListEvents({
+  const { data: events = [], isFetching } = useListEvents({
     habitId,
     startDate: formatDateToIsoDate(startOfDecade(new Date())),
     endDate: formatDateToIsoDate(new Date()),

@@ -4,6 +4,7 @@ import { useUser } from "../components/AuthContext.tsx";
 import QueryKey from "../constants/QueryKey.ts";
 import TableName from "../constants/TableName";
 import { getSupabaseClient } from "../supabaseClient.ts";
+import { Habit } from "../types.ts";
 
 const useUpsertHabit = ({ priorityId }: { priorityId: string }) => {
   const queryClient = useQueryClient();

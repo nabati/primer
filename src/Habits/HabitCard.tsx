@@ -31,7 +31,11 @@ const HabitCard: React.FC<HabitCardProps> = ({ id }) => {
     };
   }, []);
 
-  const { data: events } = useListEvents({ habitId: id, startDate, endDate });
+  const { data: events = [] } = useListEvents({
+    habitId: id,
+    startDate,
+    endDate,
+  });
   const { upsertHabit } = useUpsertHabit({ priorityId: habit?.priority_id });
 
   const handleComplete = (title: string) => {

@@ -16,7 +16,7 @@ const truncateDescription = (description: string, maxWords: number) => {
 };
 
 const ListPriorities: React.FC = () => {
-  const { data: priorities, isLoading } = useListPriorities();
+  const { data: priorities = [], isLoading } = useListPriorities();
 
   if (isLoading) {
     return <CircularProgress />;

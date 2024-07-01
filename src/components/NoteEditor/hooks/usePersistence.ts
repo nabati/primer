@@ -13,7 +13,7 @@ const usePersistence = ({
   priorityId,
 }: {
   id: string;
-  priorityId?: string;
+  priorityId?: string | null;
 }) => {
   const [editorContent, setEditorContent] = useState<string>("");
   const { data: note, isFetching } = useNote({ id });

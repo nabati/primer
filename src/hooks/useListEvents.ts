@@ -3,6 +3,7 @@ import { endOfDay, format, startOfDay } from "date-fns";
 import { useMemo } from "react";
 import { useUser } from "../components/AuthContext.tsx";
 import { getSupabaseClient } from "../supabaseClient.ts";
+import { HabitEvent } from "../types.ts";
 import formatDateToIsoDate from "../utils/formatDateToIsoDate.ts";
 
 const useListEvents = ({
@@ -28,7 +29,7 @@ const useListEvents = ({
 
   return useQuery({
     queryKey: ["events", habitId, alignedStartDate, alignedEndDate],
-    queryFn: async () => {
+    queryFn: async (): Promise<HabitEvent[]> => {
       const { data: events } = await getSupabaseClient()
         .from("events")
         .select("*")
@@ -36,6 +37,10 @@ const useListEvents = ({
         .eq("user_id", user.id)
         .gte("date", format(alignedStartDate, "yyyy-MM-dd"))
         .lte("date", format(alignedEndDate, "yyyy-MM-dd"));
+
+      if (events === null) {
+        return [];
+      }
 
       return events;
     },

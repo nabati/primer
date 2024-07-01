@@ -24,7 +24,7 @@ const Coach: React.FC<CoachProps> = ({ journalId }) => {
 
   const { context, isFetching: isFetchingContext } = useRelatedContext({
     activity: debouncedActivity,
-    journalId: journalId ?? "",
+    noteId: journalId ?? "",
   });
 
   // const { data: chunks = [], isFetching: isFetchingChunks } = useSemanticChunks(
