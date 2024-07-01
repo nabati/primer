@@ -36,6 +36,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   if (!session) {
     return (
       <Auth
+        redirectTo={"https://primer-9iv.pages.dev"}
         supabaseClient={getSupabaseClient()}
         appearance={{ theme: ThemeSupa }}
         providers={["google"]}
